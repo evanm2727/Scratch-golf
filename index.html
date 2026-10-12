@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Scratch Blueprint | Golf & TrackMan</title>
+  <title>Scratch Blueprint | Golf & GHIN</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Scratch Golf">
@@ -29,13 +29,13 @@
 </head>
 <body class="flex flex-col h-screen overflow-hidden">
 
-  <!-- Fixed Top Header -->
+  <!-- Header -->
   <header class="safe-top px-4 pb-2 border-b border-emerald-950 bg-[#0d1811]/95 backdrop-blur shrink-0 z-40">
     <div class="flex justify-between items-center max-w-lg mx-auto">
       <div>
         <div class="flex items-center gap-1.5">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <p class="text-[10px] font-bold tracking-widest uppercase text-emerald-400">Target: 8.0 &rarr; 0.0 Index</p>
+          <p class="text-[10px] font-bold tracking-widest uppercase text-emerald-400" id="headerHandicapLabel">Target: 8.0 &rarr; 0.0 Index</p>
         </div>
         <h1 class="text-lg font-black tracking-tight text-white flex items-center gap-2">
           SCRATCH BLUEPRINT
@@ -50,13 +50,11 @@
     </div>
   </header>
 
-  <!-- Scrollable App Body -->
+  <!-- Main Scrollable App Container -->
   <main class="flex-1 overflow-y-auto px-4 py-3 max-w-lg mx-auto w-full custom-scrollbar pb-28">
 
-    <!-- TAB 1: SCHEDULE & CALENDAR -->
+    <!-- TAB 1: SCHEDULE -->
     <div id="tab-schedule" class="tab-pane space-y-3">
-      
-      <!-- Live 7-Day Calendar Strip -->
       <div class="bg-[#101e14] p-3 rounded-2xl border border-emerald-800/40 shadow">
         <div class="flex justify-between items-center mb-2 px-1">
           <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300" id="currentCalendarMonth">Week Schedule</h2>
@@ -65,7 +63,6 @@
         <div class="grid grid-cols-7 gap-1" id="calendarDaysRow"></div>
       </div>
 
-      <!-- Focused Day Card Banner -->
       <div class="bg-gradient-to-r from-emerald-950 to-emerald-900/60 p-3.5 rounded-2xl border border-emerald-800/50 flex justify-between items-center">
         <div>
           <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider" id="selectedDayName">Today's Protocol</span>
@@ -79,27 +76,23 @@
         </div>
       </div>
 
-      <!-- Detail Card for Focused Day -->
       <div id="activeDayDetailContainer"></div>
-
-      <!-- Custom Activities Logged for Selected Day -->
       <div id="selectedDayCustomActivities" class="space-y-2"></div>
 
-      <!-- Full Weekly Overview -->
       <div class="pt-2">
         <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Full Week Overview</p>
         <div id="allDaysContainer" class="space-y-2"></div>
       </div>
     </div>
 
-    <!-- TAB 2: GYM (45-60 MINUTE SESSIONS) -->
+    <!-- TAB 2: GYM (45-60 MIN SESSIONS) -->
     <div id="tab-gym" class="tab-pane hidden space-y-3">
       <div class="flex justify-between items-center">
         <div>
           <h2 class="text-sm font-bold text-white flex items-center gap-1.5">
             <i class="fa-solid fa-dumbbell text-emerald-400"></i> 45-60 Min Strength Split
           </h2>
-          <p class="text-[11px] text-slate-400">5-6 exercises per workout tailored for rotational speed</p>
+          <p class="text-[11px] text-slate-400">Rotational power & anti-rotation deceleration</p>
         </div>
         <div class="flex gap-1 bg-[#122017] p-1 rounded-lg border border-emerald-900/60 text-xs">
           <button onclick="switchGymSession(1)" id="gymBtn1" class="px-2 py-0.5 rounded font-bold text-white bg-emerald-700">D1</button>
@@ -110,7 +103,7 @@
 
       <div class="bg-[#122017] p-3 rounded-xl border border-emerald-800/40">
         <div class="flex justify-between items-center">
-          <h3 class="text-xs font-bold text-emerald-300" id="gymWorkoutTitle">Day 1: Ground Reaction & Lower Force</h3>
+          <h3 class="text-xs font-bold text-emerald-300" id="gymWorkoutTitle">Day 1: Ground Force Base</h3>
           <span class="text-[10px] text-slate-400 font-semibold">50 mins</span>
         </div>
         <p class="text-[11px] text-slate-400 mt-0.5" id="gymWorkoutFocus"></p>
@@ -128,7 +121,7 @@
           </h2>
           <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/40 font-bold">OCR</span>
         </div>
-        <p class="text-[11px] text-slate-300 mb-3">Snap the monitor tile readout at Studio or choose a screenshot from your Photos.</p>
+        <p class="text-[11px] text-slate-300 mb-3">Snap the monitor tile readout at Studio or select a screenshot.</p>
 
         <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="processTrackmanImage(event)">
         <input type="file" id="galleryInput" accept="image/*" class="hidden" onchange="processTrackmanImage(event)">
@@ -201,34 +194,83 @@
       </div>
     </div>
 
-    <!-- TAB 4: SCORING -->
+    <!-- TAB 4: SCORING & GHIN LIVE SYNC -->
     <div id="tab-scoring" class="tab-pane hidden space-y-3">
-      <div class="bg-[#122017] p-4 rounded-2xl border border-emerald-600/30">
-        <h2 class="text-sm font-bold text-white mb-2 flex items-center gap-1.5">
-          <i class="fa-solid fa-flag-checkered text-emerald-400"></i> Course Round Log
+      
+      <!-- USGA GHIN RELAY CARD -->
+      <div class="bg-[#122017] p-4 rounded-2xl border border-emerald-500/50 shadow-lg">
+        <div class="flex justify-between items-center mb-2">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-cloud-bolt text-emerald-400"></i>
+            <h2 class="text-xs font-black uppercase tracking-wider text-white">USGA GHIN Live Sync</h2>
+          </div>
+          <span id="ghinBadgeStatus" class="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-700/50 px-2 py-0.5 rounded font-black">
+            Index: --
+          </span>
+        </div>
+        <p class="text-[11px] text-slate-300 mb-3">Sync official USGA handicap and recent score differentials via your Cloudflare Worker.</p>
+
+        <div class="space-y-2 mb-3">
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-0.5">Worker Endpoint URL</label>
+            <input type="url" id="ghinWorkerUrl" placeholder="https://ghin-sync.yourname.workers.dev" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/40 text-emerald-300 font-mono">
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="text-[10px] text-slate-400 block mb-0.5">GHIN Email / Golfer ID</label>
+              <input type="text" id="ghinEmail" placeholder="golfer@email.com" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/40 text-white">
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-400 block mb-0.5">GHIN Password</label>
+              <input type="password" id="ghinPassword" placeholder="••••••••" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/40 text-white">
+            </div>
+          </div>
+        </div>
+
+        <button onclick="syncGhinData()" id="ghinSyncBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 rounded-xl flex items-center justify-center gap-2 shadow">
+          <i class="fa-solid fa-arrows-rotate"></i> Sync GHIN Now
+        </button>
+      </div>
+
+      <!-- Manual Round Entry -->
+      <div class="bg-[#122017] p-4 rounded-2xl border border-emerald-900/60">
+        <h2 class="text-xs font-bold text-white mb-2 flex items-center gap-1.5 uppercase tracking-wider">
+          <i class="fa-solid fa-flag-checkered text-emerald-400"></i> Quick Round Log
         </h2>
         <div class="grid grid-cols-3 gap-2 mb-3">
           <div>
             <label class="text-[10px] text-slate-400">Total Score</label>
-            <input type="number" id="roundScore" placeholder="76" class="w-full bg-[#17271e] rounded p-2 text-xs border border-emerald-800/50 text-white font-bold">
+            <input type="number" id="roundScore" placeholder="77" class="w-full bg-[#17271e] rounded p-2 text-xs border border-emerald-800/50 text-white font-bold">
           </div>
           <div>
             <label class="text-[10px] text-slate-400">GIR (of 18)</label>
-            <input type="number" id="roundGir" placeholder="12" class="w-full bg-[#17271e] rounded p-2 text-xs border border-emerald-800/50 text-white font-bold">
+            <input type="number" id="roundGir" placeholder="11" class="w-full bg-[#17271e] rounded p-2 text-xs border border-emerald-800/50 text-white font-bold">
           </div>
           <div>
             <label class="text-[10px] text-slate-400">Doubles</label>
             <input type="number" id="roundDoubles" placeholder="0" class="w-full bg-[#17271e] rounded p-2 text-xs border border-emerald-800/50 text-white font-bold">
           </div>
         </div>
-        <button onclick="saveRound()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-2 rounded-xl">
-          Save 18-Hole Round
+        <button onclick="saveManualRound()" class="w-full bg-[#1b3425] hover:bg-emerald-600 text-emerald-300 hover:text-white text-xs font-bold py-2 rounded-xl border border-emerald-700/50 transition">
+          Save Round
         </button>
       </div>
 
+      <!-- Chart -->
       <div class="bg-[#122017] p-3 rounded-2xl border border-emerald-800/40">
-        <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Scoring & GIR Trend</h3>
+        <div class="flex justify-between items-center mb-2 px-1">
+          <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Handicap Differential Trend</h3>
+          <span class="text-[10px] text-emerald-400 font-bold" id="trendSubtext">Target: 0.0</span>
+        </div>
         <canvas id="scoringChart" class="w-full h-44"></canvas>
+      </div>
+
+      <!-- Recent GHIN Scores List -->
+      <div class="bg-[#122017] p-3 rounded-2xl border border-emerald-800/40">
+        <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Recent Rounds History</h3>
+        <div id="ghinScoresList" class="space-y-1.5 text-xs text-slate-300">
+          <!-- Populated from GHIN scores -->
+        </div>
       </div>
     </div>
 
@@ -245,27 +287,27 @@
       </div>
       <div>
         <label class="text-[10px] text-slate-400 block mb-1">Activity Name</label>
-        <input type="text" id="customTitle" placeholder="e.g. 9-Hole Twilight, Peloton, Sauna" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/50 text-white">
+        <input type="text" id="customTitle" placeholder="e.g. 9-Hole Twilight, Extra Mobility" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/50 text-white">
       </div>
       <div class="grid grid-cols-2 gap-2">
         <div>
           <label class="text-[10px] text-slate-400 block mb-1">Category</label>
           <select id="customType" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/50 text-white">
-            <option value="Golf">Golf (Range/Twilight)</option>
-            <option value="Gym">Gym / Lifting</option>
-            <option value="Cardio">Cardio / Conditioning</option>
-            <option value="Recovery">Recovery / Mobility</option>
+            <option value="Golf">Golf</option>
+            <option value="Gym">Gym / Lift</option>
+            <option value="Cardio">Cardio</option>
+            <option value="Recovery">Recovery</option>
             <option value="Other">Other</option>
           </select>
         </div>
         <div>
           <label class="text-[10px] text-slate-400 block mb-1">Duration</label>
-          <input type="text" id="customDuration" placeholder="e.g. 45 min, 9 holes" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/50 text-white">
+          <input type="text" id="customDuration" placeholder="45 min" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/50 text-white">
         </div>
       </div>
       <div>
-        <label class="text-[10px] text-slate-400 block mb-1">Notes / Key Metric</label>
-        <textarea id="customNotes" rows="2" placeholder="e.g. Shot 38, focused on takeaway tempo" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/50 text-white"></textarea>
+        <label class="text-[10px] text-slate-400 block mb-1">Notes</label>
+        <textarea id="customNotes" rows="2" placeholder="Notes, key feel, or score..." class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/50 text-white"></textarea>
       </div>
       <button onclick="saveCustomActivity()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow">
         Save Activity to Today
@@ -281,7 +323,7 @@
     </button>
     <button onclick="showTab('gym')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-emerald-300" data-tab="gym">
       <i class="fa-solid fa-dumbbell text-lg"></i>
-      <span class="text-[10px] font-semibold mt-1">Gym (45-60m)</span>
+      <span class="text-[10px] font-semibold mt-1">Gym</span>
     </button>
     <button onclick="showTab('trackman')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-emerald-300" data-tab="trackman">
       <i class="fa-solid fa-camera text-lg"></i>
@@ -289,12 +331,12 @@
     </button>
     <button onclick="showTab('scoring')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-emerald-300" data-tab="scoring">
       <i class="fa-solid fa-chart-line text-lg"></i>
-      <span class="text-[10px] font-semibold mt-1">Scoring</span>
+      <span class="text-[10px] font-semibold mt-1">GHIN & Scores</span>
     </button>
   </nav>
 
   <script>
-    // 4-WEEK PERIODIZED DATABASE
+    // 4-WEEK PROTOCOLS
     const weeklyPrograms = {
       1: {
         title: "Week 1: Ground Reaction & Force Base",
@@ -316,32 +358,32 @@
               { name: "Rotational MB Scoop Toss (into wall)", sets: "4 sets x 5 / side", cue: "Explode off trail foot, snap lead hip clear" },
               { name: "Bulgarian Split Squat", sets: "3 sets x 8 / leg", cue: "Lead leg deceleration control under load" },
               { name: "Dumbbell Incline Bench Press", sets: "3 sets x 8 reps", cue: "Upper body push strength without shrugging traps" },
-              { name: "Half-Kneeling Pallof Press with Hold", sets: "3 sets x 10 / side (3s hold)", cue: "Anti-rotation: resist torso twist" },
-              { name: "Hanging Knee Raises / Hollow Body Hold", sets: "3 sets x 12 reps", cue: "Lock rib cage flush to spine" }
+              { name: "Half-Kneeling Pallof Press with Hold", sets: "3 sets x 10 / side", cue: "Anti-rotation: resist torso twist" },
+              { name: "Hanging Knee Raises / Hollow Hold", sets: "3 sets x 12 reps", cue: "Lock rib cage flush to spine" }
             ]
           },
           2: {
             title: "Day 2: Rotational Velocity & Deceleration (55 Mins)",
-            focus: "Develop high rotary speed with the braking strength needed to stop the torso at impact.",
+            focus: "High rotary speed with braking strength to stop torso at impact.",
             exercises: [
               { name: "Landmine Rotational Punch", sets: "4 sets x 6 / side", cue: "Drive rotation from back hip through serratus" },
               { name: "Half-Kneeling Cable Chops (High to Low)", sets: "3 sets x 8 / side", cue: "Lock hips still; rotate upper chest only" },
               { name: "Neutral Grip DB Single-Arm Row", sets: "4 sets x 8 / arm", cue: "Lat engagement to hold lead-arm structure" },
-              { name: "Plyometric Push-Ups (Fast Tempo)", sets: "3 sets x 6 reps", cue: "Maximum explosive chest/tricep velocity" },
-              { name: "Single-Leg Romanian Deadlift (RDL)", sets: "3 sets x 8 / leg", cue: "Hamstring and glute stability on lead leg" },
-              { name: "Cable External Rotations & Face Pulls", sets: "3 sets x 12 reps", cue: "Rotator cuff endurance and posture integrity" }
+              { name: "Plyometric Push-Ups (Fast Tempo)", sets: "3 sets x 6 reps", cue: "Explosive chest/tricep velocity" },
+              { name: "Single-Leg Romanian Deadlift (RDL)", sets: "3 sets x 8 / leg", cue: "Lead hamstring and glute stability" },
+              { name: "Cable External Rotations & Face Pulls", sets: "3 sets x 12 reps", cue: "Rotator cuff integrity" }
             ]
           },
           3: {
             title: "Day 3: Full-Body Power & Kinetic Chain (50 Mins)",
-            focus: "Coordinate power from feet to fingertips to increase ball speed transfer efficiency.",
+            focus: "Coordinate power from feet to fingertips for ball speed transfer.",
             exercises: [
               { name: "Trap Bar Jump Shrugs (Low Weight)", sets: "4 sets x 4 reps", cue: "Max vertical jump explosion off the toes" },
-              { name: "Lateral Heiden Bounds with Stick", sets: "4 sets x 5 / side", cue: "Land and stick on lead hip like golf follow-through" },
-              { name: "Turkish Get-Up (Quarter or Full)", sets: "3 sets x 3 / arm", cue: "Shoulder stability through rotating torso" },
+              { name: "Lateral Heiden Bounds with Stick", sets: "4 sets x 5 / side", cue: "Land and stick on lead hip" },
+              { name: "Turkish Get-Up", sets: "3 sets x 3 / arm", cue: "Shoulder stability through rotating torso" },
               { name: "Goblet Squat (Explosive Ascending)", sets: "3 sets x 8 reps", cue: "Fast upward acceleration out of the hole" },
               { name: "Side Plank with Cable Row", sets: "3 sets x 8 / side", cue: "Lateral core stability and oblique firing" },
-              { name: "Overhead Farmer's Walk / Single-Arm Carry", sets: "3 sets x 30 yds", cue: "Core stiffness under dynamic movement" }
+              { name: "Overhead Farmer's Walk", sets: "3 sets x 30 yds", cue: "Core stiffness under dynamic movement" }
             ]
           }
         }
@@ -352,46 +394,46 @@
           { day: "Mon", dayFull: "Monday", type: "Gym Lift 1", badge: "GYM", focus: "Speed Squats (4x4) + Lateral Bounds (4x4)", time: "50 min" },
           { day: "Tue", dayFull: "Tuesday", type: "Studio Sim Combine 1", badge: "SIM", focus: "75-105yd Clock Wedge spin rate consistency", time: "60 min" },
           { day: "Wed", dayFull: "Wednesday", type: "Gym Lift 2", badge: "GYM", focus: "DB Snatch (4x5) + Cable Rotations (4x8)", time: "55 min" },
-          { day: "Thu", dayFull: "Thursday", type: "Studio Sim Combine 2", badge: "SIM", focus: "3-Wood tight fairway carry & high-landing 4-irons", time: "60 min" },
+          { day: "Thu", dayFull: "Thursday", type: "Studio Sim Combine 2", badge: "SIM", focus: "3-Wood tight fairway carry & 4-iron landings", time: "60 min" },
           { day: "Fri", dayFull: "Friday", type: "Gym Lift 3", badge: "GYM", focus: "Posterior Chain Whip: RDLs + Plyo Push-Ups", time: "50 min" },
-          { day: "Sat", dayFull: "Saturday", type: "18-Hole Course Round", badge: "PLAY", focus: "GIR discipline: Center-green priority over flag pins", time: "4.5 hrs" },
+          { day: "Sat", dayFull: "Saturday", type: "18-Hole Course Round", badge: "PLAY", focus: "GIR discipline: Center-green priority", time: "4.5 hrs" },
           { day: "Sun", dayFull: "Sunday", type: "Active Recovery", badge: "RECOVER", focus: "Lat stretching, pigeon flow, 100-stroke putting ruler", time: "30 min" }
         ],
         gymWorkouts: {
           1: {
-            title: "Day 1: Lateral Velocity & Speed-Strength (50 Mins)",
-            focus: "Accelerate lateral ground reaction and quick kinetic transfer.",
+            title: "Day 1: Lateral Velocity (50 Mins)",
+            focus: "Accelerate lateral ground reaction and kinetic transfer.",
             exercises: [
-              { name: "Lateral Bounds (Heidens with Stick)", sets: "4 sets x 4 / side", cue: "Absorb landing instantly with glute" },
-              { name: "Speed Front Squats (60% 1RM)", sets: "4 sets x 4 reps", cue: "Violent upward acceleration out of bottom" },
-              { name: "Single-Arm Dumbbell Power Snatch", sets: "3 sets x 5 / arm", cue: "Triple extension ankle/knee/hip" },
+              { name: "Lateral Bounds (Heidens with Stick)", sets: "4 sets x 4 / side", cue: "Absorb landing with lead glute" },
+              { name: "Speed Front Squats", sets: "4 sets x 4 reps", cue: "Violent upward acceleration" },
+              { name: "Single-Arm DB Snatch", sets: "3 sets x 5 / arm", cue: "Triple extension ankle/knee/hip" },
               { name: "Standing Cable Anti-Rotational Press", sets: "4 sets x 8 reps", cue: "Lock rib cage tight to pelvis" },
-              { name: "Walking Dumbbell Lunges", sets: "3 sets x 10 steps / leg", cue: "Upright posture, glute push" },
+              { name: "Walking DB Lunges", sets: "3 sets x 10 steps/leg", cue: "Upright posture, glute push" },
               { name: "Hanging Leg Raises", sets: "3 sets x 10 reps", cue: "Lower abdominal compression" }
             ]
           },
           2: {
             title: "Day 2: Rotary Whip & Posterior Chain (55 Mins)",
-            focus: "Train the back half of the body to support lead-side rotary whip.",
+            focus: "Train posterior chain to support lead-side rotary whip.",
             exercises: [
-              { name: "Kettlebell Swing (Hip Snap)", sets: "4 sets x 10 reps", cue: "Violent hip hinge snap without squatting" },
+              { name: "Kettlebell Swing (Hip Snap)", sets: "4 sets x 10 reps", cue: "Violent hip hinge snap" },
               { name: "Landmine Rotary Press", sets: "4 sets x 8 / side", cue: "Drive power from feet through hands" },
-              { name: "Neutral Grip Pull-Ups", sets: "4 sets x 6 reps", cue: "Lat activation to hold downswing plane" },
-              { name: "Single-Leg RDL with Dumbbell", sets: "3 sets x 8 / leg", cue: "Hamstring stretch and glute squeeze" },
-              { name: "Half-Kneeling Lift (Low-to-High)", sets: "3 sets x 8 / side", cue: "Upward rotary push without swaying hips" },
-              { name: "Rear Delt Dumbbell Flyes", sets: "3 sets x 12 reps", cue: "Scapular pinch and thoracic extension" }
+              { name: "Neutral Grip Pull-Ups", sets: "4 sets x 6 reps", cue: "Lat activation for downswing plane" },
+              { name: "Single-Leg RDL", sets: "3 sets x 8 / leg", cue: "Hamstring stretch and glute squeeze" },
+              { name: "Half-Kneeling Lift (Low-to-High)", sets: "3 sets x 8 / side", cue: "Upward rotary push without swaying" },
+              { name: "Rear Delt DB Flyes", sets: "3 sets x 12 reps", cue: "Scapular pinch" }
             ]
           },
           3: {
             title: "Day 3: Elasticity & Deceleration (50 Mins)",
             focus: "Elastic rebound and trunk stability under dynamic loading.",
             exercises: [
-              { name: "Rotational MB Step & Slam", sets: "4 sets x 5 / side", cue: "Step into lead foot and slam violently" },
-              { name: "Hex Bar Deadlift (Moderate Weight)", sets: "4 sets x 6 reps", cue: "Smooth pull, fast lockout" },
-              { name: "Push Press (DB or Barbell)", sets: "3 sets x 6 reps", cue: "Leg dip into aggressive overhead push" },
-              { name: "Side Plank with Hip Abduction", sets: "3 sets x 8 / side", cue: "Glute medius strength for golf stance" },
-              { name: "Cable Face Pull with External Rotation", sets: "3 sets x 12 reps", cue: "Shoulder joint health" },
-              { name: "Deadbugs with Core Press", sets: "3 sets x 10 / side", cue: "Keep low back glued to the mat" }
+              { name: "Rotational MB Step & Slam", sets: "4 sets x 5 / side", cue: "Step into lead foot and slam" },
+              { name: "Hex Bar Deadlift", sets: "4 sets x 6 reps", cue: "Smooth pull, fast lockout" },
+              { name: "Push Press (DB or Barbell)", sets: "3 sets x 6 reps", cue: "Aggressive overhead push" },
+              { name: "Side Plank with Abduction", sets: "3 sets x 8 / side", cue: "Glute medius strength" },
+              { name: "Cable Face Pull", sets: "3 sets x 12 reps", cue: "Shoulder joint health" },
+              { name: "Deadbugs with Core Press", sets: "3 sets x 10 / side", cue: "Low back glued to mat" }
             ]
           }
         }
@@ -414,8 +456,8 @@
             exercises: [
               { name: "Trap Bar Jump Shrugs", sets: "5 sets x 3 reps", cue: "Fastest vertical propulsion possible" },
               { name: "Box Depth Jumps", sets: "4 sets x 3 reps", cue: "Minimize ground contact time" },
-              { name: "Barbell Back Squat (Explosive)", sets: "4 sets x 4 reps", cue: "Drive heels straight through floor" },
-              { name: "Rotational Scoop Toss (Max Effort)", sets: "4 sets x 4 / side", cue: "Treat each rep like a 180 mph ball speed swing" },
+              { name: "Barbell Back Squat", sets: "4 sets x 4 reps", cue: "Drive heels straight through floor" },
+              { name: "Rotational Scoop Toss (Max Effort)", sets: "4 sets x 4 / side", cue: "Max effort intent" },
               { name: "Pallof Press with Rotation", sets: "3 sets x 8 / side", cue: "Resist rotation until end range" },
               { name: "Weighted Abdominal Planks", sets: "3 sets x 45s", cue: "Total body bracing" }
             ]
@@ -425,23 +467,23 @@
             focus: "Over-speed rotational core work and rapid lat contraction.",
             exercises: [
               { name: "High-to-Low Cable Rotational Chops", sets: "4 sets x 6 / side", cue: "Snap hips then let arms follow" },
-              { name: "Banded Kettlebell Over-Speed Swings", sets: "4 sets x 8 reps", cue: "Pull bell down fast, snap hips into lockout" },
-              { name: "Weighted Pull-Ups / Chin-Ups", sets: "4 sets x 5 reps", cue: "Lat engagement to support lead side pull" },
-              { name: "Dumbbell Push Press", sets: "3 sets x 6 reps", cue: "Explode up with the legs" },
-              { name: "Single-Leg Bulgarian Split Squat", sets: "3 sets x 6 / leg", cue: "Lead hip deceleration stability" },
-              { name: "Half-Kneeling Cable External Rotations", sets: "3 sets x 12 reps", cue: "Shoulder stability at top of backswing" }
+              { name: "Banded KB Over-Speed Swings", sets: "4 sets x 8 reps", cue: "Pull bell down fast, snap hips" },
+              { name: "Weighted Pull-Ups", sets: "4 sets x 5 reps", cue: "Lat engagement" },
+              { name: "Dumbbell Push Press", sets: "3 sets x 6 reps", cue: "Explode up with legs" },
+              { name: "Single-Leg Bulgarian Split Squat", sets: "3 sets x 6 / leg", cue: "Lead hip deceleration" },
+              { name: "Half-Kneeling External Rotations", sets: "3 sets x 12 reps", cue: "Shoulder stability at top" }
             ]
           },
           3: {
             title: "Day 3: Kinetic Transfer & Power (50 Mins)",
             focus: "Full-body synchronization under fatigue.",
             exercises: [
-              { name: "Dumbbell Snatch (Alternating)", sets: "4 sets x 4 / arm", cue: "Explode upwards through the ceiling" },
-              { name: "Rotational Med Ball Overhead Slam", sets: "4 sets x 5 reps", cue: "Total body anterior core flexion" },
-              { name: "Hex Bar Deadlift (Speed Sets)", sets: "4 sets x 4 reps", cue: "Max velocity off the floor" },
-              { name: "Single-Arm Cable Row with Rotation", sets: "3 sets x 8 / arm", cue: "Thoracic mobility under resistance" },
-              { name: "Lead Leg Lateral Box Push-Offs", sets: "3 sets x 6 / leg", cue: "Simulate lead foot banking in downswing" },
-              { name: "Dragon Flags or Reverse Crunches", sets: "3 sets x 10 reps", cue: "Deep core stability" }
+              { name: "Dumbbell Snatch (Alternating)", sets: "4 sets x 4 / arm", cue: "Explode through ceiling" },
+              { name: "Rotational MB Overhead Slam", sets: "4 sets x 5 reps", cue: "Anterior core flexion" },
+              { name: "Hex Bar Deadlift (Speed Sets)", sets: "4 sets x 4 reps", cue: "Max velocity off floor" },
+              { name: "Single-Arm Row with Rotation", sets: "3 sets x 8 / arm", cue: "Thoracic mobility" },
+              { name: "Lead Leg Box Push-Offs", sets: "3 sets x 6 / leg", cue: "Lead foot banking" },
+              { name: "Dragon Flags", sets: "3 sets x 10 reps", cue: "Deep core stability" }
             ]
           }
         }
@@ -452,7 +494,7 @@
           { day: "Mon", dayFull: "Monday", type: "Gym Lift 1 (Deload)", badge: "GYM", focus: "Tempo Goblet Squats + T-spine rotations", time: "45 min" },
           { day: "Tue", dayFull: "Tuesday", type: "Studio Sim Combine 1", badge: "SIM", focus: "Wedge Distance Touch: 30, 45, 60, 75yd flight control", time: "50 min" },
           { day: "Wed", dayFull: "Wednesday", type: "Gym Lift 2 (Deload)", badge: "GYM", focus: "Core & Posture: Deadbugs + Side planks with reach", time: "45 min" },
-          { day: "Thu", dayFull: "Thursday", type: "Studio Sim Combine 2", badge: "SIM", focus: "Iron Flight Windowing: High draw vs. low fade trajectories", time: "50 min" },
+          { day: "Thu", dayFull: "Thursday", type: "Studio Sim Combine 2", badge: "SIM", focus: "Iron Flight Windowing: High draw vs. low fade", time: "50 min" },
           { day: "Fri", dayFull: "Friday", type: "Gym Lift 3 (Deload)", badge: "GYM", focus: "Rotational Flow: Light med ball tosses + Scap pulls", time: "45 min" },
           { day: "Sat", dayFull: "Saturday", type: "18-Hole Course Round", badge: "PLAY", focus: "Tournament simulation: Full pre-shot routine", time: "4.5 hrs" },
           { day: "Sun", dayFull: "Sunday", type: "Active Recovery", badge: "RECOVER", focus: "Full body foam rolling & green-reading touch", time: "30 min" }
@@ -460,38 +502,38 @@
         gymWorkouts: {
           1: {
             title: "Day 1: Joint Fluidity & Mobility (45 Mins)",
-            focus: "Lower nervous system fatigue and restore hip/spine range of motion.",
+            focus: "Lower nervous system fatigue and restore range of motion.",
             exercises: [
-              { name: "Tempo Goblet Squat (3-1-1)", sets: "3 sets x 8 reps", cue: "Deep ankle dorsiflexion and open hips" },
-              { name: "Half-Kneeling Thoracic Spine Rotations", sets: "3 sets x 10 / side", cue: "Rotate rib cage without moving hips" },
-              { name: "Light Trap Bar Deadlift (Tempo)", sets: "3 sets x 6 reps", cue: "Smooth posture and hinge groove" },
-              { name: "Deadbugs (Anti-Extension)", sets: "3 sets x 10 / side", cue: "Lumbar spine glued flush to the floor" },
-              { name: "Band Pull-Aparts & Face Pulls", sets: "3 sets x 15 reps", cue: "Rear deltoid and scapular stability" },
-              { name: "Half-Kneeling Hip Flexor Stretch", sets: "3 sets x 45s hold / side", cue: "Glute squeeze on down leg" }
+              { name: "Tempo Goblet Squat (3-1-1)", sets: "3 sets x 8 reps", cue: "Deep ankle dorsiflexion" },
+              { name: "T-Spine Rotations", sets: "3 sets x 10 / side", cue: "Rotate rib cage without moving hips" },
+              { name: "Light Trap Bar Deadlift", sets: "3 sets x 6 reps", cue: "Smooth posture groove" },
+              { name: "Deadbugs (Anti-Extension)", sets: "3 sets x 10 / side", cue: "Low back glued to mat" },
+              { name: "Band Pull-Aparts & Face Pulls", sets: "3 sets x 15 reps", cue: "Scapular stability" },
+              { name: "Half-Kneeling Hip Stretch", sets: "3 sets x 45s / side", cue: "Glute squeeze" }
             ]
           },
           2: {
-            title: "Day 2: Postural Alignment & Rotational Flow (45 Mins)",
+            title: "Day 2: Postural Alignment (45 Mins)",
             focus: "Consolidate posture without central nervous system stress.",
             exercises: [
-              { name: "Light MB Rotational Wall Toss (Smooth)", sets: "3 sets x 6 / side", cue: "Focus on rhythm and sequencing" },
-              { name: "Dumbbell Neutral-Grip Chest Press", sets: "3 sets x 8 reps", cue: "Shoulder-friendly pressing angle" },
-              { name: "Single-Leg Balance Dumbbell RDL", sets: "3 sets x 6 / leg", cue: "Foot arch and ankle stability" },
-              { name: "Cable Pallof Press Hold", sets: "3 sets x 30s / side", cue: "Clean isometric core tension" },
-              { name: "Lat Pulldown (Moderate Load)", sets: "3 sets x 10 reps", cue: "Wide grip to open thoracic cage" },
-              { name: "Pigeon Pose Stretch", sets: "3 sets x 45s / leg", cue: "Release gluteal tension" }
+              { name: "Light MB Wall Toss", sets: "3 sets x 6 / side", cue: "Smooth sequencing" },
+              { name: "DB Neutral Chest Press", sets: "3 sets x 8 reps", cue: "Shoulder friendly pressing" },
+              { name: "Single-Leg Balance DB RDL", sets: "3 sets x 6 / leg", cue: "Foot arch stability" },
+              { name: "Cable Pallof Press Hold", sets: "3 sets x 30s / side", cue: "Isometric tension" },
+              { name: "Lat Pulldown (Moderate)", sets: "3 sets x 10 reps", cue: "Wide grip" },
+              { name: "Pigeon Pose Stretch", sets: "3 sets x 45s / leg", cue: "Release glutes" }
             ]
           },
           3: {
             title: "Day 3: Posterior Chain Flow (45 Mins)",
-            focus: "Light activation for weekend tournament readiness.",
+            focus: "Light activation for weekend round readiness.",
             exercises: [
-              { name: "Kettlebell Romanian Deadlift", sets: "3 sets x 8 reps", cue: "Clean hip hinge without knee collapse" },
-              { name: "Push-Ups with Hand Release", sets: "3 sets x 8 reps", cue: "Full range chest and scapular push" },
+              { name: "Kettlebell RDL", sets: "3 sets x 8 reps", cue: "Clean hip hinge" },
+              { name: "Hand-Release Push-Ups", sets: "3 sets x 8 reps", cue: "Full range chest push" },
               { name: "Side Planks with Leg Lift", sets: "3 sets x 20s / side", cue: "Lateral pelvic stability" },
-              { name: "Inverted Row / TRX Row", sets: "3 sets x 10 reps", cue: "Smooth pull to lower chest" },
-              { name: "World's Greatest Stretch", sets: "3 sets x 5 / side", cue: "Hip flexor, thoracic spine, hamstring combo" },
-              { name: "Cat-Cow & Child's Pose Flow", sets: "3 sets x 60s", cue: "Spinal decompression" }
+              { name: "Inverted TRX Row", sets: "3 sets x 10 reps", cue: "Smooth pull" },
+              { name: "World's Greatest Stretch", sets: "3 sets x 5 / side", cue: "T-spine and hamstring combo" },
+              { name: "Child's Pose Flow", sets: "3 sets x 60s", cue: "Decompression" }
             ]
           }
         }
@@ -502,16 +544,18 @@
     let activeGymDay = 1;
     let selectedCalendarDayIdx = 0;
 
-    // Custom Activities Database (Indexed by day index 0-6)
+    // Databases
     let customActivities = JSON.parse(localStorage.getItem('sb_custom_activities')) || {};
+    let ghinConfig = JSON.parse(localStorage.getItem('sb_ghin_config')) || { workerUrl: '', email: '', password: '', index: '8.0' };
+    let ghinScores = JSON.parse(localStorage.getItem('sb_ghin_scores')) || [
+      { course: 'Torrey Pines South', score: 79, diff: 7.2, date: 'Oct 04' },
+      { course: 'Aviara Golf Club', score: 81, diff: 8.6, date: 'Sep 27' },
+      { course: 'Balboa Park Golf Course', score: 77, diff: 6.8, date: 'Sep 20' }
+    ];
 
     let trackmanShots = JSON.parse(localStorage.getItem('sb_trackman_shots')) || [
       { club: 'Driver', speed: 172.4, carry: 298, smash: 1.49, source: 'Studio Scan' },
       { club: '2-Iron', speed: 151.2, carry: 246, smash: 1.44, source: 'Studio Scan' }
-    ];
-    let rounds = JSON.parse(localStorage.getItem('sb_rounds')) || [
-      { score: 79, gir: 10, doubles: 1, date: 'Sep 27' },
-      { score: 77, gir: 12, doubles: 0, date: 'Oct 04' }
     ];
 
     function init() {
@@ -519,9 +563,158 @@
       switchWeek(1);
       switchGymSession(1);
       renderTrackmanTable();
+      loadGhinSavedConfig();
+      renderGhinScores();
       initChart();
     }
 
+    // --- GHIN RELAY INTEGRATION ---
+    function loadGhinSavedConfig() {
+      if (ghinConfig.workerUrl) document.getElementById('ghinWorkerUrl').value = ghinConfig.workerUrl;
+      if (ghinConfig.email) document.getElementById('ghinEmail').value = ghinConfig.email;
+      if (ghinConfig.password) document.getElementById('ghinPassword').value = ghinConfig.password;
+      if (ghinConfig.index) {
+        document.getElementById('ghinBadgeStatus').innerText = `Index: ${ghinConfig.index}`;
+        document.getElementById('headerHandicapLabel').innerText = `USGA Index: ${ghinConfig.index} \u2192 0.0 Target`;
+      }
+    }
+
+    async function syncGhinData() {
+      const workerUrl = document.getElementById('ghinWorkerUrl').value.trim();
+      const email = document.getElementById('ghinEmail').value.trim();
+      const password = document.getElementById('ghinPassword').value.trim();
+      const btn = document.getElementById('ghinSyncBtn');
+
+      if (!workerUrl) return alert("Please enter your Cloudflare Worker URL");
+      if (!email || !password) return alert("Please enter your GHIN email and password");
+
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i> Contacting USGA GHIN...`;
+
+      try {
+        const cleanUrl = workerUrl.endsWith('/') ? workerUrl.slice(0, -1) : workerUrl;
+        const res = await fetch(cleanUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (data.error) {
+          throw new Error(data.error);
+        }
+
+        // Save Credentials locally
+        ghinConfig = {
+          workerUrl,
+          email,
+          password,
+          index: data.handicapIndex || "8.0",
+          name: data.golferName || ""
+        };
+        localStorage.setItem('sb_ghin_config', JSON.stringify(ghinConfig));
+
+        // Format recent scores
+        if (data.scores && data.scores.length > 0) {
+          ghinScores = data.scores.map(s => ({
+            course: s.course_name || s.facility_name || '18 Holes',
+            score: s.adjusted_gross_score || s.score,
+            diff: parseFloat(s.differential || 0).toFixed(1),
+            date: s.played_at ? new Date(s.played_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : 'Recent'
+          }));
+          localStorage.setItem('sb_ghin_scores', JSON.stringify(ghinScores));
+        }
+
+        document.getElementById('ghinBadgeStatus').innerText = `Index: ${ghinConfig.index}`;
+        document.getElementById('headerHandicapLabel').innerText = `USGA Index: ${ghinConfig.index} \u2192 0.0 Target`;
+        renderGhinScores();
+        initChart();
+        alert(`GHIN Connected! Live Handicap: ${ghinConfig.index}`);
+
+      } catch (err) {
+        alert("GHIN Sync Failed: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i> Sync GHIN Now`;
+      }
+    }
+
+    function renderGhinScores() {
+      const container = document.getElementById('ghinScoresList');
+      if (ghinScores.length === 0) {
+        container.innerHTML = `<p class="text-[11px] text-slate-500">No rounds synced yet. Tap Sync GHIN Now.</p>`;
+        return;
+      }
+      container.innerHTML = ghinScores.slice(0, 10).map(s => `
+        <div class="bg-[#0e1811] p-2.5 rounded-xl border border-emerald-900/40 flex justify-between items-center">
+          <div>
+            <p class="font-bold text-white">${s.course}</p>
+            <p class="text-[10px] text-slate-400">${s.date} &bull; Differential: <span class="text-emerald-400 font-bold">${s.diff}</span></p>
+          </div>
+          <span class="text-xs font-black bg-emerald-950 text-emerald-300 border border-emerald-800/60 px-2 py-1 rounded">${s.score}</span>
+        </div>
+      `).join('');
+    }
+
+    function saveManualRound() {
+      const score = parseInt(document.getElementById('roundScore').value);
+      if (!score) return alert('Enter score');
+
+      ghinScores.unshift({
+        course: 'Weekend Round',
+        score: score,
+        diff: ((score - 72) * 0.9).toFixed(1),
+        date: 'Today'
+      });
+      localStorage.setItem('sb_ghin_scores', JSON.stringify(ghinScores));
+      renderGhinScores();
+      initChart();
+      alert('Round logged!');
+    }
+
+    let chartInstance = null;
+    function initChart() {
+      const ctx = document.getElementById('scoringChart').getContext('2d');
+      if (chartInstance) chartInstance.destroy();
+
+      const reversedScores = [...ghinScores].reverse();
+
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: reversedScores.map(r => r.date),
+          datasets: [
+            {
+              label: 'Differential',
+              data: reversedScores.map(r => parseFloat(r.diff)),
+              borderColor: '#10b981',
+              backgroundColor: 'rgba(16, 185, 129, 0.15)',
+              tension: 0.3,
+              fill: true
+            },
+            {
+              label: 'Scratch Benchmark (0.0)',
+              data: reversedScores.map(() => 0.0),
+              borderColor: '#f59e0b',
+              borderDash: [5, 5],
+              pointRadius: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { labels: { color: '#94a3b8', font: { size: 10 } } } },
+          scales: {
+            x: { ticks: { color: '#64748b' }, grid: { display: false } },
+            y: { ticks: { color: '#64748b' }, grid: { color: '#162e21' } }
+          }
+        }
+      });
+    }
+
+    // --- CALENDAR & GYM ---
     function setupRealWeeklyCalendar() {
       const now = new Date();
       const jsDay = now.getDay();
@@ -597,13 +790,8 @@
       renderDayCustomActivities();
     }
 
-    // --- CUSTOM ACTIVITY SYSTEM ---
-    function openCustomActivityModal() {
-      document.getElementById('customActivityModal').classList.remove('hidden');
-    }
-    function closeCustomActivityModal() {
-      document.getElementById('customActivityModal').classList.add('hidden');
-    }
+    function openCustomActivityModal() { document.getElementById('customActivityModal').classList.remove('hidden'); }
+    function closeCustomActivityModal() { document.getElementById('customActivityModal').classList.add('hidden'); }
     function saveCustomActivity() {
       const title = document.getElementById('customTitle').value.trim();
       const type = document.getElementById('customType').value;
@@ -611,15 +799,9 @@
       const notes = document.getElementById('customNotes').value.trim();
 
       if (!title) return alert('Enter activity title');
+      if (!customActivities[selectedCalendarDayIdx]) customActivities[selectedCalendarDayIdx] = [];
 
-      if (!customActivities[selectedCalendarDayIdx]) {
-        customActivities[selectedCalendarDayIdx] = [];
-      }
-
-      customActivities[selectedCalendarDayIdx].push({
-        title, type, duration, notes, timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      });
-
+      customActivities[selectedCalendarDayIdx].push({ title, type, duration, notes });
       localStorage.setItem('sb_custom_activities', JSON.stringify(customActivities));
       closeCustomActivityModal();
       document.getElementById('customTitle').value = '';
@@ -631,10 +813,7 @@
     function renderDayCustomActivities() {
       const container = document.getElementById('selectedDayCustomActivities');
       const list = customActivities[selectedCalendarDayIdx] || [];
-      if (list.length === 0) {
-        container.innerHTML = '';
-        return;
-      }
+      if (list.length === 0) { container.innerHTML = ''; return; }
       container.innerHTML = `
         <p class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider mt-2 mb-1">Logged Custom Sessions</p>
         ${list.map((item, idx) => `
@@ -733,6 +912,7 @@
       }
     }
 
+    // OCR ENGINE
     async function processTrackmanImage(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -808,58 +988,6 @@
           <td class="py-2 px-2 text-[10px] text-emerald-400">${s.source}</td>
         </tr>
       `).join('');
-    }
-
-    function saveRound() {
-      const score = parseInt(document.getElementById('roundScore').value);
-      const gir = parseInt(document.getElementById('roundGir').value);
-      const doubles = parseInt(document.getElementById('roundDoubles').value) || 0;
-
-      if (!score || isNaN(gir)) return alert('Enter score and greens in regulation');
-
-      rounds.push({ score, gir, doubles, date: 'Round ' + (rounds.length + 1) });
-      localStorage.setItem('sb_rounds', JSON.stringify(rounds));
-      initChart();
-      alert('Round saved!');
-    }
-
-    let chartInstance = null;
-    function initChart() {
-      const ctx = document.getElementById('scoringChart').getContext('2d');
-      if (chartInstance) chartInstance.destroy();
-
-      chartInstance = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: rounds.map(r => r.date),
-          datasets: [
-            {
-              label: '18-Hole Score',
-              data: rounds.map(r => r.score),
-              borderColor: '#10b981',
-              backgroundColor: 'rgba(16, 185, 129, 0.15)',
-              tension: 0.3,
-              fill: true
-            },
-            {
-              label: 'GIR (Target: 12)',
-              data: rounds.map(r => r.gir),
-              borderColor: '#38bdf8',
-              borderDash: [5, 5],
-              tension: 0.2
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { labels: { color: '#94a3b8', font: { size: 10 } } } },
-          scales: {
-            x: { ticks: { color: '#64748b' }, grid: { display: false } },
-            y: { ticks: { color: '#64748b' }, grid: { color: '#162e21' } }
-          }
-        }
-      });
     }
 
     window.onload = init;
