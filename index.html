@@ -197,7 +197,7 @@
     <!-- TAB 4: SCORING & GHIN -->
     <div id="tab-scoring" class="tab-pane hidden space-y-3">
       
-      <!-- HERO HANDICAP & PROGRESS CARD -->
+      <!-- HERO HANDICAP CARD -->
       <div class="bg-gradient-to-br from-[#122619] to-[#0d1a12] p-4 rounded-2xl border border-emerald-500/50 shadow-xl">
         <div class="flex justify-between items-start mb-3">
           <div>
@@ -225,7 +225,7 @@
         </div>
       </div>
 
-      <!-- Quick Credentials Settings Accordion -->
+      <!-- Quick Credentials Accordion -->
       <details class="bg-[#122017] rounded-xl border border-emerald-900/40 p-2 text-xs">
         <summary class="text-slate-400 cursor-pointer font-semibold flex justify-between items-center px-1">
           <span><i class="fa-solid fa-key text-emerald-400 mr-1.5"></i> GHIN Login Credentials</span>
@@ -243,7 +243,7 @@
         </div>
       </details>
 
-      <!-- Differential Chart Container with pointer-events-none -->
+      <!-- Differential Chart Container (Pointer events disabled to prevent touch interception) -->
       <div class="bg-[#122017] p-3 rounded-2xl border border-emerald-800/40">
         <div class="flex justify-between items-center mb-2 px-1">
           <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Differential Progression</h3>
@@ -537,13 +537,14 @@
     let activeGymDay = 1;
     let selectedCalendarDayIdx = 0;
 
-    // Databases
     let customActivities = JSON.parse(localStorage.getItem('sb_custom_activities')) || {};
     let ghinConfig = JSON.parse(localStorage.getItem('sb_ghin_config')) || { email: 'evanm2727@gmail.com', password: '', index: '8.1', previousIndex: '8.1' };
     let ghinScores = JSON.parse(localStorage.getItem('sb_ghin_scores')) || [];
 
+    // Pre-loaded realistic club yardages based on bag configuration
     let trackmanShots = JSON.parse(localStorage.getItem('sb_trackman_shots')) || [
       { club: 'Driver', speed: 172.4, carry: 298, smash: 1.49, source: 'Studio Scan' },
+      { club: '3-Wood', speed: 158.0, carry: 262, smash: 1.46, source: 'Studio Scan' },
       { club: '2-Iron', speed: 151.2, carry: 246, smash: 1.44, source: 'Studio Scan' }
     ];
 
@@ -593,12 +594,13 @@
         };
         localStorage.setItem('sb_ghin_config', JSON.stringify(ghinConfig));
 
-        // Exhaustive fallback checks for all possible USGA scores payload locations
+        // Exhaustive fallback extraction across all possible score arrays
         let rawList = [];
-        if (Array.isArray(data.scores)) rawList = data.scores;
-        else if (Array.isArray(data.golfer_scores)) rawList = data.golfer_scores;
-        else if (Array.isArray(data.recent_scores)) rawList = data.recent_scores;
+        if (Array.isArray(data.scores) && data.scores.length > 0) rawList = data.scores;
+        else if (Array.isArray(data.golfer_scores) && data.golfer_scores.length > 0) rawList = data.golfer_scores;
+        else if (Array.isArray(data.recent_scores) && data.recent_scores.length > 0) rawList = data.recent_scores;
         else if (data.golfer && Array.isArray(data.golfer.scores)) rawList = data.golfer.scores;
+        else if (data.user && Array.isArray(data.user.scores)) rawList = data.user.scores;
 
         if (rawList.length > 0) {
           ghinScores = rawList.map(s => {
@@ -620,7 +622,13 @@
         }
 
         renderScoringTab();
-        alert(`GHIN Connected!\nLive Index: ${ghinConfig.index}\n${ghinScores.length} rounds imported.`);
+
+        if (ghinScores.length > 0) {
+          alert(`GHIN Connected!\nLive Index: ${ghinConfig.index}\n${ghinScores.length} rounds imported.`);
+        } else {
+          const debugText = (data.debug && data.debug.length > 0) ? `\n\nEndpoint Diagnostics:\n${data.debug.join('\n')}` : '';
+          alert(`Connected (Index: ${ghinConfig.index})\n0 rounds imported.${debugText}`);
+        }
 
       } catch (err) {
         alert("GHIN Sync Failed: " + err.message);
@@ -637,7 +645,6 @@
       document.getElementById('heroHandicap').innerText = idxNum.toFixed(1);
       document.getElementById('headerHandicapLabel').innerText = `USGA Index: ${idxNum.toFixed(1)} \u2192 0.0 Target`;
 
-      // Delta Badge
       const trendBadge = document.getElementById('handicapTrendBadge');
       const delta = (idxNum - prevNum).toFixed(1);
       if (delta < 0) {
@@ -651,12 +658,11 @@
         trendBadge.innerHTML = `Live`;
       }
 
-      // Scratch Progress Bar (10.0 to 0.0 scale)
+      // Scratch Progress Bar (10.0 to 0.0 baseline)
       const progressPercent = Math.min(100, Math.max(0, ((10.0 - idxNum) / 10.0) * 100));
       document.getElementById('scratchProgressBar').style.width = `${progressPercent}%`;
       document.getElementById('scratchProgressText').innerText = `${idxNum.toFixed(1)} pts to Scratch (0.0)`;
 
-      // Render Ledger List
       const listContainer = document.getElementById('ghinScoresList');
       document.getElementById('scoresCountLabel').innerText = `${ghinScores.length} Rounds Synced`;
 
@@ -726,7 +732,7 @@
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          events: [],
+          events: [], // Completely prevents touch gesture capture so the page scrolls naturally
           plugins: { 
             legend: { display: false },
             tooltip: { enabled: false }
