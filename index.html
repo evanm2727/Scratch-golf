@@ -268,7 +268,7 @@
 
   </main>
 
-  <!-- MODAL: LOG CUSTOM OFF-PLAN ACTIVITY -->
+  <!-- MODAL: LOG CUSTOM ACTIVITY -->
   <div id="customActivityModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-[#122017] border border-emerald-700/60 rounded-2xl p-4 w-full max-w-sm space-y-3 shadow-2xl">
       <div class="flex justify-between items-center">
@@ -329,7 +329,6 @@
   <script>
     const WORKER_ENDPOINT = "https://gentle-glade-d97c.evanm2727.workers.dev";
 
-    // 4-WEEK PROTOCOLS
     const weeklyPrograms = {
       1: {
         title: "Week 1: Ground Reaction & Force Base",
@@ -541,7 +540,6 @@
     let ghinConfig = JSON.parse(localStorage.getItem('sb_ghin_config')) || { email: 'evanm2727@gmail.com', password: '', index: '8.1', previousIndex: '8.1' };
     let ghinScores = JSON.parse(localStorage.getItem('sb_ghin_scores')) || [];
 
-    // Pre-loaded realistic club yardages based on bag configuration
     let trackmanShots = JSON.parse(localStorage.getItem('sb_trackman_shots')) || [
       { club: 'Driver', speed: 172.4, carry: 298, smash: 1.49, source: 'Studio Scan' },
       { club: '3-Wood', speed: 158.0, carry: 262, smash: 1.46, source: 'Studio Scan' },
@@ -594,27 +592,19 @@
         };
         localStorage.setItem('sb_ghin_config', JSON.stringify(ghinConfig));
 
-        // Exhaustive fallback extraction across all possible score arrays
-        let rawList = [];
-        if (Array.isArray(data.scores) && data.scores.length > 0) rawList = data.scores;
-        else if (Array.isArray(data.golfer_scores) && data.golfer_scores.length > 0) rawList = data.golfer_scores;
-        else if (Array.isArray(data.recent_scores) && data.recent_scores.length > 0) rawList = data.recent_scores;
-        else if (data.golfer && Array.isArray(data.golfer.scores)) rawList = data.golfer.scores;
-        else if (data.user && Array.isArray(data.user.scores)) rawList = data.user.scores;
-
-        if (rawList.length > 0) {
-          ghinScores = rawList.map(s => {
-            const rawDiff = s.differential ?? s.score_differential ?? s.diff ?? 0;
-            const numDiff = parseFloat(rawDiff) || 0.0;
-            const playedDate = s.played_at || s.date_played || s.date || '';
+        // Consume cleaned array directly from worker
+        if (Array.isArray(data.scores) && data.scores.length > 0) {
+          ghinScores = data.scores.map(s => {
+            const numDiff = parseFloat(s.differential) || 0.0;
+            const playedDate = s.played_at || '';
 
             return {
-              course: s.course_name || s.facility_name || s.club_name || '18-Hole Round',
-              score: s.adjusted_gross_score || s.gross_score || s.score || '--',
+              course: s.course_name || '18-Hole Round',
+              score: s.score || '--',
               diff: numDiff.toFixed(1),
-              isUsed: Boolean(s.used_for_handicap || s.used || s.is_used),
-              rating: s.course_rating || s.rating || '--',
-              slope: s.slope_rating || s.slope || '--',
+              isUsed: Boolean(s.used),
+              rating: s.course_rating || '--',
+              slope: s.slope_rating || '--',
               date: playedDate ? new Date(playedDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: '2-digit' }) : 'Recent'
             };
           });
@@ -622,13 +612,7 @@
         }
 
         renderScoringTab();
-
-        if (ghinScores.length > 0) {
-          alert(`GHIN Connected!\nLive Index: ${ghinConfig.index}\n${ghinScores.length} rounds imported.`);
-        } else {
-          const debugText = (data.debug && data.debug.length > 0) ? `\n\nEndpoint Diagnostics:\n${data.debug.join('\n')}` : '';
-          alert(`Connected (Index: ${ghinConfig.index})\n0 rounds imported.${debugText}`);
-        }
+        alert(`GHIN Connected!\nLive Index: ${ghinConfig.index}\n${ghinScores.length} rounds imported.`);
 
       } catch (err) {
         alert("GHIN Sync Failed: " + err.message);
@@ -732,7 +716,7 @@
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          events: [], // Completely prevents touch gesture capture so the page scrolls naturally
+          events: [],
           plugins: { 
             legend: { display: false },
             tooltip: { enabled: false }
@@ -745,7 +729,6 @@
       });
     }
 
-    // --- CALENDAR & GYM ---
     function setupRealWeeklyCalendar() {
       const now = new Date();
       const jsDay = now.getDay();
