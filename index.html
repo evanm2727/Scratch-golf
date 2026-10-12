@@ -6,83 +6,26 @@ import {
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
-  Dimensions,
 } from 'react-native';
-import { LineChart } from 'react-native-chart-kit';
-import {
-  Calendar,
-  Dumbbell,
-  Camera,
-  TrendingUp,
-  RefreshCw,
-  Lock,
-} from 'lucide-react-native';
-
-const screenWidth = Dimensions.get('window').width;
-
-interface Round {
-  id: string;
-  date: string;
-  course: string;
-  score: number;
-  differential: number;
-  isCounting: boolean;
-}
 
 export default function ScratchBlueprintApp() {
   const [activeTab, setActiveTab] = useState<'calendar' | 'gym' | 'trackman' | 'ghin'>('ghin');
-  const [rounds, setRounds] = useState<Round[]>([]);
-  const [isSyncing, setIsSyncing] = useState(false);
-
-  // GHIN profile mock state
-  const handicapIndex = '8.0';
-  const targetIndex = '0.0';
-  const userName = 'Evan McCullough';
-  const ghinNumber = '13093434';
-
-  const handleSync = () => {
-    setIsSyncing(true);
-    // Simulating API fetch
-    setTimeout(() => {
-      setRounds([
-        { id: '1', date: '10/04', course: 'Coronado GC', score: 77, differential: 5.4, isCounting: true },
-        { id: '2', date: '09/27', course: 'Torrey Pines South', score: 81, differential: 7.2, isCounting: true },
-        { id: '3', date: '09/18', course: 'Balboa Park', score: 79, differential: 6.8, isCounting: true },
-        { id: '4', date: '09/11', course: 'Coronado GC', score: 84, differential: 10.1, isCounting: false },
-        { id: '5', date: '09/03', course: 'Admiral Baker', score: 78, differential: 6.1, isCounting: true },
-      ]);
-      setIsSyncing(false);
-    }, 800);
-  };
-
-  const chartData = {
-    labels: rounds.length > 0 ? rounds.map((r) => r.date) : [],
-    datasets: [
-      {
-        data: rounds.length > 0 ? rounds.map((r) => r.differential) : [0],
-        color: (opacity = 1) => `rgba(74, 222, 128, ${opacity})`,
-        strokeWidth: 2,
-      },
-    ],
-  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* Top App Header */}
+      {/* Top Header */}
       <View style={styles.topHeader}>
         <View>
           <View style={styles.targetRow}>
             <View style={styles.statusDot} />
-            <Text style={styles.targetLabel}>
-              USGA INDEX: {handicapIndex} → {targetIndex}
-            </Text>
+            <Text style={styles.targetLabel}>USGA INDEX: 8.0 → 0.0</Text>
           </View>
           <Text style={styles.targetSubLabel}>TARGET</Text>
           <Text style={styles.appTitle}>SCRATCH BLUEPRINT</Text>
         </View>
 
         <TouchableOpacity style={styles.weekPill}>
-          <Text style={styles.weekPillText}>Week 1: Force Base</Text>
+          <Text style={styles.weekPillText}>Week 1: Force Base  ▾</Text>
         </TouchableOpacity>
       </View>
 
@@ -90,146 +33,65 @@ export default function ScratchBlueprintApp() {
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
       >
-        {activeTab === 'ghin' && (
-          <>
-            {/* GHIN Summary Card */}
-            <View style={styles.card}>
-              <View style={styles.cardHeader}>
-                <View>
-                  <Text style={styles.cardMetaLabel}>OFFICIAL USGA INDEX</Text>
-                  <View style={styles.indexRow}>
-                    <Text style={styles.indexValue}>{handicapIndex}</Text>
-                    <View style={styles.evenBadge}>
-                      <Text style={styles.evenBadgeText}>Even</Text>
-                    </View>
-                  </View>
-                  <Text style={styles.playerInfo}>
-                    {userName} • GHIN {ghinNumber}
-                  </Text>
+        {/* GHIN Summary Card */}
+        <View style={styles.card}>
+          <View style={styles.cardHeader}>
+            <View>
+              <Text style={styles.cardMetaLabel}>OFFICIAL USGA INDEX</Text>
+              <View style={styles.indexRow}>
+                <Text style={styles.indexValue}>8.0</Text>
+                <View style={styles.evenBadge}>
+                  <Text style={styles.evenBadgeText}>Even</Text>
                 </View>
-
-                <TouchableOpacity
-                  style={styles.syncButton}
-                  onPress={handleSync}
-                  disabled={isSyncing}
-                >
-                  <RefreshCw size={14} color="#FFFFFF" />
-                  <Text style={styles.syncButtonText}>
-                    {isSyncing ? 'Syncing...' : 'Sync'}
-                  </Text>
-                </TouchableOpacity>
               </View>
-
-              <View style={styles.divider} />
-
-              <View style={styles.progressRow}>
-                <Text style={styles.progressLabel}>Road to Scratch</Text>
-                <Text style={styles.progressValue}>8.0 pts to Scratch</Text>
-              </View>
+              <Text style={styles.playerInfo}>
+                Evan McCollough • GHIN 13093434
+              </Text>
             </View>
 
-            {/* Credentials Row */}
-            <TouchableOpacity style={styles.credentialsRow}>
-              <View style={styles.credentialsLeft}>
-                <Lock size={15} color="#4ADE80" />
-                <Text style={styles.credentialsText}>GHIN Login Credentials</Text>
-              </View>
-              <Text style={styles.editAction}>Edit</Text>
+            <TouchableOpacity style={styles.syncButton}>
+              <Text style={styles.syncButtonText}>🔄 Sync</Text>
             </TouchableOpacity>
+          </View>
 
-            {/* Differential Progression Card (Fixed Height & Empty State Guard) */}
-            <View style={styles.card}>
-              <View style={styles.cardHeader}>
-                <Text style={styles.sectionHeaderTitle}>DIFFERENTIAL PROGRESSION</Text>
-                <Text style={styles.goldLegend}>• Gold = Best 8 Counting</Text>
-              </View>
+          <View style={styles.divider} />
 
-              {rounds.length === 0 ? (
-                <View style={styles.chartEmptyContainer}>
-                  <Text style={styles.emptyStateTitle}>No differential records</Text>
-                  <Text style={styles.emptyStateSubtext}>
-                    Tap 'Sync' above to populate your USGA progression chart
-                  </Text>
-                </View>
-              ) : (
-                <View style={styles.chartWrapper}>
-                  <LineChart
-                    data={chartData}
-                    width={screenWidth - 64}
-                    height={210}
-                    yAxisInterval={1}
-                    chartConfig={{
-                      backgroundColor: '#0F1A13',
-                      backgroundGradientFrom: '#0F1A13',
-                      backgroundGradientTo: '#0F1A13',
-                      decimalPlaces: 1,
-                      color: (opacity = 1) => `rgba(74, 222, 128, ${opacity})`,
-                      labelColor: (opacity = 1) => `rgba(160, 174, 192, ${opacity})`,
-                      style: { borderRadius: 8 },
-                      propsForDots: {
-                        r: '4',
-                        strokeWidth: '2',
-                        stroke: '#4ADE80',
-                      },
-                    }}
-                    bezier
-                    style={styles.chartComponent}
-                  />
-                </View>
-              )}
-            </View>
+          <View style={styles.progressRow}>
+            <Text style={styles.progressLabel}>Road to Scratch</Text>
+            <Text style={styles.progressValue}>8.0 pts to Scratch</Text>
+          </View>
+        </View>
 
-            {/* 20-Round Ledger */}
-            <View style={styles.card}>
-              <View style={styles.cardHeader}>
-                <Text style={styles.sectionHeaderTitle}>OFFICIAL 20-ROUND LEDGER</Text>
-                <Text style={styles.roundsSyncedBadge}>
-                  {rounds.length} Rounds Synced
-                </Text>
-              </View>
+        {/* GHIN Credentials Row */}
+        <TouchableOpacity style={styles.credentialsRow}>
+          <Text style={styles.credentialsText}>🔑  GHIN Login Credentials</Text>
+          <Text style={styles.editAction}>Edit</Text>
+        </TouchableOpacity>
 
-              {rounds.length === 0 ? (
-                <View style={styles.ledgerEmptyContainer}>
-                  <Text style={styles.ledgerEmptyText}>
-                    No rounds synced. Tap 'Sync' above to fetch your history.
-                  </Text>
-                </View>
-              ) : (
-                <View style={styles.ledgerList}>
-                  {rounds.map((round) => (
-                    <View key={round.id} style={styles.ledgerRow}>
-                      <View>
-                        <Text style={styles.ledgerCourse}>{round.course}</Text>
-                        <Text style={styles.ledgerDate}>{round.date}</Text>
-                      </View>
-                      <View style={styles.ledgerStats}>
-                        <Text style={styles.ledgerScore}>{round.score}</Text>
-                        <Text
-                          style={[
-                            styles.ledgerDiff,
-                            round.isCounting && styles.ledgerDiffCounting,
-                          ]}
-                        >
-                          Diff: {round.differential}
-                        </Text>
-                      </View>
-                    </View>
-                  ))}
-                </View>
-              )}
-            </View>
-          </>
-        )}
+        {/* Differential Progression Card */}
+        <View style={styles.card}>
+          <View style={styles.cardHeader}>
+            <Text style={styles.sectionHeaderTitle}>DIFFERENTIAL PROGRESSION</Text>
+            <Text style={styles.goldLegend}>• Gold = Best 8 Counting</Text>
+          </View>
+          <View style={styles.chartContainer}>
+            {/* Original unconstrained chart view / canvas */}
+          </View>
+        </View>
 
-        {activeTab !== 'ghin' && (
-          <View style={styles.placeholderContainer}>
-            <Text style={styles.placeholderText}>
-              {activeTab.toUpperCase()} Module Loaded
+        {/* 20-Round Ledger */}
+        <View style={styles.card}>
+          <View style={styles.cardHeader}>
+            <Text style={styles.sectionHeaderTitle}>OFFICIAL 20-ROUND LEDGER</Text>
+            <Text style={styles.roundsSyncedBadge}>0 Rounds Synced</Text>
+          </View>
+          <View style={styles.ledgerEmptyContainer}>
+            <Text style={styles.ledgerEmptyText}>
+              No rounds synced. Tap 'Sync' above to fetch your history.
             </Text>
           </View>
-        )}
+        </View>
       </ScrollView>
 
       {/* Bottom Navigation */}
@@ -238,364 +100,20 @@ export default function ScratchBlueprintApp() {
           style={styles.navItem}
           onPress={() => setActiveTab('calendar')}
         >
-          <Calendar
-            size={20}
-            color={activeTab === 'calendar' ? '#4ADE80' : '#4B5563'}
-          />
-          <Text
-            style={[
-              styles.navLabel,
-              activeTab === 'calendar' && styles.navLabelActive,
-            ]}
-          >
-            Calendar
-          </Text>
+          <Text style={[styles.navIcon, activeTab === 'calendar' && styles.navIconActive]}>📅</Text>
+          <Text style={[styles.navLabel, activeTab === 'calendar' && styles.navLabelActive]}>Calendar</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.navItem}
           onPress={() => setActiveTab('gym')}
         >
-          <Dumbbell
-            size={20}
-            color={activeTab === 'gym' ? '#4ADE80' : '#4B5563'}
-          />
-          <Text
-            style={[styles.navLabel, activeTab === 'gym' && styles.navLabelActive]}
-          >
-            Gym
-          </Text>
+          <Text style={[styles.navIcon, activeTab === 'gym' && styles.navIconActive]}>🏋️</Text>
+          <Text style={[styles.navLabel, activeTab === 'gym' && styles.navLabelActive]}>Gym</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.navItem}
           onPress={() => setActiveTab('trackman')}
         >
-          <Camera
-            size={20}
-            color={activeTab === 'trackman' ? '#4ADE80' : '#4B5563'}
-          />
-          <Text
-            style={[
-              styles.navLabel,
-              activeTab === 'trackman' && styles.navLabelActive,
-            ]}
-          >
-            TrackMan
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.navItem}
-          onPress={() => setActiveTab('ghin')}
-        >
-          <TrendingUp
-            size={20}
-            color={activeTab === 'ghin' ? '#4ADE80' : '#4B5563'}
-          />
-          <Text
-            style={[
-              styles.navLabel,
-              activeTab === 'ghin' && styles.navLabelActive,
-            ]}
-          >
-            GHIN & Scores
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
-  );
-}
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#070D09',
-  },
-  topHeader: {
-    paddingHorizontal: 20,
-    paddingTop: 12,
-    paddingBottom: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    backgroundColor: '#070D09',
-  },
-  targetRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  statusDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#4ADE80',
-  },
-  targetLabel: {
-    color: '#9CA3AF',
-    fontSize: 10,
-    fontWeight: '700',
-    letterSpacing: 0.5,
-  },
-  targetSubLabel: {
-    color: '#6B7280',
-    fontSize: 9,
-    fontWeight: '700',
-    letterSpacing: 0.5,
-    marginTop: 2,
-  },
-  appTitle: {
-    color: '#F9FAFB',
-    fontSize: 18,
-    fontWeight: '900',
-    letterSpacing: 0.5,
-    marginTop: 2,
-  },
-  weekPill: {
-    backgroundColor: '#0F1A13',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#1C2E22',
-  },
-  weekPillText: {
-    color: '#E5E7EB',
-    fontSize: 11,
-    fontWeight: '600',
-  },
-  container: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: 16,
-    paddingBottom: 24,
-    gap: 12,
-  },
-  card: {
-    backgroundColor: '#0E1711',
-    borderRadius: 14,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#17271D',
-  },
-  cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  cardMetaLabel: {
-    color: '#9CA3AF',
-    fontSize: 10,
-    fontWeight: '700',
-    letterSpacing: 0.6,
-  },
-  indexRow: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    gap: 8,
-    marginVertical: 4,
-  },
-  indexValue: {
-    color: '#F9FAFB',
-    fontSize: 32,
-    fontWeight: '800',
-  },
-  evenBadge: {
-    backgroundColor: '#1C2E22',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-  },
-  evenBadgeText: {
-    color: '#9CA3AF',
-    fontSize: 11,
-    fontWeight: '600',
-  },
-  playerInfo: {
-    color: '#6B7280',
-    fontSize: 11,
-  },
-  syncButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: '#1E6B43',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  syncButtonText: {
-    color: '#FFFFFF',
-    fontSize: 12,
-    fontWeight: '700',
-  },
-  divider: {
-    height: 1,
-    backgroundColor: '#17271D',
-    marginVertical: 12,
-  },
-  progressRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  progressLabel: {
-    color: '#9CA3AF',
-    fontSize: 11,
-    fontWeight: '500',
-  },
-  progressValue: {
-    color: '#E5E7EB',
-    fontSize: 11,
-    fontWeight: '600',
-  },
-  credentialsRow: {
-    backgroundColor: '#0E1711',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderWidth: 1,
-    borderColor: '#17271D',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  credentialsLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  credentialsText: {
-    color: '#E5E7EB',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  editAction: {
-    color: '#4ADE80',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  sectionHeaderTitle: {
-    color: '#E5E7EB',
-    fontSize: 11,
-    fontWeight: '800',
-    letterSpacing: 0.6,
-  },
-  goldLegend: {
-    color: '#D4AF37',
-    fontSize: 10,
-    fontWeight: '600',
-  },
-  roundsSyncedBadge: {
-    color: '#6B7280',
-    fontSize: 10,
-    fontWeight: '600',
-  },
-  // Constrained container fixes layout expansion
-  chartWrapper: {
-    height: 210,
-    width: '100%',
-    marginTop: 12,
-    overflow: 'hidden',
-  },
-  chartComponent: {
-    marginVertical: 4,
-    borderRadius: 8,
-  },
-  chartEmptyContainer: {
-    height: 110,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-  },
-  emptyStateTitle: {
-    color: '#9CA3AF',
-    fontSize: 12,
-    fontWeight: '600',
-    marginBottom: 4,
-  },
-  emptyStateSubtext: {
-    color: '#4B5563',
-    fontSize: 11,
-    textAlign: 'center',
-  },
-  ledgerEmptyContainer: {
-    paddingVertical: 20,
-    alignItems: 'center',
-  },
-  ledgerEmptyText: {
-    color: '#4B5563',
-    fontSize: 11,
-    textAlign: 'center',
-  },
-  ledgerList: {
-    marginTop: 12,
-    gap: 10,
-  },
-  ledgerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 6,
-    borderBottomWidth: 1,
-    borderBottomColor: '#17271D',
-  },
-  ledgerCourse: {
-    color: '#F9FAFB',
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  ledgerDate: {
-    color: '#6B7280',
-    fontSize: 11,
-  },
-  ledgerStats: {
-    alignItems: 'flex-end',
-  },
-  ledgerScore: {
-    color: '#F9FAFB',
-    fontSize: 14,
-    fontWeight: '700',
-  },
-  ledgerDiff: {
-    color: '#9CA3AF',
-    fontSize: 11,
-  },
-  ledgerDiffCounting: {
-    color: '#D4AF37',
-    fontWeight: '700',
-  },
-  placeholderContainer: {
-    padding: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  placeholderText: {
-    color: '#6B7280',
-    fontSize: 13,
-  },
-  bottomNav: {
-    flexDirection: 'row',
-    backgroundColor: '#070D09',
-    borderTopWidth: 1,
-    borderTopColor: '#17271D',
-    paddingVertical: 10,
-    paddingBottom: 24,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  navItem: {
-    alignItems: 'center',
-    gap: 4,
-  },
-  navLabel: {
-    color: '#4B5563',
-    fontSize: 10,
-    fontWeight: '600',
-  },
-  navLabelActive: {
-    color: '#4ADE80',
-  },
-});
+          <Text style={[styles.navIcon, activeTab === 'trackman' && styles.navIconActive]}>📷
