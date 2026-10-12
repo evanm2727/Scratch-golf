@@ -243,7 +243,7 @@
         </div>
       </details>
 
-      <!-- Differential Chart Container (Pointer events disabled to prevent touch interception) -->
+      <!-- Differential Chart Container -->
       <div class="bg-[#122017] p-3 rounded-2xl border border-emerald-800/40">
         <div class="flex justify-between items-center mb-2 px-1">
           <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Differential Progression</h3>
@@ -565,7 +565,7 @@
       const password = document.getElementById('ghinPassword').value.trim();
       const btn = document.getElementById('ghinSyncBtn');
 
-      if (!email || !password) return alert("Please enter your GHIN email and password in the credentials section.");
+      if (!email || !password) return alert("Please enter credentials");
 
       btn.disabled = true;
       btn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i>`;
@@ -580,42 +580,15 @@
         const data = await res.json();
         if (data.error) throw new Error(data.error);
 
-        const currentIdx = parseFloat(data.handicapIndex) || 8.1;
-        const prevIdx = parseFloat(ghinConfig.index) || currentIdx;
+        // Targeted diagnostics display to inspect schema
+        const arraysStr = JSON.stringify(data.arraysFound || {});
+        const keysStr = (data.rootKeys || []).join(', ');
+        const sampleKeys = (data.sampleItemKeys || []).join(', ');
 
-        ghinConfig = {
-          email,
-          password,
-          index: currentIdx.toFixed(1),
-          previousIndex: prevIdx.toFixed(1),
-          name: data.golferName || "Evan McCollough"
-        };
-        localStorage.setItem('sb_ghin_config', JSON.stringify(ghinConfig));
-
-        // Consume cleaned array directly from worker
-        if (Array.isArray(data.scores) && data.scores.length > 0) {
-          ghinScores = data.scores.map(s => {
-            const numDiff = parseFloat(s.differential) || 0.0;
-            const playedDate = s.played_at || '';
-
-            return {
-              course: s.course_name || '18-Hole Round',
-              score: s.score || '--',
-              diff: numDiff.toFixed(1),
-              isUsed: Boolean(s.used),
-              rating: s.course_rating || '--',
-              slope: s.slope_rating || '--',
-              date: playedDate ? new Date(playedDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: '2-digit' }) : 'Recent'
-            };
-          });
-          localStorage.setItem('sb_ghin_scores', JSON.stringify(ghinScores));
-        }
-
-        renderScoringTab();
-        alert(`GHIN Connected!\nLive Index: ${ghinConfig.index}\n${ghinScores.length} rounds imported.`);
+        alert(`Arrays in payload:\n${arraysStr}\n\nRoot keys:\n${keysStr}\n\nItem properties:\n${sampleKeys}`);
 
       } catch (err) {
-        alert("GHIN Sync Failed: " + err.message);
+        alert("Sync Failed: " + err.message);
       } finally {
         btn.disabled = false;
         btn.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i> Sync`;
@@ -651,7 +624,7 @@
       document.getElementById('scoresCountLabel').innerText = `${ghinScores.length} Rounds Synced`;
 
       if (ghinScores.length === 0) {
-        listContainer.innerHTML = `<p class="text-xs text-slate-500 py-3 text-center">No rounds synced yet. Tap 'Sync' above to fetch your official USGA rounds.</p>`;
+        listContainer.innerHTML = `<p class="text-xs text-slate-500 py-3 text-center">No rounds synced yet. Tap 'Sync' above to inspect payload keys.</p>`;
       } else {
         listContainer.innerHTML = ghinScores.map(s => `
           <div class="bg-[#0e1811] p-3 rounded-xl border ${s.isUsed ? 'border-amber-500/40 bg-gradient-to-r from-[#142316] to-[#0e1811]' : 'border-emerald-950'} flex justify-between items-center shadow-sm">
