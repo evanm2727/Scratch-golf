@@ -68,7 +68,7 @@
     </div>
   </header>
 
-  <!-- Main Scrollable App Container -->
+  <!-- Main Scrollable Container -->
   <main class="flex-1 overflow-y-auto px-4 py-3 max-w-lg mx-auto w-full custom-scrollbar pb-32 relative z-10">
 
     <!-- TAB 1: SCHEDULE -->
@@ -105,15 +105,15 @@
         </div>
       </div>
 
-      <!-- Detail Card For Active Day -->
+      <!-- Detail Card for Active Day -->
       <div id="activeDayDetailContainer"></div>
       
       <!-- Custom Logs -->
       <div id="selectedDayCustomActivities" class="space-y-2"></div>
 
-      <!-- Full Week Protocol Reference List (Always Visible) -->
+      <!-- Protocol Reference -->
       <div class="pt-2">
-        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Protocol Reference (Tap to inspect)</p>
+        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Protocol Reference (Tap day to inspect)</p>
         <div id="allDaysContainer" class="space-y-2"></div>
       </div>
     </div>
@@ -473,7 +473,7 @@
     </div>
   </div>
 
-  <!-- Bottom Navigation Bar (z-[99999] pointer-events-auto) -->
+  <!-- Bottom Navigation Bar -->
   <nav id="bottom-nav" class="bg-[#0d1811]/98 border-t border-emerald-950 px-6 pt-2 safe-bottom-nav flex justify-between items-center max-w-lg mx-auto">
     <button type="button" onclick="showTab('schedule')" class="nav-btn flex flex-col items-center text-emerald-400 cursor-pointer py-1 px-3" data-tab="schedule">
       <i class="fa-solid fa-calendar-week text-lg pointer-events-none"></i>
@@ -1187,22 +1187,6 @@
       { club: 'PW', speed: 108.5, carry: 142, smash: 1.37 }
     ];
 
-    function init() {
-      setupRealWeeklyCalendar();
-      switchWeek(1);
-      switchGymSession(1);
-      renderWedgeMatrix();
-      renderBagGapping();
-      renderTrackmanTable();
-      renderScoringTab();
-
-      const now = Date.now();
-      const twelveHours = 12 * 60 * 60 * 1000;
-      if (ghinConfig.email && ghinConfig.password && (now - (ghinConfig.lastSync || 0) > twelveHours)) {
-        syncGhinData(false);
-      }
-    }
-
     function showTab(tabId) {
       document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
       document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -1599,15 +1583,30 @@
         localStorage.setItem('sb_ghin_config', JSON.stringify(ghinConfig));
 
         if (Array.isArray(data.scores) && data.scores.length > 0) {
-          ghinScores = data.scores.map(s => ({
-            course: s.course_name || '18-Hole Round',
-            score: s.score || '--',
-            diff: parseFloat(s.differential || 0).toFixed(1),
-            isUsed: Boolean(s.used),
-            rating: s.course_rating || '--',
-            slope: s.slope_rating || '--',
-            date: s.played_at ? new Date(s.played_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: '2-digit' }) : 'Recent'
-          }));
+          ghinScores = data.scores.map(s => {
+            let courseName = s.course_name || '18-Hole Round';
+            const rating = parseFloat(s.course_rating || 0);
+            const slope = parseFloat(s.slope_rating || 0);
+
+            // Client-side fallback to disambiguate local San Diego courses
+            if (courseName.trim().toUpperCase() === "NORTH") {
+              if (Math.abs(rating - 71.5) < 0.2 && Math.abs(slope - 125) < 2) {
+                courseName = "Torrey Pines (North)";
+              } else if (Math.abs(rating - 73.0) < 0.2 && Math.abs(slope - 127) < 2) {
+                courseName = "Admiral Baker (North)";
+              }
+            }
+
+            return {
+              course: courseName,
+              score: s.score || '--',
+              diff: parseFloat(s.differential || 0).toFixed(1),
+              isUsed: Boolean(s.used),
+              rating: s.course_rating || '--',
+              slope: s.slope_rating || '--',
+              date: s.played_at ? new Date(s.played_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: '2-digit' }) : 'Recent'
+            };
+          });
           localStorage.setItem('sb_ghin_scores', JSON.stringify(ghinScores));
         }
 
@@ -1705,6 +1704,22 @@
           }
         }
       });
+    }
+
+    function init() {
+      setupRealWeeklyCalendar();
+      switchWeek(1);
+      switchGymSession(1);
+      renderWedgeMatrix();
+      renderBagGapping();
+      renderTrackmanTable();
+      renderScoringTab();
+
+      const now = Date.now();
+      const twelveHours = 12 * 60 * 60 * 1000;
+      if (ghinConfig.email && ghinConfig.password && (now - (ghinConfig.lastSync || 0) > twelveHours)) {
+        syncGhinData(false);
+      }
     }
 
     window.onload = function() {
