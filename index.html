@@ -6,9 +6,6 @@
   <title>Scratch Blueprint | Golf & GHIN</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Scratch Golf">
-  <meta name="theme-color" content="#0b130e">
-  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2964/2964514.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
@@ -20,11 +17,10 @@
       color: #f1f5f9;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
       -webkit-tap-highlight-color: transparent;
-      overscroll-behavior-y: none;
       user-select: none;
     }
     .safe-top { padding-top: max(env(safe-area-inset-top), 16px); }
-    .safe-bottom-nav { padding-bottom: max(env(safe-area-inset-bottom), 18px); }
+    .safe-bottom-nav { padding-bottom: max(env(safe-area-inset-bottom), 16px); }
     .custom-scrollbar::-webkit-scrollbar { display: none; }
     .custom-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
@@ -53,31 +49,21 @@
   </header>
 
   <!-- Main Scrollable App Container -->
-  <main class="flex-1 overflow-y-auto px-4 py-3 max-w-lg mx-auto w-full custom-scrollbar pb-28">
+  <main class="flex-1 overflow-y-auto px-4 py-3 max-w-lg mx-auto w-full custom-scrollbar pb-32">
 
-    <!-- TAB 1: SCHEDULE WITH PRIOR DATE NAVIGATION -->
+    <!-- TAB 1: SCHEDULE -->
     <div id="tab-schedule" class="tab-pane space-y-3">
       <div class="bg-[#101e14] p-3 rounded-2xl border border-emerald-800/40 shadow">
         <div class="flex justify-between items-center mb-2 px-1">
-          <div class="flex items-center gap-2">
-            <button onclick="changeWeekOffset(-1)" class="w-6 h-6 rounded-lg bg-[#15251a] hover:bg-[#1c3324] text-emerald-300 border border-emerald-800/40 flex items-center justify-center text-xs">
-              <i class="fa-solid fa-chevron-left"></i>
-            </button>
-            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300" id="currentCalendarMonth">Week Schedule</h2>
-            <button onclick="changeWeekOffset(1)" class="w-6 h-6 rounded-lg bg-[#15251a] hover:bg-[#1c3324] text-emerald-300 border border-emerald-800/40 flex items-center justify-center text-xs">
-              <i class="fa-solid fa-chevron-right"></i>
-            </button>
-          </div>
-          <button onclick="jumpToCurrentWeek()" class="text-[10px] text-emerald-400 font-bold bg-[#15251a] px-2 py-0.5 rounded border border-emerald-800/40">
-            Today
-          </button>
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300" id="currentCalendarMonth">Week Schedule</h2>
+          <span class="text-[10px] text-emerald-400 font-semibold" id="activeDayIndicator">Tap a day to view</span>
         </div>
         <div class="grid grid-cols-7 gap-1" id="calendarDaysRow"></div>
       </div>
 
       <div class="bg-gradient-to-r from-emerald-950 to-emerald-900/60 p-3.5 rounded-2xl border border-emerald-800/50 flex justify-between items-center">
         <div>
-          <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider" id="selectedDayName">Selected Protocol</span>
+          <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider" id="selectedDayName">Today's Protocol</span>
           <h3 class="text-sm font-black text-white" id="selectedDayType">Gym Lift 1</h3>
         </div>
         <div class="flex items-center gap-1.5">
@@ -102,9 +88,9 @@
       <div class="flex justify-between items-center">
         <div>
           <h2 class="text-sm font-bold text-white flex items-center gap-1.5">
-            <i class="fa-solid fa-dumbbell text-emerald-400"></i> 45-60 Min Strength Split
+            <i class="fa-solid fa-dumbbell text-emerald-400"></i> Strength Split
           </h2>
-          <p class="text-[11px] text-slate-400">Rotational power & deceleration</p>
+          <p class="text-[11px] text-slate-400">Rotational power & stability</p>
         </div>
         <div class="flex gap-1 bg-[#122017] p-1 rounded-lg border border-emerald-900/60 text-xs">
           <button onclick="switchGymSession(1)" id="gymBtn1" class="px-2 py-0.5 rounded font-bold text-white bg-emerald-700">D1</button>
@@ -115,7 +101,7 @@
 
       <div class="bg-[#122017] p-3 rounded-xl border border-emerald-800/40">
         <div class="flex justify-between items-center">
-          <h3 class="text-xs font-bold text-emerald-300" id="gymWorkoutTitle">Day 1: Ground Force Base</h3>
+          <h3 class="text-xs font-bold text-emerald-300" id="gymWorkoutTitle">Day 1</h3>
           <span class="text-[10px] text-slate-400 font-semibold">50 mins</span>
         </div>
         <p class="text-[11px] text-slate-400 mt-0.5" id="gymWorkoutFocus"></p>
@@ -124,167 +110,102 @@
       <div id="gymExerciseList" class="space-y-2.5"></div>
     </div>
 
-    <!-- TAB 3: TRACKMAN & BAG GAPPING & WEDGE MATRIX -->
+    <!-- TAB 3: TRACKMAN OCR SCANNER -->
     <div id="tab-trackman" class="tab-pane hidden space-y-3">
-      
-      <!-- SUB-NAVIGATION: SCANNER / BAG GAPPING / WEDGE MATRIX -->
-      <div class="flex bg-[#122017] p-1 rounded-xl border border-emerald-900/60 text-xs">
-        <button onclick="switchTrackmanSubTab('scanner')" id="tmSubBtn-scanner" class="flex-1 py-1.5 rounded-lg font-bold text-white bg-emerald-700">OCR Scanner</button>
-        <button onclick="switchTrackmanSubTab('gapping')" id="tmSubBtn-gapping" class="flex-1 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white">Bag Gapping</button>
-        <button onclick="switchTrackmanSubTab('wedge')" id="tmSubBtn-wedge" class="flex-1 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white">Wedge Matrix</button>
-      </div>
+      <div class="bg-[#122017] p-4 rounded-2xl border border-emerald-500/40">
+        <div class="flex justify-between items-center mb-1">
+          <h2 class="text-sm font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-camera text-emerald-400"></i> TrackMan Reader
+          </h2>
+          <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/40 font-bold">OCR</span>
+        </div>
+        <p class="text-[11px] text-slate-300 mb-3">Snap monitor tiles or upload photo.</p>
 
-      <!-- SUBVIEW 1: SCANNER -->
-      <div id="tmSubView-scanner" class="space-y-3">
-        <div class="bg-[#122017] p-4 rounded-2xl border border-emerald-500/40">
-          <div class="flex justify-between items-center mb-1">
-            <h2 class="text-sm font-bold text-white flex items-center gap-2">
-              <i class="fa-solid fa-camera text-emerald-400"></i> TrackMan Screen Reader
-            </h2>
-            <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/40 font-bold">OCR</span>
-          </div>
-          <p class="text-[11px] text-slate-300 mb-3">Snap monitor tile readout at Studio or select screenshot.</p>
+        <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="processTrackmanImage(event)">
+        <input type="file" id="galleryInput" accept="image/*" class="hidden" onchange="processTrackmanImage(event)">
 
-          <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="processTrackmanImage(event)">
-          <input type="file" id="galleryInput" accept="image/*" class="hidden" onchange="processTrackmanImage(event)">
-
-          <div class="grid grid-cols-2 gap-2">
-            <button onclick="document.getElementById('cameraInput').click()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 shadow">
-              <i class="fa-solid fa-camera"></i> Camera
-            </button>
-            <button onclick="document.getElementById('galleryInput').click()" class="bg-[#1b3425] hover:bg-[#234531] text-emerald-300 font-bold text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 border border-emerald-700/50">
-              <i class="fa-solid fa-images"></i> Photos
-            </button>
-          </div>
-
-          <div id="ocrStatus" class="hidden mt-3 p-3 rounded-xl bg-[#0b160f] border border-emerald-800/40 text-center">
-            <div class="inline-block animate-spin text-emerald-400 text-base mb-1"><i class="fa-solid fa-circle-notch"></i></div>
-            <p class="text-xs text-slate-300 font-medium">Scanning monitor tiles...</p>
-          </div>
-
-          <div id="ocrResultForm" class="hidden mt-3 pt-3 border-t border-emerald-900/60">
-            <p class="text-[11px] font-bold text-emerald-400 mb-2">Review Scanned Metrics:</p>
-            <div class="grid grid-cols-4 gap-2 mb-2 text-xs">
-              <div>
-                <label class="text-[10px] text-slate-400">Club</label>
-                <select id="parsedClub" class="w-full bg-[#17271e] rounded p-1.5 border border-emerald-800/40 text-white text-xs">
-                  <option value="Driver">Driver</option>
-                  <option value="3-Wood">3-Wood</option>
-                  <option value="2-Iron">2-Iron</option>
-                  <option value="4-Iron">4-Iron</option>
-                  <option value="6-Iron">6-Iron</option>
-                  <option value="8-Iron">8-Iron</option>
-                  <option value="PW">PW</option>
-                  <option value="50°">50°</option>
-                  <option value="54°">54°</option>
-                  <option value="58°">58°</option>
-                </select>
-              </div>
-              <div>
-                <label class="text-[10px] text-slate-400">Ball Spd</label>
-                <input type="number" step="0.1" id="parsedSpeed" class="w-full bg-[#17271e] rounded p-1.5 border border-emerald-800/40 text-emerald-300 font-bold text-xs">
-              </div>
-              <div>
-                <label class="text-[10px] text-slate-400">Carry</label>
-                <input type="number" id="parsedCarry" class="w-full bg-[#17271e] rounded p-1.5 border border-emerald-800/40 text-slate-200 text-xs">
-              </div>
-              <div>
-                <label class="text-[10px] text-slate-400">Smash</label>
-                <input type="number" step="0.01" id="parsedSmash" class="w-full bg-[#17271e] rounded p-1.5 border border-emerald-800/40 text-slate-200 text-xs">
-              </div>
-            </div>
-            <button onclick="confirmParsedShot()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2 rounded-xl">
-              Save to Bag History
-            </button>
-          </div>
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="document.getElementById('cameraInput').click()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 shadow">
+            <i class="fa-solid fa-camera"></i> Camera
+          </button>
+          <button onclick="document.getElementById('galleryInput').click()" class="bg-[#1b3425] hover:bg-[#234531] text-emerald-300 font-bold text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 border border-emerald-700/50">
+            <i class="fa-solid fa-images"></i> Photos
+          </button>
         </div>
 
-        <div class="bg-[#122017] p-3 rounded-2xl border border-emerald-800/40">
-          <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">TrackMan History</h3>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs text-slate-300">
-              <thead class="text-[10px] text-emerald-400 uppercase bg-[#0d1711] border-b border-emerald-900/60">
-                <tr>
-                  <th class="py-1.5 px-2">Club</th>
-                  <th class="py-1.5 px-2">Ball Spd</th>
-                  <th class="py-1.5 px-2">Carry</th>
-                  <th class="py-1.5 px-2">Smash</th>
-                  <th class="py-1.5 px-2">Source</th>
-                </tr>
-              </thead>
-              <tbody id="trackmanShotsTable"></tbody>
-            </table>
-          </div>
+        <div id="ocrStatus" class="hidden mt-3 p-3 rounded-xl bg-[#0b160f] border border-emerald-800/40 text-center">
+          <div class="inline-block animate-spin text-emerald-400 text-base mb-1"><i class="fa-solid fa-circle-notch"></i></div>
+          <p class="text-xs text-slate-300 font-medium">Reading metrics...</p>
         </div>
-      </div>
 
-      <!-- SUBVIEW 2: BAG GAPPING CALCULATOR -->
-      <div id="tmSubView-gapping" class="hidden space-y-3">
-        <div class="bg-[#122017] p-3.5 rounded-2xl border border-emerald-800/40">
-          <div class="flex justify-between items-center mb-2">
+        <div id="ocrResultForm" class="hidden mt-3 pt-3 border-t border-emerald-900/60">
+          <div class="grid grid-cols-4 gap-2 mb-2 text-xs">
             <div>
-              <h3 class="text-xs font-bold text-white uppercase tracking-wider">Bag Gapping & Dispersion</h3>
-              <p class="text-[10px] text-slate-400">Averages calculated from logged launch monitor data</p>
+              <label class="text-[10px] text-slate-400">Club</label>
+              <select id="parsedClub" class="w-full bg-[#17271e] rounded p-1.5 border border-emerald-800/40 text-white text-xs">
+                <option value="Driver">Driver</option>
+                <option value="3-Wood">3-Wood</option>
+                <option value="2-Iron">2-Iron</option>
+                <option value="4-Iron">4-Iron</option>
+                <option value="6-Iron">6-Iron</option>
+                <option value="8-Iron">8-Iron</option>
+                <option value="PW">PW</option>
+              </select>
             </div>
-            <button onclick="openManualShotModal()" class="text-[10px] bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-2 py-1 rounded-lg">
-              + Log Shot
-            </button>
-          </div>
-          <div class="space-y-2" id="bagGappingList"></div>
-        </div>
-      </div>
-
-      <!-- SUBVIEW 3: WEDGE MATRIX (CLOCK SYSTEM) -->
-      <div id="tmSubView-wedge" class="hidden space-y-3">
-        <div class="bg-[#122017] p-3.5 rounded-2xl border border-emerald-800/40">
-          <div class="flex justify-between items-center mb-2">
             <div>
-              <h3 class="text-xs font-bold text-white uppercase tracking-wider">Scoring Wedge Matrix</h3>
-              <p class="text-[10px] text-slate-400">Carry yards for 50°, 54°, 58° wedges (Clock System)</p>
+              <label class="text-[10px] text-slate-400">Ball Spd</label>
+              <input type="number" step="0.1" id="parsedSpeed" class="w-full bg-[#17271e] rounded p-1.5 border border-emerald-800/40 text-emerald-300 font-bold text-xs">
             </div>
-            <button onclick="saveWedgeMatrix()" class="text-[10px] bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-2.5 py-1 rounded-lg">
-              Save
-            </button>
+            <div>
+              <label class="text-[10px] text-slate-400">Carry</label>
+              <input type="number" id="parsedCarry" class="w-full bg-[#17271e] rounded p-1.5 border border-emerald-800/40 text-slate-200 text-xs">
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-400">Smash</label>
+              <input type="number" step="0.01" id="parsedSmash" class="w-full bg-[#17271e] rounded p-1.5 border border-emerald-800/40 text-slate-200 text-xs">
+            </div>
           </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs">
-              <thead class="text-[10px] text-emerald-400 uppercase bg-[#0a150e]">
-                <tr>
-                  <th class="p-2">Wedge</th>
-                  <th class="p-2 text-center">1/2 Swing (9:00)</th>
-                  <th class="p-2 text-center">3/4 Swing (10:30)</th>
-                  <th class="p-2 text-center">Full Swing</th>
-                </tr>
-              </thead>
-              <tbody id="wedgeMatrixBody" class="divide-y divide-emerald-950/60"></tbody>
-            </table>
-          </div>
+          <button onclick="confirmParsedShot()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2 rounded-xl">
+            Save Shot
+          </button>
         </div>
       </div>
 
+      <div class="bg-[#122017] p-3 rounded-2xl border border-emerald-800/40">
+        <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">TrackMan History</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="text-[10px] text-emerald-400 uppercase bg-[#0d1711] border-b border-emerald-900/60">
+              <tr>
+                <th class="py-1.5 px-2">Club</th>
+                <th class="py-1.5 px-2">Ball Spd</th>
+                <th class="py-1.5 px-2">Carry</th>
+                <th class="py-1.5 px-2">Smash</th>
+              </tr>
+            </thead>
+            <tbody id="trackmanShotsTable"></tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
     <!-- TAB 4: SCORING & GHIN -->
     <div id="tab-scoring" class="tab-pane hidden space-y-3">
-      
-      <!-- HERO HANDICAP CARD WITH AUTO-SYNC TIMESTAMP -->
       <div class="bg-gradient-to-br from-[#122619] to-[#0d1a12] p-4 rounded-2xl border border-emerald-500/50 shadow-xl">
         <div class="flex justify-between items-start mb-3">
           <div>
             <span class="text-[10px] font-black uppercase tracking-wider text-emerald-400">Official USGA Index</span>
             <div class="flex items-baseline gap-2 mt-0.5">
               <span class="text-4xl font-black text-white tracking-tight" id="heroHandicap">8.1</span>
-              <span class="text-xs font-bold px-2 py-0.5 rounded-full" id="handicapTrendBadge">Live</span>
+              <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300" id="handicapTrendBadge">Live</span>
             </div>
-            <p class="text-[11px] text-slate-400 mt-1" id="golferNameLabel">Evan McCollough &bull; GHIN 13093434</p>
-            <p class="text-[9px] text-emerald-500/80 mt-0.5" id="autoSyncLabel">Last Synced: Just now</p>
+            <p class="text-[11px] text-slate-400 mt-1">Evan McCollough &bull; GHIN 13093434</p>
           </div>
-          <button onclick="syncGhinData(true)" id="ghinSyncBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3 py-2 rounded-xl flex items-center gap-1.5 shadow">
+          <button onclick="syncGhinData()" id="ghinSyncBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3 py-2 rounded-xl flex items-center gap-1.5 shadow">
             <i class="fa-solid fa-arrows-rotate"></i> Sync
           </button>
         </div>
 
-        <!-- Road to Scratch Progress Bar -->
         <div class="space-y-1 pt-2 border-t border-emerald-900/50">
           <div class="flex justify-between text-[10px] font-semibold text-slate-300">
             <span>Road to Scratch</span>
@@ -296,30 +217,6 @@
         </div>
       </div>
 
-      <!-- COUNTING SCORES IMPACT SIMULATOR -->
-      <div class="bg-[#122017] p-3 rounded-2xl border border-emerald-800/40">
-        <div class="flex justify-between items-center mb-1.5">
-          <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-            <i class="fa-solid fa-calculator text-amber-400"></i> Next Round Handicap Target
-          </h3>
-          <span class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.2 rounded font-bold">WHS Engine</span>
-        </div>
-        <p class="text-[11px] text-slate-300" id="simulatorSummaryText">
-          Loading counting score threshold...
-        </p>
-        <div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-emerald-950 text-xs">
-          <div class="bg-[#0b160f] p-2 rounded-lg">
-            <span class="text-[10px] text-slate-400 block">8th Counting Diff</span>
-            <span class="font-black text-amber-400" id="eighthDiffLabel">--</span>
-          </div>
-          <div class="bg-[#0b160f] p-2 rounded-lg">
-            <span class="text-[10px] text-slate-400 block">Diff to Drop Index</span>
-            <span class="font-black text-emerald-400" id="targetDiffLabel">&le; --</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quick Credentials Accordion -->
       <details class="bg-[#122017] rounded-xl border border-emerald-900/40 p-2 text-xs">
         <summary class="text-slate-400 cursor-pointer font-semibold flex justify-between items-center px-1">
           <span><i class="fa-solid fa-key text-emerald-400 mr-1.5"></i> GHIN Login Credentials</span>
@@ -337,7 +234,6 @@
         </div>
       </details>
 
-      <!-- Differential Chart Container -->
       <div class="bg-[#122017] p-3 rounded-2xl border border-emerald-800/40">
         <div class="flex justify-between items-center mb-2 px-1">
           <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Differential Progression</h3>
@@ -348,7 +244,6 @@
         </div>
       </div>
 
-      <!-- Recent 20 Official Rounds List -->
       <div class="bg-[#122017] p-3 rounded-2xl border border-emerald-800/40">
         <div class="flex justify-between items-center mb-2 px-1">
           <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Official 20-Round Ledger</h3>
@@ -360,30 +255,23 @@
 
   </main>
 
-  <!-- MODAL: LOG CUSTOM ACTIVITY WITH DATE SELECTOR (FOR PRIOR DATES) -->
+  <!-- MODAL: CUSTOM ACTIVITY -->
   <div id="customActivityModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-[#122017] border border-emerald-700/60 rounded-2xl p-4 w-full max-w-sm space-y-3 shadow-2xl">
       <div class="flex justify-between items-center">
-        <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-          <i class="fa-solid fa-pen-to-square text-emerald-400"></i> Log Activity (Any Date)
-        </h3>
+        <h3 class="text-xs font-bold text-white uppercase tracking-wider">Log Activity</h3>
         <button onclick="closeCustomActivityModal()" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div>
-        <label class="text-[10px] text-slate-400 block mb-1">Date</label>
-        <input type="date" id="customDateInput" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/50 text-white">
-      </div>
-      <div>
         <label class="text-[10px] text-slate-400 block mb-1">Activity Name</label>
-        <input type="text" id="customTitle" placeholder="e.g. 9-Hole Twilight, Speed Session" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/50 text-white">
+        <input type="text" id="customTitle" placeholder="e.g. 9-Hole Twilight" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/50 text-white">
       </div>
       <div class="grid grid-cols-2 gap-2">
         <div>
           <label class="text-[10px] text-slate-400 block mb-1">Category</label>
           <select id="customType" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/50 text-white">
-            <option value="Golf">Golf Round</option>
-            <option value="Sim">Simulator Combine</option>
-            <option value="Gym">Gym / Lift</option>
+            <option value="Golf">Golf</option>
+            <option value="Gym">Gym</option>
             <option value="Cardio">Cardio</option>
             <option value="Recovery">Recovery</option>
           </select>
@@ -393,78 +281,29 @@
           <input type="text" id="customDuration" placeholder="45 min" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/50 text-white">
         </div>
       </div>
-      <div>
-        <label class="text-[10px] text-slate-400 block mb-1">Notes</label>
-        <textarea id="customNotes" rows="2" placeholder="Feelings, contact quality, fairway hits..." class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/50 text-white"></textarea>
-      </div>
       <button onclick="saveCustomActivity()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow">
-        Save Activity
+        Save
       </button>
     </div>
   </div>
 
-  <!-- MODAL: MANUAL SHOT ENTRY FOR BAG GAPPING -->
-  <div id="manualShotModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-[#122017] border border-emerald-700/60 rounded-2xl p-4 w-full max-w-sm space-y-3 shadow-2xl">
-      <div class="flex justify-between items-center">
-        <h3 class="text-xs font-bold text-white uppercase tracking-wider">Log Manual TrackMan Shot</h3>
-        <button onclick="document.getElementById('manualShotModal').classList.add('hidden')" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="grid grid-cols-2 gap-2 text-xs">
-        <div>
-          <label class="text-[10px] text-slate-400 block mb-1">Club</label>
-          <select id="manClub" class="w-full bg-[#17271e] rounded p-2 border border-emerald-800/50 text-white">
-            <option value="Driver">Driver</option>
-            <option value="3-Wood">3-Wood</option>
-            <option value="2-Iron">2-Iron</option>
-            <option value="4-Iron">4-Iron</option>
-            <option value="5-Iron">5-Iron</option>
-            <option value="6-Iron">6-Iron</option>
-            <option value="7-Iron">7-Iron</option>
-            <option value="8-Iron">8-Iron</option>
-            <option value="9-Iron">9-Iron</option>
-            <option value="PW">PW</option>
-            <option value="50°">50°</option>
-            <option value="54°">54°</option>
-            <option value="58°">58°</option>
-          </select>
-        </div>
-        <div>
-          <label class="text-[10px] text-slate-400 block mb-1">Carry (yds)</label>
-          <input type="number" id="manCarry" placeholder="245" class="w-full bg-[#17271e] rounded p-2 border border-emerald-800/50 text-white">
-        </div>
-        <div>
-          <label class="text-[10px] text-slate-400 block mb-1">Ball Speed</label>
-          <input type="number" step="0.1" id="manSpeed" placeholder="151.2" class="w-full bg-[#17271e] rounded p-2 border border-emerald-800/50 text-white">
-        </div>
-        <div>
-          <label class="text-[10px] text-slate-400 block mb-1">Smash</label>
-          <input type="number" step="0.01" id="manSmash" placeholder="1.45" class="w-full bg-[#17271e] rounded p-2 border border-emerald-800/50 text-white">
-        </div>
-      </div>
-      <button onclick="saveManualShot()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2 rounded-xl">
-        Add Shot
-      </button>
-    </div>
-  </div>
-
-  <!-- iOS Bottom Navigation Bar -->
-  <nav class="fixed bottom-0 left-0 right-0 bg-[#0d1811]/98 border-t border-emerald-950 px-6 pt-2 safe-bottom-nav z-50 flex justify-between items-center max-w-lg mx-auto">
-    <button onclick="showTab('schedule')" class="nav-btn flex flex-col items-center text-emerald-400" data-tab="schedule">
-      <i class="fa-solid fa-calendar-week text-lg"></i>
-      <span class="text-[10px] font-semibold mt-1">Calendar</span>
+  <!-- Bottom Navigation Bar (z-index 9999 & explicit touch targeting) -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-[#0d1811]/98 border-t border-emerald-950 px-6 pt-2 safe-bottom-nav z-[9999] flex justify-between items-center max-w-lg mx-auto pointer-events-auto">
+    <button type="button" onclick="showTab('schedule')" class="nav-btn flex flex-col items-center text-emerald-400 cursor-pointer py-1 px-3" data-tab="schedule">
+      <i class="fa-solid fa-calendar-week text-lg pointer-events-none"></i>
+      <span class="text-[10px] font-semibold mt-1 pointer-events-none">Calendar</span>
     </button>
-    <button onclick="showTab('gym')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-emerald-300" data-tab="gym">
-      <i class="fa-solid fa-dumbbell text-lg"></i>
-      <span class="text-[10px] font-semibold mt-1">Gym</span>
+    <button type="button" onclick="showTab('gym')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-emerald-300 cursor-pointer py-1 px-3" data-tab="gym">
+      <i class="fa-solid fa-dumbbell text-lg pointer-events-none"></i>
+      <span class="text-[10px] font-semibold mt-1 pointer-events-none">Gym</span>
     </button>
-    <button onclick="showTab('trackman')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-emerald-300" data-tab="trackman">
-      <i class="fa-solid fa-crosshairs text-lg"></i>
-      <span class="text-[10px] font-semibold mt-1">TrackMan</span>
+    <button type="button" onclick="showTab('trackman')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-emerald-300 cursor-pointer py-1 px-3" data-tab="trackman">
+      <i class="fa-solid fa-camera text-lg pointer-events-none"></i>
+      <span class="text-[10px] font-semibold mt-1 pointer-events-none">TrackMan</span>
     </button>
-    <button onclick="showTab('scoring')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-emerald-300" data-tab="scoring">
-      <i class="fa-solid fa-chart-line text-lg"></i>
-      <span class="text-[10px] font-semibold mt-1">GHIN & Scores</span>
+    <button type="button" onclick="showTab('scoring')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-emerald-300 cursor-pointer py-1 px-3" data-tab="scoring">
+      <i class="fa-solid fa-chart-line text-lg pointer-events-none"></i>
+      <span class="text-[10px] font-semibold mt-1 pointer-events-none">GHIN & Scores</span>
     </button>
   </nav>
 
@@ -473,201 +312,40 @@
 
     const weeklyPrograms = {
       1: {
-        title: "Week 1: Ground Reaction & Force Base",
+        title: "Week 1: Force Base",
         schedule: [
-          { day: "Mon", dayFull: "Monday", type: "Gym Lift 1", badge: "GYM", focus: "Ground Reaction: Trap Bar Deadlifts + MB Scoop Slams", time: "50 min" },
-          { day: "Tue", dayFull: "Tuesday", type: "Studio Sim Combine 1", badge: "SIM", focus: "Driver Peak Ball Speed test + 60-105yd Clock Wedge matrix", time: "60 min" },
-          { day: "Wed", dayFull: "Wednesday", type: "Gym Lift 2", badge: "GYM", focus: "Torso Deceleration & Rotary Strength: Landmine + Cable Chops", time: "55 min" },
-          { day: "Thu", dayFull: "Thursday", type: "Studio Sim Combine 2", badge: "SIM", focus: "2-Iron Stinger corridor dispersion + Long Iron Proximity", time: "60 min" },
-          { day: "Fri", dayFull: "Friday", type: "Gym Lift 3", badge: "GYM", focus: "Full-Body Explosive Power: Jump Shrugs + Single-Leg RDLs", time: "50 min" },
-          { day: "Sat", dayFull: "Saturday", type: "18-Hole Course Round", badge: "PLAY", focus: "Course Management: Zero double bogeys, 66% GIR target", time: "4.5 hrs" },
-          { day: "Sun", dayFull: "Sunday", type: "Active Recovery & Putting", badge: "RECOVER", focus: "Thoracic spine mobility, hip opening, 8-foot string putting", time: "30 min" }
+          { day: "Mon", dayFull: "Monday", type: "Gym Lift 1", badge: "GYM", focus: "Trap Bar Deadlifts + MB Scoop Slams", time: "50 min" },
+          { day: "Tue", dayFull: "Tuesday", type: "Sim Combine 1", badge: "SIM", focus: "Driver Peak Ball Speed + 60-105yd Wedge matrix", time: "60 min" },
+          { day: "Wed", dayFull: "Wednesday", type: "Gym Lift 2", badge: "GYM", focus: "Landmine Rotational Punch + Cable Chops", time: "55 min" },
+          { day: "Thu", dayFull: "Thursday", type: "Sim Combine 2", badge: "SIM", focus: "2-Iron Stinger corridor + Long Iron Proximity", time: "60 min" },
+          { day: "Fri", dayFull: "Friday", type: "Gym Lift 3", badge: "GYM", focus: "Jump Shrugs + Single-Leg RDLs", time: "50 min" },
+          { day: "Sat", dayFull: "Saturday", type: "18-Hole Course Round", badge: "PLAY", focus: "Course Management: Zero double bogeys", time: "4.5 hrs" },
+          { day: "Sun", dayFull: "Sunday", type: "Active Recovery", badge: "RECOVER", focus: "Thoracic spine mobility + Gate putting", time: "30 min" }
         ],
         gymWorkouts: {
           1: {
-            title: "Day 1: Ground Reaction Force (50 Mins)",
-            focus: "Build maximum vertical thrust and trail-foot pushing power into the ground.",
+            title: "Day 1: Ground Force Base",
+            focus: "Trap Bar Deadlifts, MB Scoop Tosses, Bulgarian Split Squats",
             exercises: [
-              { name: "Trap Bar Deadlift (Velocity Focus)", sets: "4 sets x 5 reps", cue: "Violent hip extension, push floor away fast" },
-              { name: "Rotational MB Scoop Toss (into wall)", sets: "4 sets x 5 / side", cue: "Explode off trail foot, snap lead hip clear" },
-              { name: "Bulgarian Split Squat", sets: "3 sets x 8 / leg", cue: "Lead leg deceleration control under load" },
-              { name: "Dumbbell Incline Bench Press", sets: "3 sets x 8 reps", cue: "Upper body push strength without shrugging traps" },
-              { name: "Half-Kneeling Pallof Press with Hold", sets: "3 sets x 10 / side", cue: "Anti-rotation: resist torso twist" },
-              { name: "Hanging Knee Raises / Hollow Hold", sets: "3 sets x 12 reps", cue: "Lock rib cage flush to spine" }
+              { name: "Trap Bar Deadlift", sets: "4x5", cue: "Violent hip extension" },
+              { name: "Rotational MB Scoop Toss", sets: "4x5/side", cue: "Drive off back foot" },
+              { name: "Bulgarian Split Squat", sets: "3x8/leg", cue: "Lead leg deceleration" }
             ]
           },
           2: {
-            title: "Day 2: Rotational Velocity & Deceleration (55 Mins)",
-            focus: "High rotary speed with braking strength to stop torso at impact.",
+            title: "Day 2: Rotational Velocity",
+            focus: "Landmine Rotary Press, High-to-Low Cable Chops",
             exercises: [
-              { name: "Landmine Rotational Punch", sets: "4 sets x 6 / side", cue: "Drive rotation from back hip through serratus" },
-              { name: "Half-Kneeling Cable Chops (High to Low)", sets: "3 sets x 8 / side", cue: "Lock hips still; rotate upper chest only" },
-              { name: "Neutral Grip DB Single-Arm Row", sets: "4 sets x 8 / arm", cue: "Lat engagement to hold lead-arm structure" },
-              { name: "Plyometric Push-Ups (Fast Tempo)", sets: "3 sets x 6 reps", cue: "Explosive chest/tricep velocity" },
-              { name: "Single-Leg Romanian Deadlift (RDL)", sets: "3 sets x 8 / leg", cue: "Lead hamstring and glute stability" },
-              { name: "Cable External Rotations & Face Pulls", sets: "3 sets x 12 reps", cue: "Rotator cuff integrity" }
+              { name: "Landmine Rotational Punch", sets: "4x6/side", cue: "Drive from hip through fist" },
+              { name: "Cable Chops", sets: "3x8/side", cue: "Hips quiet, rotate chest" }
             ]
           },
           3: {
-            title: "Day 3: Full-Body Power & Kinetic Chain (50 Mins)",
-            focus: "Coordinate power from feet to fingertips for ball speed transfer.",
+            title: "Day 3: Full-Body Power",
+            focus: "Trap Bar Jump Shrugs, Heiden Bounds",
             exercises: [
-              { name: "Trap Bar Jump Shrugs (Low Weight)", sets: "4 sets x 4 reps", cue: "Max vertical jump explosion off the toes" },
-              { name: "Lateral Heiden Bounds with Stick", sets: "4 sets x 5 / side", cue: "Land and stick on lead hip" },
-              { name: "Turkish Get-Up", sets: "3 sets x 3 / arm", cue: "Shoulder stability through rotating torso" },
-              { name: "Goblet Squat (Explosive Ascending)", sets: "3 sets x 8 reps", cue: "Fast upward acceleration out of the hole" },
-              { name: "Side Plank with Cable Row", sets: "3 sets x 8 / side", cue: "Lateral core stability and oblique firing" },
-              { name: "Overhead Farmer's Walk", sets: "3 sets x 30 yds", cue: "Core stiffness under dynamic movement" }
-            ]
-          }
-        }
-      },
-      2: {
-        title: "Week 2: Rotational Velocity & Deceleration",
-        schedule: [
-          { day: "Mon", dayFull: "Monday", type: "Gym Lift 1", badge: "GYM", focus: "Speed Squats (4x4) + Lateral Bounds (4x4)", time: "50 min" },
-          { day: "Tue", dayFull: "Tuesday", type: "Studio Sim Combine 1", badge: "SIM", focus: "75-105yd Clock Wedge spin rate consistency", time: "60 min" },
-          { day: "Wed", dayFull: "Wednesday", type: "Gym Lift 2", badge: "GYM", focus: "DB Snatch (4x5) + Cable Rotations (4x8)", time: "55 min" },
-          { day: "Thu", dayFull: "Thursday", type: "Studio Sim Combine 2", badge: "SIM", focus: "3-Wood tight fairway carry & 4-iron landings", time: "60 min" },
-          { day: "Fri", dayFull: "Friday", type: "Gym Lift 3", badge: "GYM", focus: "Posterior Chain Whip: RDLs + Plyo Push-Ups", time: "50 min" },
-          { day: "Sat", dayFull: "Saturday", type: "18-Hole Course Round", badge: "PLAY", focus: "GIR discipline: Center-green priority", time: "4.5 hrs" },
-          { day: "Sun", dayFull: "Sunday", type: "Active Recovery", badge: "RECOVER", focus: "Lat stretching, pigeon flow, 100-stroke putting ruler", time: "30 min" }
-        ],
-        gymWorkouts: {
-          1: {
-            title: "Day 1: Lateral Velocity (50 Mins)",
-            focus: "Accelerate lateral ground reaction and kinetic transfer.",
-            exercises: [
-              { name: "Lateral Bounds (Heidens with Stick)", sets: "4 sets x 4 / side", cue: "Absorb landing with lead glute" },
-              { name: "Speed Front Squats", sets: "4 sets x 4 reps", cue: "Violent upward acceleration" },
-              { name: "Single-Arm DB Snatch", sets: "3 sets x 5 / arm", cue: "Triple extension ankle/knee/hip" },
-              { name: "Standing Cable Anti-Rotational Press", sets: "4 sets x 8 reps", cue: "Lock rib cage tight to pelvis" },
-              { name: "Walking DB Lunges", sets: "3 sets x 10 steps/leg", cue: "Upright posture, glute push" },
-              { name: "Hanging Leg Raises", sets: "3 sets x 10 reps", cue: "Lower abdominal compression" }
-            ]
-          },
-          2: {
-            title: "Day 2: Rotary Whip & Posterior Chain (55 Mins)",
-            focus: "Train posterior chain to support lead-side rotary whip.",
-            exercises: [
-              { name: "Kettlebell Swing (Hip Snap)", sets: "4 sets x 10 reps", cue: "Violent hip hinge snap" },
-              { name: "Landmine Rotary Press", sets: "4 sets x 8 / side", cue: "Drive power from feet through hands" },
-              { name: "Neutral Grip Pull-Ups", sets: "4 sets x 6 reps", cue: "Lat activation for downswing plane" },
-              { name: "Single-Leg RDL", sets: "3 sets x 8 / leg", cue: "Hamstring stretch and glute squeeze" },
-              { name: "Half-Kneeling Lift (Low-to-High)", sets: "3 sets x 8 / side", cue: "Upward rotary push without swaying" },
-              { name: "Rear Delt DB Flyes", sets: "3 sets x 12 reps", cue: "Scapular pinch" }
-            ]
-          },
-          3: {
-            title: "Day 3: Elasticity & Deceleration (50 Mins)",
-            focus: "Elastic rebound and trunk stability under dynamic loading.",
-            exercises: [
-              { name: "Rotational MB Step & Slam", sets: "4 sets x 5 / side", cue: "Step into lead foot and slam" },
-              { name: "Hex Bar Deadlift", sets: "4 sets x 6 reps", cue: "Smooth pull, fast lockout" },
-              { name: "Push Press (DB or Barbell)", sets: "3 sets x 6 reps", cue: "Aggressive overhead push" },
-              { name: "Side Plank with Abduction", sets: "3 sets x 8 / side", cue: "Glute medius strength" },
-              { name: "Cable Face Pull", sets: "3 sets x 12 reps", cue: "Shoulder joint health" },
-              { name: "Deadbugs with Core Press", sets: "3 sets x 10 / side", cue: "Low back glued to mat" }
-            ]
-          }
-        }
-      },
-      3: {
-        title: "Week 3: Peak Intent & Overspeed",
-        schedule: [
-          { day: "Mon", dayFull: "Monday", type: "Gym Lift 1", badge: "GYM", focus: "Trap Bar Jump Shrugs (5x3) + Depth Jumps", time: "50 min" },
-          { day: "Tue", dayFull: "Tuesday", type: "Studio Sim Combine 1", badge: "SIM", focus: "Max Driver Intent: 5 balls at 100% effort", time: "60 min" },
-          { day: "Wed", dayFull: "Wednesday", type: "Gym Lift 2", badge: "GYM", focus: "High-Speed Core: Cable woodchops + Hanging leg raises", time: "55 min" },
-          { day: "Thu", dayFull: "Thursday", type: "Studio Sim Combine 2", badge: "SIM", focus: "TrackMan Combine test with penalty scoring", time: "60 min" },
-          { day: "Fri", dayFull: "Friday", type: "Gym Lift 3", badge: "GYM", focus: "Total Body Whip: Banded kettlebell swings + Chin-ups", time: "50 min" },
-          { day: "Sat", dayFull: "Saturday", type: "18-Hole Course Round", badge: "PLAY", focus: "Scramble mastery: Up-and-down conversion < 40 yards", time: "4.5 hrs" },
-          { day: "Sun", dayFull: "Sunday", type: "Mobility & Gate Putting", badge: "RECOVER", focus: "Wrist flossing, 4-foot pressure gate putts", time: "30 min" }
-        ],
-        gymWorkouts: {
-          1: {
-            title: "Day 1: Maximum Vertical Intent (50 Mins)",
-            focus: "Peak nervous system output and fast-twitch vertical propulsion.",
-            exercises: [
-              { name: "Trap Bar Jump Shrugs", sets: "5 sets x 3 reps", cue: "Fastest vertical propulsion possible" },
-              { name: "Box Depth Jumps", sets: "4 sets x 3 reps", cue: "Minimize ground contact time" },
-              { name: "Barbell Back Squat", sets: "4 sets x 4 reps", cue: "Drive heels straight through floor" },
-              { name: "Rotational Scoop Toss (Max Effort)", sets: "4 sets x 4 / side", cue: "Max effort intent" },
-              { name: "Pallof Press with Rotation", sets: "3 sets x 8 / side", cue: "Resist rotation until end range" },
-              { name: "Weighted Abdominal Planks", sets: "3 sets x 45s", cue: "Total body bracing" }
-            ]
-          },
-          2: {
-            title: "Day 2: High-Speed Rotational Whip (55 Mins)",
-            focus: "Over-speed rotational core work and rapid lat contraction.",
-            exercises: [
-              { name: "High-to-Low Cable Rotational Chops", sets: "4 sets x 6 / side", cue: "Snap hips then let arms follow" },
-              { name: "Banded KB Over-Speed Swings", sets: "4 sets x 8 reps", cue: "Pull bell down fast, snap hips" },
-              { name: "Weighted Pull-Ups", sets: "4 sets x 5 reps", cue: "Lat engagement" },
-              { name: "Dumbbell Push Press", sets: "3 sets x 6 reps", cue: "Explode up with legs" },
-              { name: "Single-Leg Bulgarian Split Squat", sets: "3 sets x 6 / leg", cue: "Lead hip deceleration" },
-              { name: "Half-Kneeling External Rotations", sets: "3 sets x 12 reps", cue: "Shoulder stability at top" }
-            ]
-          },
-          3: {
-            title: "Day 3: Kinetic Transfer & Power (50 Mins)",
-            focus: "Full-body synchronization under fatigue.",
-            exercises: [
-              { name: "Dumbbell Snatch (Alternating)", sets: "4 sets x 4 / arm", cue: "Explode through ceiling" },
-              { name: "Rotational MB Overhead Slam", sets: "4 sets x 5 reps", cue: "Anterior core flexion" },
-              { name: "Hex Bar Deadlift (Speed Sets)", sets: "4 sets x 4 reps", cue: "Max velocity off floor" },
-              { name: "Single-Arm Row with Rotation", sets: "3 sets x 8 / arm", cue: "Thoracic mobility" },
-              { name: "Lead Leg Box Push-Offs", sets: "3 sets x 6 / leg", cue: "Lead foot banking" },
-              { name: "Dragon Flags", sets: "3 sets x 10 reps", cue: "Deep core stability" }
-            ]
-          }
-        }
-      },
-      4: {
-        title: "Week 4: Deload & Scrambling Flow",
-        schedule: [
-          { day: "Mon", dayFull: "Monday", type: "Gym Lift 1 (Deload)", badge: "GYM", focus: "Tempo Goblet Squats + T-spine rotations", time: "45 min" },
-          { day: "Tue", dayFull: "Tuesday", type: "Studio Sim Combine 1", badge: "SIM", focus: "Wedge Distance Touch: 30, 45, 60, 75yd flight control", time: "50 min" },
-          { day: "Wed", dayFull: "Wednesday", type: "Gym Lift 2 (Deload)", badge: "GYM", focus: "Core & Posture: Deadbugs + Side planks with reach", time: "45 min" },
-          { day: "Thu", dayFull: "Thursday", type: "Studio Sim Combine 2", badge: "SIM", focus: "Iron Flight Windowing: High draw vs. low fade", time: "50 min" },
-          { day: "Fri", dayFull: "Friday", type: "Gym Lift 3 (Deload)", badge: "GYM", focus: "Rotational Flow: Light med ball tosses + Scap pulls", time: "45 min" },
-          { day: "Sat", dayFull: "Saturday", type: "18-Hole Course Round", badge: "PLAY", focus: "Tournament simulation: Full pre-shot routine", time: "4.5 hrs" },
-          { day: "Sun", dayFull: "Sunday", type: "Active Recovery", badge: "RECOVER", focus: "Full body foam rolling & green-reading touch", time: "30 min" }
-        ],
-        gymWorkouts: {
-          1: {
-            title: "Day 1: Joint Fluidity & Mobility (45 Mins)",
-            focus: "Lower nervous system fatigue and restore range of motion.",
-            exercises: [
-              { name: "Tempo Goblet Squat (3-1-1)", sets: "3 sets x 8 reps", cue: "Deep ankle dorsiflexion" },
-              { name: "T-Spine Rotations", sets: "3 sets x 10 / side", cue: "Rotate rib cage without moving hips" },
-              { name: "Light Trap Bar Deadlift", sets: "3 sets x 6 reps", cue: "Smooth posture groove" },
-              { name: "Deadbugs (Anti-Extension)", sets: "3 sets x 10 / side", cue: "Low back glued to mat" },
-              { name: "Band Pull-Aparts & Face Pulls", sets: "3 sets x 15 reps", cue: "Scapular stability" },
-              { name: "Half-Kneeling Hip Stretch", sets: "3 sets x 45s / side", cue: "Glute squeeze" }
-            ]
-          },
-          2: {
-            title: "Day 2: Postural Alignment (45 Mins)",
-            focus: "Consolidate posture without central nervous system stress.",
-            exercises: [
-              { name: "Light MB Wall Toss", sets: "3 sets x 6 / side", cue: "Smooth sequencing" },
-              { name: "DB Neutral Chest Press", sets: "3 sets x 8 reps", cue: "Shoulder friendly pressing" },
-              { name: "Single-Leg Balance DB RDL", sets: "3 sets x 6 / leg", cue: "Foot arch stability" },
-              { name: "Cable Pallof Press Hold", sets: "3 sets x 30s / side", cue: "Isometric tension" },
-              { name: "Lat Pulldown (Moderate)", sets: "3 sets x 10 reps", cue: "Wide grip" },
-              { name: "Pigeon Pose Stretch", sets: "3 sets x 45s / leg", cue: "Release glutes" }
-            ]
-          },
-          3: {
-            title: "Day 3: Posterior Chain Flow (45 Mins)",
-            focus: "Light activation for weekend round readiness.",
-            exercises: [
-              { name: "Kettlebell RDL", sets: "3 sets x 8 reps", cue: "Clean hip hinge" },
-              { name: "Hand-Release Push-Ups", sets: "3 sets x 8 reps", cue: "Full range chest push" },
-              { name: "Side Planks with Leg Lift", sets: "3 sets x 20s / side", cue: "Lateral pelvic stability" },
-              { name: "Inverted TRX Row", sets: "3 sets x 10 reps", cue: "Smooth pull" },
-              { name: "World's Greatest Stretch", sets: "3 sets x 5 / side", cue: "T-spine and hamstring combo" },
-              { name: "Child's Pose Flow", sets: "3 sets x 60s", cue: "Decompression" }
+              { name: "Trap Bar Jump Shrugs", sets: "4x4", cue: "Max vertical explosion" },
+              { name: "Lateral Bounds", sets: "4x5/side", cue: "Stick landing on lead leg" }
             ]
           }
         }
@@ -676,75 +354,169 @@
 
     let currentWeek = 1;
     let activeGymDay = 1;
-    let selectedCalendarDateStr = new Date().toISOString().split('T')[0];
-    let calendarWeekOffset = 0; // 0 = current week, -1 = last week, etc.
+    let selectedCalendarDayIdx = 0;
 
     let customActivities = JSON.parse(localStorage.getItem('sb_custom_activities')) || {};
-    let ghinConfig = JSON.parse(localStorage.getItem('sb_ghin_config')) || { email: 'evanm2727@gmail.com', password: '', index: '8.1', previousIndex: '8.1', lastSync: null };
+    let ghinConfig = JSON.parse(localStorage.getItem('sb_ghin_config')) || { email: 'evanm2727@gmail.com', password: '', index: '8.1', previousIndex: '8.1' };
     let ghinScores = JSON.parse(localStorage.getItem('sb_ghin_scores')) || [];
 
-    // Realistic default baseline shots reflecting your bag specs
     let trackmanShots = JSON.parse(localStorage.getItem('sb_trackman_shots')) || [
-      { club: 'Driver', speed: 172.4, carry: 298, smash: 1.49, source: 'Studio Scan' },
-      { club: '3-Wood', speed: 158.0, carry: 262, smash: 1.46, source: 'Studio Scan' },
-      { club: '2-Iron', speed: 151.2, carry: 246, smash: 1.44, source: 'Studio Scan' },
-      { club: '4-Iron', speed: 142.0, carry: 215, smash: 1.42, source: 'Studio Scan' },
-      { club: '6-Iron', speed: 132.5, carry: 197, smash: 1.40, source: 'Studio Scan' },
-      { club: '8-Iron', speed: 120.0, carry: 168, smash: 1.38, source: 'Studio Scan' },
-      { club: 'PW', speed: 109.0, carry: 142, smash: 1.35, source: 'Studio Scan' }
+      { club: 'Driver', speed: 172.4, carry: 298, smash: 1.49 },
+      { club: '2-Iron', speed: 151.2, carry: 246, smash: 1.44 }
     ];
 
-    // Wedge matrix storage (50°, 54°, 58°)
-    let wedgeMatrixData = JSON.parse(localStorage.getItem('sb_wedge_matrix')) || {
-      '50°': { half: 75, threeQuarter: 102, full: 124 },
-      '54°': { half: 64, threeQuarter: 88, full: 112 },
-      '58°': { half: 52, threeQuarter: 74, full: 101 }
-    };
-
-    function init() {
-      renderCalendar();
-      switchWeek(1);
-      switchGymSession(1);
-      renderTrackmanTable();
-      renderBagGapping();
-      renderWedgeMatrix();
-      loadGhinState();
-      renderScoringTab();
-      checkAutoSync();
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('text-emerald-400');
+        btn.classList.add('text-slate-500');
+      });
+      const target = document.getElementById('tab-' + tabId);
+      if (target) target.classList.remove('hidden');
+      const activeBtn = document.querySelector(`.nav-btn[data-tab="${tabId}"]`);
+      if (activeBtn) {
+        activeBtn.classList.remove('text-slate-500');
+        activeBtn.classList.add('text-emerald-400');
+      }
+      if (tabId === 'scoring') initChart();
     }
 
-    // --- AUTO-SYNC ON LAUNCH ENGINE ---
-    function checkAutoSync() {
-      const lastSyncTime = ghinConfig.lastSync ? new Date(ghinConfig.lastSync).getTime() : 0;
-      const now = new Date().getTime();
-      const hoursSinceSync = (now - lastSyncTime) / (1000 * 60 * 60);
+    function setupRealWeeklyCalendar() {
+      const now = new Date();
+      const jsDay = now.getDay();
+      const mondayOffset = (jsDay === 0) ? -6 : 1 - jsDay;
+      const mondayDate = new Date(now);
+      mondayDate.setDate(now.getDate() + mondayOffset);
 
-      const label = document.getElementById('autoSyncLabel');
-      if (ghinConfig.lastSync) {
-        label.innerText = `Last Synced: ${new Date(ghinConfig.lastSync).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      const daysShort = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      const calendarRow = document.getElementById('calendarDaysRow');
+      if (!calendarRow) return;
+      calendarRow.innerHTML = '';
+
+      const todayIdx = (jsDay === 0) ? 6 : jsDay - 1;
+      selectedCalendarDayIdx = todayIdx;
+
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(mondayDate);
+        d.setDate(mondayDate.getDate() + i);
+        const dayNumber = d.getDate();
+        const isToday = (i === todayIdx);
+
+        const pill = document.createElement('button');
+        pill.type = 'button';
+        pill.className = `cal-pill flex flex-col items-center py-2 px-1 rounded-xl text-center border cursor-pointer ${
+          isToday ? 'bg-emerald-600 text-white border-emerald-400 shadow-md ring-1 ring-emerald-300' : 'bg-[#15251a] text-slate-300 border-emerald-900/50 hover:bg-[#1c3324]'
+        }`;
+        pill.onclick = () => selectCalendarDay(i);
+        pill.innerHTML = `
+          <span class="text-[9px] font-bold uppercase tracking-wider">${daysShort[i]}</span>
+          <span class="text-xs font-black mt-0.5">${dayNumber}</span>
+          ${isToday ? '<span class="text-[7px] font-black uppercase text-emerald-100 mt-0.5 tracking-tight">TODAY</span>' : ''}
+        `;
+        calendarRow.appendChild(pill);
+      }
+    }
+
+    function selectCalendarDay(dayIdx) {
+      selectedCalendarDayIdx = dayIdx;
+      document.querySelectorAll('.cal-pill').forEach((btn, idx) => {
+        if (idx === dayIdx) btn.classList.add('ring-2', 'ring-emerald-400');
+        else btn.classList.remove('ring-2', 'ring-emerald-400');
+      });
+
+      const prog = weeklyPrograms[currentWeek] || weeklyPrograms[1];
+      const dayData = prog.schedule[dayIdx] || prog.schedule[0];
+
+      document.getElementById('selectedDayName').innerText = dayData.dayFull;
+      document.getElementById('selectedDayType').innerText = dayData.type;
+      document.getElementById('selectedDayBadge').innerText = dayData.badge;
+      document.getElementById('activeDayIndicator').innerText = `Viewing ${dayData.dayFull}`;
+
+      const detailContainer = document.getElementById('activeDayDetailContainer');
+      if (detailContainer) {
+        detailContainer.innerHTML = `
+          <div class="bg-[#122017] p-3.5 rounded-2xl border border-emerald-600/40 shadow">
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <p class="text-xs font-bold text-emerald-300">${dayData.type} &bull; ${dayData.time}</p>
+                <p class="text-[11px] text-slate-300 mt-0.5">${dayData.focus}</p>
+              </div>
+              <button onclick="${dayData.badge === 'GYM' ? "showTab('gym')" : dayData.badge === 'SIM' ? "showTab('trackman')" : "showTab('scoring')"}" class="bg-[#1c3626] hover:bg-emerald-600 text-emerald-300 hover:text-white text-[11px] font-bold px-2.5 py-1 rounded-lg border border-emerald-700/50">
+                Open &rarr;
+              </button>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function switchWeek(weekNum) {
+      currentWeek = parseInt(weekNum);
+      const prog = weeklyPrograms[currentWeek] || weeklyPrograms[1];
+
+      const allDays = document.getElementById('allDaysContainer');
+      if (allDays) {
+        allDays.innerHTML = prog.schedule.map((item, idx) => `
+          <div onclick="selectCalendarDay(${idx})" class="bg-[#122017] p-3 rounded-xl border border-emerald-950 flex justify-between items-center cursor-pointer hover:border-emerald-700 transition">
+            <div>
+              <div class="flex items-center gap-2 mb-0.5">
+                <span class="text-xs font-bold text-white">${item.dayFull}</span>
+                <span class="text-[9px] font-extrabold px-1.5 py-0.2 rounded bg-slate-800 text-emerald-300">${item.badge}</span>
+              </div>
+              <p class="text-[11px] text-slate-400">${item.type} &bull; ${item.time}</p>
+            </div>
+            <span class="text-slate-500 text-xs"><i class="fa-solid fa-chevron-right"></i></span>
+          </div>
+        `).join('');
       }
 
-      // If credentials exist and last sync is older than 12 hours, sync quietly
-      if (ghinConfig.email && ghinConfig.password && hoursSinceSync > 12) {
-        console.log("Auto-syncing GHIN rounds in background...");
-        syncGhinData(false);
+      selectCalendarDay(selectedCalendarDayIdx);
+      switchGymSession(activeGymDay);
+    }
+
+    function switchGymSession(dayNum) {
+      activeGymDay = dayNum;
+      ['gymBtn1', 'gymBtn2', 'gymBtn3'].forEach((id, idx) => {
+        const btn = document.getElementById(id);
+        if (!btn) return;
+        if (idx + 1 === dayNum) btn.className = "px-2 py-0.5 rounded font-bold text-white bg-emerald-700";
+        else btn.className = "px-2 py-0.5 rounded font-bold text-slate-400 hover:text-white";
+      });
+
+      const prog = weeklyPrograms[currentWeek] || weeklyPrograms[1];
+      const workout = prog.gymWorkouts[dayNum] || prog.gymWorkouts[1];
+      document.getElementById('gymWorkoutTitle').innerText = workout.title;
+      document.getElementById('gymWorkoutFocus').innerText = workout.focus;
+
+      const exerciseList = document.getElementById('gymExerciseList');
+      if (exerciseList) {
+        exerciseList.innerHTML = workout.exercises.map((ex, idx) => `
+          <div class="bg-[#122017] p-3 rounded-xl border border-emerald-900/60 shadow-sm">
+            <div class="flex justify-between items-start mb-1">
+              <h4 class="text-xs font-bold text-white">${idx + 1}. ${ex.name}</h4>
+              <span class="text-[10px] text-emerald-400 font-bold bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800/40">${ex.sets}</span>
+            </div>
+            <p class="text-[11px] text-slate-400">${ex.cue}</p>
+          </div>
+        `).join('');
       }
     }
 
-    function loadGhinState() {
-      if (ghinConfig.email) document.getElementById('ghinEmail').value = ghinConfig.email;
-      if (ghinConfig.password) document.getElementById('ghinPassword').value = ghinConfig.password;
+    function openCustomActivityModal() { document.getElementById('customActivityModal').classList.remove('hidden'); }
+    function closeCustomActivityModal() { document.getElementById('customActivityModal').classList.add('hidden'); }
+    function saveCustomActivity() {
+      const title = document.getElementById('customTitle').value.trim();
+      if (!title) return alert('Enter activity title');
+      closeCustomActivityModal();
+      alert(`Logged ${title}`);
     }
 
-    async function syncGhinData(showAlert = true) {
+    async function syncGhinData() {
       const email = document.getElementById('ghinEmail').value.trim();
       const password = document.getElementById('ghinPassword').value.trim();
       const btn = document.getElementById('ghinSyncBtn');
 
-      if (!email || !password) {
-        if (showAlert) alert("Please enter credentials in the GHIN Login Credentials section.");
-        return;
-      }
+      if (!email || !password) return alert("Please enter your GHIN credentials.");
 
       btn.disabled = true;
       btn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i>`;
@@ -755,50 +527,26 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password })
         });
-
         const data = await res.json();
         if (data.error) throw new Error(data.error);
 
-        const currentIdx = parseFloat(data.handicapIndex) || 8.1;
-        const prevIdx = parseFloat(ghinConfig.index) || currentIdx;
-
-        ghinConfig = {
-          email,
-          password,
-          index: currentIdx.toFixed(1),
-          previousIndex: prevIdx.toFixed(1),
-          name: data.golferName || "Evan McCollough",
-          lastSync: new Date().toISOString()
-        };
-        localStorage.setItem('sb_ghin_config', JSON.stringify(ghinConfig));
-
         if (Array.isArray(data.scores) && data.scores.length > 0) {
-          ghinScores = data.scores.map(s => {
-            const numDiff = parseFloat(s.differential) || 0.0;
-            const playedDate = s.played_at || '';
-
-            return {
-              course: s.course_name || '18-Hole Round',
-              score: s.score || '--',
-              diff: numDiff.toFixed(1),
-              isUsed: Boolean(s.used),
-              rating: s.course_rating || '--',
-              slope: s.slope_rating || '--',
-              date: playedDate ? new Date(playedDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: '2-digit' }) : 'Recent'
-            };
-          });
+          ghinScores = data.scores.map(s => ({
+            course: s.course_name || '18-Hole Round',
+            score: s.score || '--',
+            diff: parseFloat(s.differential || 0).toFixed(1),
+            isUsed: Boolean(s.used),
+            rating: s.course_rating || '--',
+            slope: s.slope_rating || '--',
+            date: s.played_at ? new Date(s.played_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: '2-digit' }) : 'Recent'
+          }));
           localStorage.setItem('sb_ghin_scores', JSON.stringify(ghinScores));
         }
 
         renderScoringTab();
-        document.getElementById('autoSyncLabel').innerText = `Last Synced: Just now`;
-
-        if (showAlert) {
-          alert(`GHIN Connected!\nLive Index: ${ghinConfig.index}\n${ghinScores.length} rounds imported.`);
-        }
-
+        alert(`GHIN Connected!\nLive Index: ${data.handicapIndex || '8.1'}\n${ghinScores.length} rounds imported.`);
       } catch (err) {
-        if (showAlert) alert("Sync Failed: " + err.message);
+        alert("Sync Failed: " + err.message);
       } finally {
         btn.disabled = false;
         btn.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i> Sync`;
@@ -806,88 +554,27 @@
     }
 
     function renderScoringTab() {
-      const idxNum = parseFloat(ghinConfig.index) || 8.1;
-      const prevNum = parseFloat(ghinConfig.previousIndex) || 8.1;
-
-      document.getElementById('heroHandicap').innerText = idxNum.toFixed(1);
-      document.getElementById('headerHandicapLabel').innerText = `USGA Index: ${idxNum.toFixed(1)} \u2192 0.0 Target`;
-
-      const trendBadge = document.getElementById('handicapTrendBadge');
-      const delta = (idxNum - prevNum).toFixed(1);
-      if (delta < 0) {
-        trendBadge.className = "text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
-        trendBadge.innerHTML = `<i class="fa-solid fa-arrow-trend-down"></i> ${delta} pts`;
-      } else if (delta > 0) {
-        trendBadge.className = "text-xs font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30";
-        trendBadge.innerHTML = `<i class="fa-solid fa-arrow-trend-up"></i> +${delta} pts`;
-      } else {
-        trendBadge.className = "text-xs font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300";
-        trendBadge.innerHTML = `Live`;
-      }
-
-      // Scratch Progress Bar (10.0 to 0.0 baseline)
-      const progressPercent = Math.min(100, Math.max(0, ((10.0 - idxNum) / 10.0) * 100));
-      document.getElementById('scratchProgressBar').style.width = `${progressPercent}%`;
-      document.getElementById('scratchProgressText').innerText = `${idxNum.toFixed(1)} pts to Scratch (0.0)`;
-
-      // WHS Counting Scores Impact Simulator
-      calculateHandicapSimulator();
-
       const listContainer = document.getElementById('ghinScoresList');
+      if (!listContainer) return;
       document.getElementById('scoresCountLabel').innerText = `${ghinScores.length} Rounds Synced`;
 
       if (ghinScores.length === 0) {
-        listContainer.innerHTML = `<p class="text-xs text-slate-500 py-3 text-center">No rounds synced yet. Tap 'Sync' above to fetch your official USGA rounds.</p>`;
+        listContainer.innerHTML = `<p class="text-xs text-slate-500 py-3 text-center">No rounds synced yet. Tap 'Sync' above.</p>`;
       } else {
         listContainer.innerHTML = ghinScores.map(s => `
-          <div class="bg-[#0e1811] p-3 rounded-xl border ${s.isUsed ? 'border-amber-500/40 bg-gradient-to-r from-[#142316] to-[#0e1811]' : 'border-emerald-950'} flex justify-between items-center shadow-sm">
+          <div class="bg-[#0e1811] p-3 rounded-xl border ${s.isUsed ? 'border-amber-500/40' : 'border-emerald-950'} flex justify-between items-center">
             <div>
-              <div class="flex items-center gap-1.5 mb-0.5">
-                <span class="font-bold text-white text-xs">${s.course}</span>
-                ${s.isUsed ? '<span class="text-[8px] bg-amber-400 text-amber-950 font-black px-1.5 py-0.2 rounded uppercase">Counting</span>' : ''}
-              </div>
-              <p class="text-[10px] text-slate-400">
-                ${s.date} &bull; Rating/Slope: ${s.rating}/${s.slope}
-              </p>
+              <span class="font-bold text-white text-xs">${s.course}</span>
+              <p class="text-[10px] text-slate-400">${s.date} &bull; Rating: ${s.rating}/${s.slope}</p>
             </div>
             <div class="text-right">
-              <span class="text-xs font-black bg-emerald-950 text-emerald-300 border border-emerald-800/60 px-2 py-1 rounded inline-block mb-0.5">
-                ${s.score}
-              </span>
-              <p class="text-[10px] font-bold ${s.isUsed ? 'text-amber-400' : 'text-slate-400'}">Diff: ${s.diff}</p>
+              <span class="text-xs font-black text-emerald-300">${s.score}</span>
+              <p class="text-[10px] ${s.isUsed ? 'text-amber-400 font-bold' : 'text-slate-400'}">Diff: ${s.diff}</p>
             </div>
           </div>
         `).join('');
       }
-
       initChart();
-    }
-
-    // --- WHS IMPACT SIMULATOR ---
-    function calculateHandicapSimulator() {
-      const summaryEl = document.getElementById('simulatorSummaryText');
-      const eighthEl = document.getElementById('eighthDiffLabel');
-      const targetEl = document.getElementById('targetDiffLabel');
-
-      if (ghinScores.length === 0) {
-        summaryEl.innerText = "Sync your GHIN profile to view your 8th counting score and next round target.";
-        eighthEl.innerText = "9.2";
-        targetEl.innerText = "≤ 8.5";
-        return;
-      }
-
-      // Collect all differentials and find the counting subset
-      const allDiffs = ghinScores.map(s => parseFloat(s.diff)).filter(d => !isNaN(d));
-      const sorted = [...allDiffs].sort((a, b) => a - b);
-      const countingDiffs = sorted.slice(0, 8);
-      const eighthHighestCounting = countingDiffs[countingDiffs.length - 1];
-
-      // Target to replace the highest counting score by 0.5 differential
-      const targetDiff = (eighthHighestCounting - 0.5).toFixed(1);
-
-      eighthEl.innerText = eighthHighestCounting.toFixed(1);
-      targetEl.innerText = `≤ ${targetDiff}`;
-      summaryEl.innerHTML = `Your highest counting score is an <b class="text-amber-400">${eighthHighestCounting.toFixed(1)} diff</b>. Shooting <b class="text-emerald-400">≤ ${targetDiff}</b> in your next round will replace it and lower your Index toward 7.X.`;
     }
 
     let chartInstance = null;
@@ -897,429 +584,54 @@
       const ctx = canvas.getContext('2d');
       if (chartInstance) chartInstance.destroy();
 
-      const reversedScores = [...ghinScores].reverse();
-      const labels = reversedScores.length > 0 ? reversedScores.map(r => r.date) : ['R1', 'R2', 'R3', 'R4', 'R5'];
-      const dataPoints = reversedScores.length > 0 ? reversedScores.map(r => parseFloat(r.diff)) : [8.4, 8.2, 8.1, 7.8, 8.1];
-      const pointColors = reversedScores.length > 0 ? reversedScores.map(r => r.isUsed ? '#f59e0b' : '#10b981') : ['#10b981', '#10b981', '#10b981', '#10b981', '#10b981'];
+      const reversed = [...ghinScores].reverse();
+      const labels = reversed.length > 0 ? reversed.map(r => r.date) : ['R1', 'R2', 'R3', 'R4', 'R5'];
+      const dataPoints = reversed.length > 0 ? reversed.map(r => parseFloat(r.diff)) : [8.4, 8.2, 8.1, 7.8, 8.1];
 
       chartInstance = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: labels,
-          datasets: [
-            {
-              label: 'Round Differential',
-              data: dataPoints,
-              borderColor: '#10b981',
-              backgroundColor: 'rgba(16, 185, 129, 0.15)',
-              pointBackgroundColor: pointColors,
-              pointRadius: reversedScores.length > 0 ? reversedScores.map(r => r.isUsed ? 5 : 3) : 3,
-              tension: 0.35,
-              fill: true
-            },
-            {
-              label: 'Scratch Target (0.0)',
-              data: labels.map(() => 0.0),
-              borderColor: '#f59e0b',
-              borderDash: [4, 4],
-              pointRadius: 0
-            }
-          ]
+          labels,
+          datasets: [{
+            data: dataPoints,
+            borderColor: '#10b981',
+            tension: 0.35,
+            pointRadius: 3
+          }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           events: [],
-          plugins: { 
-            legend: { display: false },
-            tooltip: { enabled: false }
-          },
+          plugins: { legend: { display: false } },
           scales: {
-            x: { ticks: { color: '#64748b', font: { size: 9 } }, grid: { display: false } },
-            y: { ticks: { color: '#64748b', font: { size: 9 } }, grid: { color: '#162e21' } }
+            x: { ticks: { color: '#64748b', font: { size: 9 } } },
+            y: { ticks: { color: '#64748b', font: { size: 9 } } }
           }
         }
       });
     }
 
-    // --- CALENDAR WITH PRIOR DATE NAVIGATION ---
-    function renderCalendar() {
-      const now = new Date();
-      now.setDate(now.getDate() + (calendarWeekOffset * 7));
-
-      const jsDay = now.getDay();
-      const currentMondayOffset = (jsDay === 0) ? -6 : 1 - jsDay;
-
-      const mondayDate = new Date(now);
-      mondayDate.setDate(now.getDate() + currentMondayOffset);
-
-      const daysShort = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-      const calendarRow = document.getElementById('calendarDaysRow');
-      calendarRow.innerHTML = '';
-
-      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-      document.getElementById('currentCalendarMonth').innerText = `${monthNames[mondayDate.getMonth()]} ${mondayDate.getFullYear()}`;
-
-      const todayStr = new Date().toISOString().split('T')[0];
-
-      for (let i = 0; i < 7; i++) {
-        const d = new Date(mondayDate);
-        d.setDate(mondayDate.getDate() + i);
-        const dateStr = d.toISOString().split('T')[0];
-        const dayNumber = d.getDate();
-        const isToday = (dateStr === todayStr);
-        const isSelected = (dateStr === selectedCalendarDateStr);
-
-        const pill = document.createElement('button');
-        pill.className = `cal-pill flex flex-col items-center py-2 px-1 rounded-xl text-center transition border ${
-          isSelected 
-            ? 'bg-emerald-600 text-white border-emerald-400 shadow-md ring-2 ring-emerald-300' 
-            : isToday 
-              ? 'bg-[#1b3425] text-emerald-300 border-emerald-500/50' 
-              : 'bg-[#15251a] text-slate-300 border-emerald-900/50 hover:bg-[#1c3324]'
-        }`;
-        pill.onclick = () => selectDate(dateStr, i);
-
-        pill.innerHTML = `
-          <span class="text-[9px] font-bold uppercase tracking-wider">${daysShort[i]}</span>
-          <span class="text-xs font-black mt-0.5">${dayNumber}</span>
-          ${isToday ? '<span class="text-[7px] font-black uppercase text-emerald-300 mt-0.5 tracking-tight">TODAY</span>' : ''}
-        `;
-        calendarRow.appendChild(pill);
-      }
-
-      updateSelectedDateView();
-    }
-
-    function changeWeekOffset(delta) {
-      calendarWeekOffset += delta;
-      renderCalendar();
-    }
-
-    function jumpToCurrentWeek() {
-      calendarWeekOffset = 0;
-      selectedCalendarDateStr = new Date().toISOString().split('T')[0];
-      renderCalendar();
-    }
-
-    function selectDate(dateStr, dayIndex) {
-      selectedCalendarDateStr = dateStr;
-      renderCalendar();
-    }
-
-    function updateSelectedDateView() {
-      const d = new Date(selectedCalendarDateStr + 'T12:00:00');
-      const jsDay = d.getDay();
-      const dayIdx = (jsDay === 0) ? 6 : jsDay - 1;
-
-      const prog = weeklyPrograms[currentWeek];
-      const dayData = prog.schedule[dayIdx];
-
-      const formattedDate = d.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
-      document.getElementById('selectedDayName').innerText = formattedDate;
-      document.getElementById('selectedDayType').innerText = dayData.type;
-      document.getElementById('selectedDayBadge').innerText = dayData.badge;
-
-      document.getElementById('activeDayDetailContainer').innerHTML = `
-        <div class="bg-[#122017] p-3.5 rounded-2xl border border-emerald-600/40 shadow">
-          <div class="flex justify-between items-start mb-2">
-            <div>
-              <p class="text-xs font-bold text-emerald-300">${dayData.type} &bull; ${dayData.time}</p>
-              <p class="text-[11px] text-slate-300 mt-0.5">${dayData.focus}</p>
-            </div>
-            <button onclick="${dayData.badge === 'GYM' ? "showTab('gym')" : dayData.badge === 'SIM' ? "showTab('trackman')" : "showTab('scoring')"}" class="bg-[#1c3626] hover:bg-emerald-600 text-emerald-300 hover:text-white text-[11px] font-bold px-2.5 py-1 rounded-lg border border-emerald-700/50">
-              Open &rarr;
-            </button>
-          </div>
-        </div>
-      `;
-
-      renderDayCustomActivities();
-    }
-
-    // --- LOG ACTIVITIES FOR ANY CALENDAR DATE ---
-    function openCustomActivityModal() {
-      document.getElementById('customDateInput').value = selectedCalendarDateStr;
-      document.getElementById('customActivityModal').classList.remove('hidden');
-    }
-    function closeCustomActivityModal() { 
-      document.getElementById('customActivityModal').classList.add('hidden'); 
-    }
-
-    function saveCustomActivity() {
-      const dateKey = document.getElementById('customDateInput').value || selectedCalendarDateStr;
-      const title = document.getElementById('customTitle').value.trim();
-      const type = document.getElementById('customType').value;
-      const duration = document.getElementById('customDuration').value.trim() || '45 min';
-      const notes = document.getElementById('customNotes').value.trim();
-
-      if (!title) return alert('Enter activity title');
-      if (!customActivities[dateKey]) customActivities[dateKey] = [];
-
-      customActivities[dateKey].push({ title, type, duration, notes, timestamp: new Date().toISOString() });
-      localStorage.setItem('sb_custom_activities', JSON.stringify(customActivities));
-      
-      closeCustomActivityModal();
-      document.getElementById('customTitle').value = '';
-      document.getElementById('customNotes').value = '';
-      
-      selectedCalendarDateStr = dateKey;
-      renderCalendar();
-    }
-
-    function renderDayCustomActivities() {
-      const container = document.getElementById('selectedDayCustomActivities');
-      const list = customActivities[selectedCalendarDateStr] || [];
-      if (list.length === 0) { container.innerHTML = ''; return; }
-      container.innerHTML = `
-        <p class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider mt-2 mb-1">Logged Sessions (${selectedCalendarDateStr})</p>
-        ${list.map((item, idx) => `
-          <div class="bg-[#0f1b13] p-2.5 rounded-xl border border-emerald-800/40 flex justify-between items-start">
-            <div>
-              <div class="flex items-center gap-1.5 mb-0.5">
-                <span class="text-xs font-bold text-white">${item.title}</span>
-                <span class="text-[8px] bg-slate-800 text-emerald-300 px-1.5 py-0.2 rounded font-bold">${item.type}</span>
-                <span class="text-[9px] text-slate-400">&bull; ${item.duration}</span>
-              </div>
-              ${item.notes ? `<p class="text-[11px] text-slate-300">${item.notes}</p>` : ''}
-            </div>
-            <button onclick="deleteCustomActivity('${selectedCalendarDateStr}',${idx})" class="text-slate-500 hover:text-red-400 text-xs px-1"><i class="fa-solid fa-trash"></i></button>
-          </div>
-        `).join('')}
-      `;
-    }
-
-    function deleteCustomActivity(dateKey, idx) {
-      if (customActivities[dateKey]) {
-        customActivities[dateKey].splice(idx, 1);
-        localStorage.setItem('sb_custom_activities', JSON.stringify(customActivities));
-        renderDayCustomActivities();
-      }
-    }
-
-    function switchWeek(weekNum) {
-      currentWeek = parseInt(weekNum);
-      const prog = weeklyPrograms[currentWeek];
-
-      document.getElementById('allDaysContainer').innerHTML = prog.schedule.map((item, idx) => `
-        <div onclick="selectProtocolDay(${idx})" class="bg-[#122017] p-3 rounded-xl border border-emerald-950 flex justify-between items-center cursor-pointer hover:border-emerald-700 transition">
-          <div>
-            <div class="flex items-center gap-2 mb-0.5">
-              <span class="text-xs font-bold text-white">${item.dayFull}</span>
-              <span class="text-[9px] font-extrabold px-1.5 py-0.2 rounded ${
-                item.badge === 'GYM' ? 'bg-amber-900/40 text-amber-300' :
-                item.badge === 'SIM' ? 'bg-blue-900/40 text-blue-300' :
-                item.badge === 'PLAY' ? 'bg-emerald-900/40 text-emerald-300' :
-                'bg-slate-800 text-slate-300'
-              }">${item.badge}</span>
-            </div>
-            <p class="text-[11px] text-slate-400">${item.type} &bull; ${item.time}</p>
-          </div>
-          <span class="text-slate-500 text-xs"><i class="fa-solid fa-chevron-right"></i></span>
-        </div>
-      `).join('');
-
-      renderCalendar();
-      switchGymSession(activeGymDay);
-    }
-
-    function selectProtocolDay(dayIdx) {
-      const now = new Date();
-      now.setDate(now.getDate() + (calendarWeekOffset * 7));
-      const jsDay = now.getDay();
-      const currentMondayOffset = (jsDay === 0) ? -6 : 1 - jsDay;
-      const targetDate = new Date(now);
-      targetDate.setDate(now.getDate() + currentMondayOffset + dayIdx);
-      selectedCalendarDateStr = targetDate.toISOString().split('T')[0];
-      renderCalendar();
-    }
-
-    function switchGymSession(dayNum) {
-      activeGymDay = dayNum;
-      ['gymBtn1', 'gymBtn2', 'gymBtn3'].forEach((id, idx) => {
-        const btn = document.getElementById(id);
-        if (idx + 1 === dayNum) btn.className = "px-2 py-0.5 rounded font-bold text-white bg-emerald-700";
-        else btn.className = "px-2 py-0.5 rounded font-bold text-slate-400 hover:text-white";
-      });
-
-      const workout = weeklyPrograms[currentWeek].gymWorkouts[dayNum];
-      document.getElementById('gymWorkoutTitle').innerText = workout.title;
-      document.getElementById('gymWorkoutFocus').innerText = workout.focus;
-
-      document.getElementById('gymExerciseList').innerHTML = workout.exercises.map((ex, idx) => `
-        <div class="bg-[#122017] p-3 rounded-xl border border-emerald-900/60 shadow-sm">
-          <div class="flex justify-between items-start mb-1">
-            <h4 class="text-xs font-bold text-white">${idx + 1}. ${ex.name}</h4>
-            <span class="text-[10px] text-emerald-400 font-bold bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800/40">${ex.sets}</span>
-          </div>
-          <p class="text-[11px] text-slate-400 mb-2">Key: ${ex.cue}</p>
-          <div class="flex gap-2">
-            <input type="number" placeholder="Weight (lbs)" class="flex-1 bg-[#17271e] text-xs p-1.5 rounded border border-emerald-800/40 text-white">
-            <button onclick="this.classList.add('bg-emerald-500', 'text-white'); this.innerText='Logged!'" class="bg-[#1c3626] hover:bg-emerald-600 text-emerald-300 text-xs px-3 py-1.5 rounded font-semibold transition">
-              Log Set
-            </button>
-          </div>
-        </div>
+    function renderTrackmanTable() {
+      const tbody = document.getElementById('trackmanShotsTable');
+      if (!tbody) return;
+      tbody.innerHTML = trackmanShots.map(s => `
+        <tr class="border-b border-emerald-950/40">
+          <td class="py-2 px-2 font-bold text-white">${s.club}</td>
+          <td class="py-2 px-2 text-emerald-300">${s.speed} mph</td>
+          <td class="py-2 px-2 text-slate-300">${s.carry} yds</td>
+          <td class="py-2 px-2 text-slate-400">${s.smash || '--'}</td>
+        </tr>
       `).join('');
     }
 
-    // --- TRACKMAN SUB-TABS (SCANNER / GAPPING / WEDGE) ---
-    function switchTrackmanSubTab(subTab) {
-      ['scanner', 'gapping', 'wedge'].forEach(t => {
-        document.getElementById(`tmSubView-${t}`).classList.add('hidden');
-        const btn = document.getElementById(`tmSubBtn-${t}`);
-        btn.className = "flex-1 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white";
-      });
-      document.getElementById(`tmSubView-${subTab}`).classList.remove('hidden');
-      document.getElementById(`tmSubBtn-${subTab}`).className = "flex-1 py-1.5 rounded-lg font-bold text-white bg-emerald-700";
-
-      if (subTab === 'gapping') renderBagGapping();
-      if (subTab === 'wedge') renderWedgeMatrix();
-    }
-
-    // --- BAG GAPPING CALCULATION ENGINE ---
-    function renderBagGapping() {
-      const container = document.getElementById('bagGappingList');
-      const bagClubs = ['Driver', '3-Wood', '2-Iron', '4-Iron', '5-Iron', '6-Iron', '7-Iron', '8-Iron', '9-Iron', 'PW', '50°', '54°', '58°'];
-      
-      // Calculate averages from logged shots
-      const stats = {};
-      bagClubs.forEach(c => stats[c] = { totalCarry: 0, totalSpeed: 0, totalSmash: 0, count: 0 });
-
-      trackmanShots.forEach(s => {
-        if (stats[s.club]) {
-          stats[s.club].totalCarry += parseFloat(s.carry) || 0;
-          stats[s.club].totalSpeed += parseFloat(s.speed) || 0;
-          stats[s.club].totalSmash += parseFloat(s.smash) || 0;
-          stats[s.club].count++;
-        }
-      });
-
-      container.innerHTML = bagClubs.map(club => {
-        const item = stats[club];
-        const avgCarry = item.count > 0 ? Math.round(item.totalCarry / item.count) : null;
-        const avgSpeed = item.count > 0 ? (item.totalSpeed / item.count).toFixed(1) : null;
-        const avgSmash = item.count > 0 ? (item.totalSmash / item.count).toFixed(2) : null;
-
-        return `
-          <div class="bg-[#0b160f] p-2.5 rounded-xl border border-emerald-950 flex justify-between items-center text-xs">
-            <div class="flex items-center gap-2">
-              <span class="font-black text-white w-16">${club}</span>
-              <span class="text-[10px] text-slate-400">${item.count} logged</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <span class="text-slate-400 text-[11px]">${avgSpeed ? avgSpeed + ' mph' : '--'}</span>
-              <span class="text-slate-400 text-[11px]">${avgSmash ? avgSmash : '--'}</span>
-              <span class="font-black text-emerald-400 text-sm bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/40 w-16 text-right">
-                ${avgCarry ? avgCarry + ' y' : '--'}
-              </span>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function openManualShotModal() {
-      document.getElementById('manualShotModal').classList.remove('hidden');
-    }
-
-    function saveManualShot() {
-      const club = document.getElementById('manClub').value;
-      const carry = parseInt(document.getElementById('manCarry').value);
-      const speed = parseFloat(document.getElementById('manSpeed').value) || 0;
-      const smash = parseFloat(document.getElementById('manSmash').value) || 1.45;
-
-      if (!carry) return alert('Enter carry distance');
-
-      trackmanShots.unshift({
-        club,
-        speed: speed.toFixed(1),
-        carry,
-        smash: smash.toFixed(2),
-        source: 'Manual'
-      });
-
-      localStorage.setItem('sb_trackman_shots', JSON.stringify(trackmanShots));
-      document.getElementById('manualShotModal').classList.add('hidden');
-      renderBagGapping();
+    window.onload = function() {
+      setupRealWeeklyCalendar();
+      switchWeek(1);
+      switchGymSession(1);
       renderTrackmanTable();
-    }
-
-    // --- WEDGE MATRIX TRACKER ---
-    function renderWedgeMatrix() {
-      const tbody = document.getElementById('wedgeMatrixBody');
-      const wedges = ['50°', '54°', '58°'];
-
-      tbody.innerHTML = wedges.map(w => {
-        const val = wedgeMatrixData[w] || { half: 0, threeQuarter: 0, full: 0 };
-        return `
-          <tr class="hover:bg-[#15251a]">
-            <td class="p-2 font-black text-white">${w}</td>
-            <td class="p-2 text-center">
-              <input type="number" id="wm_${w}_half" value="${val.half}" class="w-16 bg-[#17271e] text-center text-xs p-1 rounded border border-emerald-800/40 text-emerald-300 font-bold">
-            </td>
-            <td class="p-2 text-center">
-              <input type="number" id="wm_${w}_tq" value="${val.threeQuarter}" class="w-16 bg-[#17271e] text-center text-xs p-1 rounded border border-emerald-800/40 text-emerald-300 font-bold">
-            </td>
-            <td class="p-2 text-center">
-              <input type="number" id="wm_${w}_full" value="${val.full}" class="w-16 bg-[#17271e] text-center text-xs p-1 rounded border border-emerald-800/40 text-amber-400 font-bold">
-            </td>
-          </tr>
-        `;
-      }).join('');
-    }
-
-    function saveWedgeMatrix() {
-      const wedges = ['50°', '54°', '58°'];
-      wedges.forEach(w => {
-        wedgeMatrixData[w] = {
-          half: parseInt(document.getElementById(`wm_${w}_half`).value) || 0,
-          threeQuarter: parseInt(document.getElementById(`wm_${w}_tq`).value) || 0,
-          full: parseInt(document.getElementById(`wm_${w}_full`).value) || 0
-        };
-      });
-      localStorage.setItem('sb_wedge_matrix', JSON.stringify(wedgeMatrixData));
-      alert('Wedge Matrix Carry Yardages Saved!');
-    }
-
-    function showTab(tabId) {
-      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.classList.remove('text-emerald-400');
-        btn.classList.add('text-slate-500');
-      });
-      document.getElementById('tab-' + tabId).classList.remove('hidden');
-      const activeBtn = document.querySelector(`.nav-btn[data-tab="${tabId}"]`);
-      if (activeBtn) {
-        activeBtn.classList.remove('text-slate-500');
-        activeBtn.classList.add('text-emerald-400');
-      }
-    }
-
-    // OCR ENGINE
-    async function processTrackmanImage(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const statusBox = document.getElementById('ocrStatus');
-      const resultForm = document.getElementById('ocrResultForm');
-
-      statusBox.classList.remove('hidden');
-      resultForm.classList.add('hidden');
-
-      try {
-        const worker = await Tesseract.createWorker('eng');
-        const ret = await worker.recognize(file);
-        await worker.terminate();
-
-        const raw = ret.data.text;
-        statusBox.classList.add('hidden');
-
-        let speed = null, carry = null, smash = null;
-        const speeds = raw.match(/\b(1[0-9]{2}(?:\.[0-9])?)\b/g);
-        if (speeds) speed = parseFloat(speeds[0]);
-
-        const carries = raw.match(/\b([1-3][0-9]{2})\b/g);
-        if (carries) {
-          const validCarry = carries.find(c => parseFloat(c) !== speed);
-          if (validCarry) carry =
+      renderScoringTab();
+    };
+  </script>
+</body>
+</html>
