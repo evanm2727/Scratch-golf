@@ -35,7 +35,7 @@
       <div>
         <div class="flex items-center gap-1.5">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <p class="text-[10px] font-bold tracking-widest uppercase text-emerald-400" id="headerHandicapLabel">Target: 8.0 &rarr; 0.0 Index</p>
+          <p class="text-[10px] font-bold tracking-widest uppercase text-emerald-400" id="headerHandicapLabel">USGA Index: 8.1 &rarr; 0.0 Target</p>
         </div>
         <h1 class="text-lg font-black tracking-tight text-white flex items-center gap-2">
           SCRATCH BLUEPRINT
@@ -203,8 +203,8 @@
           <div>
             <span class="text-[10px] font-black uppercase tracking-wider text-emerald-400">Official USGA Index</span>
             <div class="flex items-baseline gap-2 mt-0.5">
-              <span class="text-4xl font-black text-white tracking-tight" id="heroHandicap">8.0</span>
-              <span class="text-xs font-bold px-2 py-0.5 rounded-full" id="handicapTrendBadge">Even</span>
+              <span class="text-4xl font-black text-white tracking-tight" id="heroHandicap">8.1</span>
+              <span class="text-xs font-bold px-2 py-0.5 rounded-full" id="handicapTrendBadge">Live</span>
             </div>
             <p class="text-[11px] text-slate-400 mt-1" id="golferNameLabel">Evan McCollough &bull; GHIN 13093434</p>
           </div>
@@ -217,10 +217,10 @@
         <div class="space-y-1 pt-2 border-t border-emerald-900/50">
           <div class="flex justify-between text-[10px] font-semibold text-slate-300">
             <span>Road to Scratch</span>
-            <span id="scratchProgressText">8.0 pts to Scratch (0.0)</span>
+            <span id="scratchProgressText">8.1 pts to Scratch (0.0)</span>
           </div>
           <div class="w-full bg-[#0a140d] h-2 rounded-full overflow-hidden border border-emerald-950">
-            <div id="scratchProgressBar" class="bg-emerald-400 h-full transition-all duration-500" style="width: 20%"></div>
+            <div id="scratchProgressBar" class="bg-emerald-400 h-full transition-all duration-500" style="width: 19%"></div>
           </div>
         </div>
       </div>
@@ -243,7 +243,7 @@
         </div>
       </details>
 
-      <!-- Differential Chart with non-intercepting container -->
+      <!-- Differential Chart Container with pointer-events-none -->
       <div class="bg-[#122017] p-3 rounded-2xl border border-emerald-800/40">
         <div class="flex justify-between items-center mb-2 px-1">
           <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Differential Progression</h3>
@@ -537,9 +537,9 @@
     let activeGymDay = 1;
     let selectedCalendarDayIdx = 0;
 
-    // Local Storage Databases
+    // Databases
     let customActivities = JSON.parse(localStorage.getItem('sb_custom_activities')) || {};
-    let ghinConfig = JSON.parse(localStorage.getItem('sb_ghin_config')) || { email: 'evanm2727@gmail.com', password: '', index: '8.0', previousIndex: '8.0' };
+    let ghinConfig = JSON.parse(localStorage.getItem('sb_ghin_config')) || { email: 'evanm2727@gmail.com', password: '', index: '8.1', previousIndex: '8.1' };
     let ghinScores = JSON.parse(localStorage.getItem('sb_ghin_scores')) || [];
 
     let trackmanShots = JSON.parse(localStorage.getItem('sb_trackman_shots')) || [
@@ -581,7 +581,7 @@
         const data = await res.json();
         if (data.error) throw new Error(data.error);
 
-        const currentIdx = parseFloat(data.handicapIndex) || 8.0;
+        const currentIdx = parseFloat(data.handicapIndex) || 8.1;
         const prevIdx = parseFloat(ghinConfig.index) || currentIdx;
 
         ghinConfig = {
@@ -593,12 +593,16 @@
         };
         localStorage.setItem('sb_ghin_config', JSON.stringify(ghinConfig));
 
-        // Robust parsing of raw scores across possible GHIN payload structures
-        const rawList = data.scores || data.recent_scores || (data.golfer && data.golfer.scores) || [];
+        // Exhaustive fallback checks for all possible USGA scores payload locations
+        let rawList = [];
+        if (Array.isArray(data.scores)) rawList = data.scores;
+        else if (Array.isArray(data.golfer_scores)) rawList = data.golfer_scores;
+        else if (Array.isArray(data.recent_scores)) rawList = data.recent_scores;
+        else if (data.golfer && Array.isArray(data.golfer.scores)) rawList = data.golfer.scores;
 
-        if (Array.isArray(rawList) && rawList.length > 0) {
+        if (rawList.length > 0) {
           ghinScores = rawList.map(s => {
-            const rawDiff = s.differential !== undefined ? s.differential : (s.score_differential !== undefined ? s.score_differential : 0);
+            const rawDiff = s.differential ?? s.score_differential ?? s.diff ?? 0;
             const numDiff = parseFloat(rawDiff) || 0.0;
             const playedDate = s.played_at || s.date_played || s.date || '';
 
@@ -616,7 +620,7 @@
         }
 
         renderScoringTab();
-        alert(`GHIN Connected! Live Index: ${ghinConfig.index} (${ghinScores.length} rounds loaded)`);
+        alert(`GHIN Connected!\nLive Index: ${ghinConfig.index}\n${ghinScores.length} rounds imported.`);
 
       } catch (err) {
         alert("GHIN Sync Failed: " + err.message);
@@ -627,8 +631,8 @@
     }
 
     function renderScoringTab() {
-      const idxNum = parseFloat(ghinConfig.index) || 8.0;
-      const prevNum = parseFloat(ghinConfig.previousIndex) || 8.0;
+      const idxNum = parseFloat(ghinConfig.index) || 8.1;
+      const prevNum = parseFloat(ghinConfig.previousIndex) || 8.1;
 
       document.getElementById('heroHandicap').innerText = idxNum.toFixed(1);
       document.getElementById('headerHandicapLabel').innerText = `USGA Index: ${idxNum.toFixed(1)} \u2192 0.0 Target`;
@@ -644,7 +648,7 @@
         trendBadge.innerHTML = `<i class="fa-solid fa-arrow-trend-up"></i> +${delta} pts`;
       } else {
         trendBadge.className = "text-xs font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300";
-        trendBadge.innerHTML = `Even`;
+        trendBadge.innerHTML = `Live`;
       }
 
       // Scratch Progress Bar (10.0 to 0.0 scale)
@@ -692,7 +696,7 @@
 
       const reversedScores = [...ghinScores].reverse();
       const labels = reversedScores.length > 0 ? reversedScores.map(r => r.date) : ['R1', 'R2', 'R3', 'R4', 'R5'];
-      const dataPoints = reversedScores.length > 0 ? reversedScores.map(r => parseFloat(r.diff)) : [8.4, 8.2, 8.0, 7.8, 8.0];
+      const dataPoints = reversedScores.length > 0 ? reversedScores.map(r => parseFloat(r.diff)) : [8.4, 8.2, 8.1, 7.8, 8.1];
       const pointColors = reversedScores.length > 0 ? reversedScores.map(r => r.isUsed ? '#f59e0b' : '#10b981') : ['#10b981', '#10b981', '#10b981', '#10b981', '#10b981'];
 
       chartInstance = new Chart(ctx, {
