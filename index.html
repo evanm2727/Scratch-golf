@@ -4,12 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Scratch Blueprint | Golf & GHIN</title>
+  
+  <!-- FEATURE 6: PWA STANDALONE SETUP & APPLE TOUCH TAGS -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Scratch Blueprint">
+  <meta name="theme-color" content="#0b130e">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%20width=%22192%22%20height=%22192%22><rect width=%22192%22 height=%22192%22 fill=%22%2310b981%22 rx=%2240%22/><text x=%2250%25%22 y=%2255%25%22 font-size=%2290%22 text-anchor=%22middle%22 dominant-baseline=%22central%22 fill=%22%23042f2e%22 font-family=%22sans-serif%22 font-weight=%22bold%22>SB</text></svg>">
+  <link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22Scratch%20Blueprint%22%2C%22short_name%22%3A%22Scratch%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230b130e%22%2C%22theme_color%22%3A%22%230b130e%22%7D">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
     html, body {
       height: 100%;
@@ -20,7 +28,7 @@
       user-select: none;
     }
     .safe-top { padding-top: max(env(safe-area-inset-top), 16px); }
-    .safe-bottom-nav { padding-bottom: max(env(safe-area-inset-bottom), 16px); }
+    .safe-bottom-nav { padding-bottom: max(env(safe-area-inset-bottom), 18px); }
     .custom-scrollbar::-webkit-scrollbar { display: none; }
     .custom-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
@@ -53,10 +61,21 @@
 
     <!-- TAB 1: SCHEDULE -->
     <div id="tab-schedule" class="tab-pane space-y-3">
+      <!-- FEATURE 1: PRIOR DATE NAVIGATION (‹ / ›) -->
       <div class="bg-[#101e14] p-3 rounded-2xl border border-emerald-800/40 shadow">
         <div class="flex justify-between items-center mb-2 px-1">
-          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300" id="currentCalendarMonth">Week Schedule</h2>
-          <span class="text-[10px] text-emerald-400 font-semibold" id="activeDayIndicator">Tap a day to view</span>
+          <div class="flex items-center gap-2">
+            <button onclick="changeWeekOffset(-1)" class="w-7 h-7 flex items-center justify-center rounded-lg bg-[#15251a] border border-emerald-800/60 text-emerald-300 text-xs hover:bg-[#1f3827]">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300" id="currentCalendarMonth">Week Schedule</h2>
+            <button onclick="changeWeekOffset(1)" class="w-7 h-7 flex items-center justify-center rounded-lg bg-[#15251a] border border-emerald-800/60 text-emerald-300 text-xs hover:bg-[#1f3827]">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          </div>
+          <button onclick="resetToCurrentWeek()" class="text-[10px] bg-[#172b1e] border border-emerald-700/50 text-emerald-300 px-2 py-1 rounded font-bold">
+            Current
+          </button>
         </div>
         <div class="grid grid-cols-7 gap-1" id="calendarDaysRow"></div>
       </div>
@@ -68,7 +87,7 @@
         </div>
         <div class="flex items-center gap-1.5">
           <button onclick="openCustomActivityModal()" class="text-[10px] bg-[#1a3324] hover:bg-emerald-600 text-emerald-300 hover:text-white font-bold px-2 py-1 rounded border border-emerald-700/50 flex items-center gap-1">
-            <i class="fa-solid fa-plus"></i> Log Activity
+            <i class="fa-solid fa-plus"></i> Custom Log
           </button>
           <span class="text-[10px] bg-emerald-400 text-emerald-950 font-black px-2 py-1 rounded" id="selectedDayBadge">GYM</span>
         </div>
@@ -90,7 +109,7 @@
           <h2 class="text-sm font-bold text-white flex items-center gap-1.5">
             <i class="fa-solid fa-dumbbell text-emerald-400"></i> Strength Split
           </h2>
-          <p class="text-[11px] text-slate-400">Rotational power & stability</p>
+          <p class="text-[11px] text-slate-400">Rotational speed & kinetic power</p>
         </div>
         <div class="flex gap-1 bg-[#122017] p-1 rounded-lg border border-emerald-900/60 text-xs">
           <button onclick="switchGymSession(1)" id="gymBtn1" class="px-2 py-0.5 rounded font-bold text-white bg-emerald-700">D1</button>
@@ -110,32 +129,76 @@
       <div id="gymExerciseList" class="space-y-2.5"></div>
     </div>
 
-    <!-- TAB 3: TRACKMAN OCR SCANNER -->
+    <!-- TAB 3: TRACKMAN & WEDGE MATRIX -->
     <div id="tab-trackman" class="tab-pane hidden space-y-3">
-      <div class="bg-[#122017] p-4 rounded-2xl border border-emerald-500/40">
-        <div class="flex justify-between items-center mb-1">
-          <h2 class="text-sm font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-camera text-emerald-400"></i> TrackMan Reader
-          </h2>
-          <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/40 font-bold">OCR</span>
+      
+      <!-- FEATURE 2: WEDGE MATRIX TRACKER (CLOCK SYSTEM) -->
+      <div class="bg-gradient-to-br from-[#122619] to-[#0e1a12] p-3.5 rounded-2xl border border-emerald-500/40">
+        <div class="flex justify-between items-center mb-2">
+          <div>
+            <h2 class="text-xs font-black uppercase text-emerald-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-bullseye text-emerald-400"></i> Wedge Clock Matrix
+            </h2>
+            <p class="text-[10px] text-slate-400">Calibrated carry yardages inside 120y</p>
+          </div>
+          <button onclick="openWedgeModal()" class="text-[10px] bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-2.5 py-1 rounded-lg">
+            <i class="fa-solid fa-pen"></i> Edit Yardages
+          </button>
         </div>
-        <p class="text-[11px] text-slate-300 mb-3">Snap monitor tiles or upload photo.</p>
+        
+        <div class="grid grid-cols-4 gap-1.5 text-center text-xs">
+          <div class="bg-[#0b150f] p-2 rounded-xl border border-emerald-900/60">
+            <span class="text-[9px] font-bold text-slate-400 uppercase block">Club</span>
+            <span class="font-extrabold text-emerald-400 mt-1 block">50° (GW)</span>
+            <span class="font-extrabold text-emerald-400 mt-2 block">54° (SW)</span>
+            <span class="font-extrabold text-emerald-400 mt-2 block">58° (LW)</span>
+          </div>
+          <div class="bg-[#0b150f] p-2 rounded-xl border border-emerald-900/60">
+            <span class="text-[9px] font-bold text-slate-400 uppercase block">1/2 (Hip)</span>
+            <span class="font-bold text-white mt-1 block" id="wm_50_half">65 yds</span>
+            <span class="font-bold text-white mt-2 block" id="wm_54_half">55 yds</span>
+            <span class="font-bold text-white mt-2 block" id="wm_58_half">45 yds</span>
+          </div>
+          <div class="bg-[#0b150f] p-2 rounded-xl border border-emerald-900/60">
+            <span class="text-[9px] font-bold text-slate-400 uppercase block">3/4 (Chest)</span>
+            <span class="font-bold text-white mt-1 block" id="wm_50_three">95 yds</span>
+            <span class="font-bold text-white mt-2 block" id="wm_54_three">85 yds</span>
+            <span class="font-bold text-white mt-2 block" id="wm_58_three">72 yds</span>
+          </div>
+          <div class="bg-[#0b150f] p-2 rounded-xl border border-emerald-900/60">
+            <span class="text-[9px] font-bold text-slate-400 uppercase block">Full Swing</span>
+            <span class="font-bold text-emerald-300 mt-1 block" id="wm_50_full">118 yds</span>
+            <span class="font-bold text-emerald-300 mt-2 block" id="wm_54_full">108 yds</span>
+            <span class="font-bold text-emerald-300 mt-2 block" id="wm_58_full">95 yds</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- OCR SCANNER -->
+      <div class="bg-[#122017] p-3.5 rounded-2xl border border-emerald-800/40">
+        <div class="flex justify-between items-center mb-1">
+          <h2 class="text-xs font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-camera text-emerald-400"></i> TrackMan Monitor Reader
+          </h2>
+          <span class="text-[9px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/40 font-bold">OCR</span>
+        </div>
+        <p class="text-[10px] text-slate-300 mb-2.5">Capture monitor readout or upload photo.</p>
 
         <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="processTrackmanImage(event)">
         <input type="file" id="galleryInput" accept="image/*" class="hidden" onchange="processTrackmanImage(event)">
 
         <div class="grid grid-cols-2 gap-2">
-          <button onclick="document.getElementById('cameraInput').click()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 shadow">
+          <button onclick="document.getElementById('cameraInput').click()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 shadow">
             <i class="fa-solid fa-camera"></i> Camera
           </button>
-          <button onclick="document.getElementById('galleryInput').click()" class="bg-[#1b3425] hover:bg-[#234531] text-emerald-300 font-bold text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 border border-emerald-700/50">
+          <button onclick="document.getElementById('galleryInput').click()" class="bg-[#1b3425] hover:bg-[#234531] text-emerald-300 font-bold text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 border border-emerald-700/50">
             <i class="fa-solid fa-images"></i> Photos
           </button>
         </div>
 
         <div id="ocrStatus" class="hidden mt-3 p-3 rounded-xl bg-[#0b160f] border border-emerald-800/40 text-center">
           <div class="inline-block animate-spin text-emerald-400 text-base mb-1"><i class="fa-solid fa-circle-notch"></i></div>
-          <p class="text-xs text-slate-300 font-medium">Reading metrics...</p>
+          <p class="text-xs text-slate-300 font-medium">Scanning monitor metrics...</p>
         </div>
 
         <div id="ocrResultForm" class="hidden mt-3 pt-3 border-t border-emerald-900/60">
@@ -150,6 +213,9 @@
                 <option value="6-Iron">6-Iron</option>
                 <option value="8-Iron">8-Iron</option>
                 <option value="PW">PW</option>
+                <option value="50-Deg">50°</option>
+                <option value="54-Deg">54°</option>
+                <option value="58-Deg">58°</option>
               </select>
             </div>
             <div>
@@ -166,21 +232,44 @@
             </div>
           </div>
           <button onclick="confirmParsedShot()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2 rounded-xl">
-            Save Shot
+            Confirm & Save Shot
           </button>
         </div>
       </div>
 
+      <!-- FEATURE 5: BAG GAPPING & DISPERSION CALCULATOR -->
       <div class="bg-[#122017] p-3 rounded-2xl border border-emerald-800/40">
-        <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">TrackMan History</h3>
+        <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center justify-between">
+          <span>Bag Gapping Benchmarks</span>
+          <span class="text-[9px] text-emerald-400 font-semibold">Real-Time Averages</span>
+        </h3>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs text-slate-300">
-            <thead class="text-[10px] text-emerald-400 uppercase bg-[#0d1711] border-b border-emerald-900/60">
+            <thead class="text-[9px] text-emerald-400 uppercase bg-[#0d1711] border-b border-emerald-900/60">
               <tr>
-                <th class="py-1.5 px-2">Club</th>
-                <th class="py-1.5 px-2">Ball Spd</th>
-                <th class="py-1.5 px-2">Carry</th>
-                <th class="py-1.5 px-2">Smash</th>
+                <th class="py-1 px-2">Club</th>
+                <th class="py-1 px-2">Avg Carry</th>
+                <th class="py-1 px-2">Avg Ball Spd</th>
+                <th class="py-1 px-2">Avg Smash</th>
+                <th class="py-1 px-2">Shots</th>
+              </tr>
+            </thead>
+            <tbody id="bagGappingTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TRACKMAN LOG TABLE -->
+      <div class="bg-[#122017] p-3 rounded-2xl border border-emerald-800/40">
+        <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Logged Shots History</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="text-[9px] text-emerald-400 uppercase bg-[#0d1711] border-b border-emerald-900/60">
+              <tr>
+                <th class="py-1 px-2">Club</th>
+                <th class="py-1 px-2">Carry</th>
+                <th class="py-1 px-2">Ball Spd</th>
+                <th class="py-1 px-2">Smash</th>
               </tr>
             </thead>
             <tbody id="trackmanShotsTable"></tbody>
@@ -191,6 +280,8 @@
 
     <!-- TAB 4: SCORING & GHIN -->
     <div id="tab-scoring" class="tab-pane hidden space-y-3">
+      
+      <!-- HERO HANDICAP CARD -->
       <div class="bg-gradient-to-br from-[#122619] to-[#0d1a12] p-4 rounded-2xl border border-emerald-500/50 shadow-xl">
         <div class="flex justify-between items-start mb-3">
           <div>
@@ -199,9 +290,9 @@
               <span class="text-4xl font-black text-white tracking-tight" id="heroHandicap">8.1</span>
               <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300" id="handicapTrendBadge">Live</span>
             </div>
-            <p class="text-[11px] text-slate-400 mt-1">Evan McCollough &bull; GHIN 13093434</p>
+            <p class="text-[11px] text-slate-400 mt-1" id="golferNameLabel">Evan McCollough &bull; GHIN 13093434</p>
           </div>
-          <button onclick="syncGhinData()" id="ghinSyncBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3 py-2 rounded-xl flex items-center gap-1.5 shadow">
+          <button onclick="syncGhinData(true)" id="ghinSyncBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3 py-2 rounded-xl flex items-center gap-1.5 shadow">
             <i class="fa-solid fa-arrows-rotate"></i> Sync
           </button>
         </div>
@@ -217,6 +308,21 @@
         </div>
       </div>
 
+      <!-- FEATURE 4: COUNTING SCORES IMPACT SIMULATOR -->
+      <div class="bg-[#122017] p-3.5 rounded-2xl border border-amber-500/40 shadow">
+        <div class="flex justify-between items-center mb-1">
+          <span class="text-[10px] font-black uppercase tracking-wider text-amber-400">Handicap Movement Target</span>
+          <span class="text-[9px] bg-amber-500/20 text-amber-300 font-bold px-1.5 py-0.5 rounded">WHS Rules</span>
+        </div>
+        <p class="text-xs text-slate-200 mt-1" id="impactSimSummary">
+          Your 8th counting differential is <strong class="text-amber-300" id="sim8thDiff">--</strong>.
+        </p>
+        <p class="text-[11px] text-slate-400 mt-1" id="simTargetAdvice">
+          Shoot better than this differential in your next round to immediately reduce your 8.1 Index.
+        </p>
+      </div>
+
+      <!-- Credentials Section -->
       <details class="bg-[#122017] rounded-xl border border-emerald-900/40 p-2 text-xs">
         <summary class="text-slate-400 cursor-pointer font-semibold flex justify-between items-center px-1">
           <span><i class="fa-solid fa-key text-emerald-400 mr-1.5"></i> GHIN Login Credentials</span>
@@ -234,16 +340,18 @@
         </div>
       </details>
 
+      <!-- Chart Container -->
       <div class="bg-[#122017] p-3 rounded-2xl border border-emerald-800/40">
         <div class="flex justify-between items-center mb-2 px-1">
           <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Differential Progression</h3>
-          <span class="text-[10px] text-amber-400 font-bold">&bull; Gold = Best 8 Counting</span>
+          <span class="text-[10px] text-amber-400 font-bold">&bull; Gold = Counting</span>
         </div>
         <div class="relative w-full h-44 pointer-events-none">
           <canvas id="scoringChart" class="w-full h-full"></canvas>
         </div>
       </div>
 
+      <!-- 20-Round Ledger -->
       <div class="bg-[#122017] p-3 rounded-2xl border border-emerald-800/40">
         <div class="flex justify-between items-center mb-2 px-1">
           <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Official 20-Round Ledger</h3>
@@ -255,16 +363,22 @@
 
   </main>
 
-  <!-- MODAL: CUSTOM ACTIVITY -->
+  <!-- MODAL: CUSTOM ACTIVITY WITH FEATURE 1 DATE PICKER -->
   <div id="customActivityModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-[#122017] border border-emerald-700/60 rounded-2xl p-4 w-full max-w-sm space-y-3 shadow-2xl">
       <div class="flex justify-between items-center">
-        <h3 class="text-xs font-bold text-white uppercase tracking-wider">Log Activity</h3>
+        <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+          <i class="fa-solid fa-pen-to-square text-emerald-400"></i> Log Custom Session
+        </h3>
         <button onclick="closeCustomActivityModal()" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div>
-        <label class="text-[10px] text-slate-400 block mb-1">Activity Name</label>
-        <input type="text" id="customTitle" placeholder="e.g. 9-Hole Twilight" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/50 text-white">
+        <label class="text-[10px] text-slate-400 block mb-1">Date</label>
+        <input type="date" id="customDateInput" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/50 text-white">
+      </div>
+      <div>
+        <label class="text-[10px] text-slate-400 block mb-1">Activity Title</label>
+        <input type="text" id="customTitle" placeholder="e.g. 9-Hole Twilight, Speed Session" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/50 text-white">
       </div>
       <div class="grid grid-cols-2 gap-2">
         <div>
@@ -272,7 +386,7 @@
           <select id="customType" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/50 text-white">
             <option value="Golf">Golf</option>
             <option value="Gym">Gym</option>
-            <option value="Cardio">Cardio</option>
+            <option value="Sim">Simulator</option>
             <option value="Recovery">Recovery</option>
           </select>
         </div>
@@ -281,13 +395,50 @@
           <input type="text" id="customDuration" placeholder="45 min" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/50 text-white">
         </div>
       </div>
+      <div>
+        <label class="text-[10px] text-slate-400 block mb-1">Notes / Feels</label>
+        <textarea id="customNotes" rows="2" placeholder="Strike feel, focus cues..." class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/50 text-white"></textarea>
+      </div>
       <button onclick="saveCustomActivity()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow">
-        Save
+        Save Activity
       </button>
     </div>
   </div>
 
-  <!-- Bottom Navigation Bar (z-index 9999 & explicit touch targeting) -->
+  <!-- MODAL: EDIT WEDGE MATRIX -->
+  <div id="wedgeModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-[#122017] border border-emerald-700/60 rounded-2xl p-4 w-full max-w-sm space-y-3 shadow-2xl">
+      <div class="flex justify-between items-center">
+        <h3 class="text-xs font-bold text-white uppercase tracking-wider">Configure Wedge Matrix</h3>
+        <button onclick="closeWedgeModal()" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="space-y-2 text-xs">
+        <p class="text-[10px] font-bold text-emerald-400 uppercase">50° Gap Wedge</p>
+        <div class="grid grid-cols-3 gap-1.5">
+          <input type="number" id="inp_50_half" placeholder="1/2" class="bg-[#17271e] p-1.5 rounded border border-emerald-800/40 text-center text-white">
+          <input type="number" id="inp_50_three" placeholder="3/4" class="bg-[#17271e] p-1.5 rounded border border-emerald-800/40 text-center text-white">
+          <input type="number" id="inp_50_full" placeholder="Full" class="bg-[#17271e] p-1.5 rounded border border-emerald-800/40 text-center text-white">
+        </div>
+        <p class="text-[10px] font-bold text-emerald-400 uppercase pt-1">54° Sand Wedge</p>
+        <div class="grid grid-cols-3 gap-1.5">
+          <input type="number" id="inp_54_half" placeholder="1/2" class="bg-[#17271e] p-1.5 rounded border border-emerald-800/40 text-center text-white">
+          <input type="number" id="inp_54_three" placeholder="3/4" class="bg-[#17271e] p-1.5 rounded border border-emerald-800/40 text-center text-white">
+          <input type="number" id="inp_54_full" placeholder="Full" class="bg-[#17271e] p-1.5 rounded border border-emerald-800/40 text-center text-white">
+        </div>
+        <p class="text-[10px] font-bold text-emerald-400 uppercase pt-1">58° Lob Wedge</p>
+        <div class="grid grid-cols-3 gap-1.5">
+          <input type="number" id="inp_58_half" placeholder="1/2" class="bg-[#17271e] p-1.5 rounded border border-emerald-800/40 text-center text-white">
+          <input type="number" id="inp_58_three" placeholder="3/4" class="bg-[#17271e] p-1.5 rounded border border-emerald-800/40 text-center text-white">
+          <input type="number" id="inp_58_full" placeholder="Full" class="bg-[#17271e] p-1.5 rounded border border-emerald-800/40 text-center text-white">
+        </div>
+      </div>
+      <button onclick="saveWedgeMatrix()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 rounded-xl shadow mt-2">
+        Save Matrix
+      </button>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation Bar (z-[9999] touch-safe) -->
   <nav class="fixed bottom-0 left-0 right-0 bg-[#0d1811]/98 border-t border-emerald-950 px-6 pt-2 safe-bottom-nav z-[9999] flex justify-between items-center max-w-lg mx-auto pointer-events-auto">
     <button type="button" onclick="showTab('schedule')" class="nav-btn flex flex-col items-center text-emerald-400 cursor-pointer py-1 px-3" data-tab="schedule">
       <i class="fa-solid fa-calendar-week text-lg pointer-events-none"></i>
@@ -298,7 +449,7 @@
       <span class="text-[10px] font-semibold mt-1 pointer-events-none">Gym</span>
     </button>
     <button type="button" onclick="showTab('trackman')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-emerald-300 cursor-pointer py-1 px-3" data-tab="trackman">
-      <i class="fa-solid fa-camera text-lg pointer-events-none"></i>
+      <i class="fa-solid fa-bullseye text-lg pointer-events-none"></i>
       <span class="text-[10px] font-semibold mt-1 pointer-events-none">TrackMan</span>
     </button>
     <button type="button" onclick="showTab('scoring')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-emerald-300 cursor-pointer py-1 px-3" data-tab="scoring">
@@ -315,7 +466,7 @@
         title: "Week 1: Force Base",
         schedule: [
           { day: "Mon", dayFull: "Monday", type: "Gym Lift 1", badge: "GYM", focus: "Trap Bar Deadlifts + MB Scoop Slams", time: "50 min" },
-          { day: "Tue", dayFull: "Tuesday", type: "Sim Combine 1", badge: "SIM", focus: "Driver Peak Ball Speed + 60-105yd Wedge matrix", time: "60 min" },
+          { day: "Tue", dayFull: "Tuesday", type: "Sim Combine 1", badge: "SIM", focus: "Driver Ball Speed + 60-105yd Wedge matrix", time: "60 min" },
           { day: "Wed", dayFull: "Wednesday", type: "Gym Lift 2", badge: "GYM", focus: "Landmine Rotational Punch + Cable Chops", time: "55 min" },
           { day: "Thu", dayFull: "Thursday", type: "Sim Combine 2", badge: "SIM", focus: "2-Iron Stinger corridor + Long Iron Proximity", time: "60 min" },
           { day: "Fri", dayFull: "Friday", type: "Gym Lift 3", badge: "GYM", focus: "Jump Shrugs + Single-Leg RDLs", time: "50 min" },
@@ -355,15 +506,46 @@
     let currentWeek = 1;
     let activeGymDay = 1;
     let selectedCalendarDayIdx = 0;
+    let calendarWeekOffset = 0; // FEATURE 1: 0 = current week, -1 = last week
 
     let customActivities = JSON.parse(localStorage.getItem('sb_custom_activities')) || {};
-    let ghinConfig = JSON.parse(localStorage.getItem('sb_ghin_config')) || { email: 'evanm2727@gmail.com', password: '', index: '8.1', previousIndex: '8.1' };
+    let ghinConfig = JSON.parse(localStorage.getItem('sb_ghin_config')) || { email: 'evanm2727@gmail.com', password: '', index: '8.1', previousIndex: '8.1', lastSync: 0 };
     let ghinScores = JSON.parse(localStorage.getItem('sb_ghin_scores')) || [];
 
+    // FEATURE 2: Wedge Matrix storage
+    let wedgeMatrix = JSON.parse(localStorage.getItem('sb_wedge_matrix')) || {
+      "50": { half: 65, three: 95, full: 118 },
+      "54": { half: 55, three: 85, full: 108 },
+      "58": { half: 45, three: 72, full: 95 }
+    };
+
+    // Preloaded bag configuration
     let trackmanShots = JSON.parse(localStorage.getItem('sb_trackman_shots')) || [
       { club: 'Driver', speed: 172.4, carry: 298, smash: 1.49 },
-      { club: '2-Iron', speed: 151.2, carry: 246, smash: 1.44 }
+      { club: '3-Wood', speed: 158.0, carry: 262, smash: 1.46 },
+      { club: '2-Iron', speed: 151.2, carry: 246, smash: 1.44 },
+      { club: '4-Iron', speed: 142.1, carry: 224, smash: 1.43 },
+      { club: '6-Iron', speed: 130.5, carry: 197, smash: 1.41 },
+      { club: '8-Iron', speed: 119.0, carry: 168, smash: 1.39 },
+      { club: 'PW', speed: 108.5, carry: 142, smash: 1.37 }
     ];
+
+    function init() {
+      setupRealWeeklyCalendar();
+      switchWeek(1);
+      switchGymSession(1);
+      renderWedgeMatrix();
+      renderBagGapping();
+      renderTrackmanTable();
+      renderScoringTab();
+
+      // FEATURE 3: AUTO-SYNC ON LAUNCH (if > 12h elapsed)
+      const now = Date.now();
+      const twelveHours = 12 * 60 * 60 * 1000;
+      if (ghinConfig.email && ghinConfig.password && (now - (ghinConfig.lastSync || 0) > twelveHours)) {
+        syncGhinData(false); // background silent sync
+      }
+    }
 
     function showTab(tabId) {
       document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
@@ -381,8 +563,20 @@
       if (tabId === 'scoring') initChart();
     }
 
+    // FEATURE 1: CALENDAR NAVIGATION & MANUAL BACKDATING
+    function changeWeekOffset(delta) {
+      calendarWeekOffset += delta;
+      setupRealWeeklyCalendar();
+    }
+
+    function resetToCurrentWeek() {
+      calendarWeekOffset = 0;
+      setupRealWeeklyCalendar();
+    }
+
     function setupRealWeeklyCalendar() {
       const now = new Date();
+      now.setDate(now.getDate() + (calendarWeekOffset * 7));
       const jsDay = now.getDay();
       const mondayOffset = (jsDay === 0) ? -6 : 1 - jsDay;
       const mondayDate = new Date(now);
@@ -393,21 +587,22 @@
       if (!calendarRow) return;
       calendarRow.innerHTML = '';
 
-      const todayIdx = (jsDay === 0) ? 6 : jsDay - 1;
-      selectedCalendarDayIdx = todayIdx;
+      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      document.getElementById('currentCalendarMonth').innerText = `${monthNames[mondayDate.getMonth()]} ${mondayDate.getFullYear()}`;
 
+      const realToday = new Date();
       for (let i = 0; i < 7; i++) {
         const d = new Date(mondayDate);
         d.setDate(mondayDate.getDate() + i);
         const dayNumber = d.getDate();
-        const isToday = (i === todayIdx);
+        const isToday = (calendarWeekOffset === 0 && d.toDateString() === realToday.toDateString());
 
         const pill = document.createElement('button');
         pill.type = 'button';
         pill.className = `cal-pill flex flex-col items-center py-2 px-1 rounded-xl text-center border cursor-pointer ${
           isToday ? 'bg-emerald-600 text-white border-emerald-400 shadow-md ring-1 ring-emerald-300' : 'bg-[#15251a] text-slate-300 border-emerald-900/50 hover:bg-[#1c3324]'
         }`;
-        pill.onclick = () => selectCalendarDay(i);
+        pill.onclick = () => selectCalendarDay(i, d);
         pill.innerHTML = `
           <span class="text-[9px] font-bold uppercase tracking-wider">${daysShort[i]}</span>
           <span class="text-xs font-black mt-0.5">${dayNumber}</span>
@@ -415,9 +610,10 @@
         `;
         calendarRow.appendChild(pill);
       }
+      selectCalendarDay(selectedCalendarDayIdx, mondayDate);
     }
 
-    function selectCalendarDay(dayIdx) {
+    function selectCalendarDay(dayIdx, dateObj) {
       selectedCalendarDayIdx = dayIdx;
       document.querySelectorAll('.cal-pill').forEach((btn, idx) => {
         if (idx === dayIdx) btn.classList.add('ring-2', 'ring-emerald-400');
@@ -430,7 +626,6 @@
       document.getElementById('selectedDayName').innerText = dayData.dayFull;
       document.getElementById('selectedDayType').innerText = dayData.type;
       document.getElementById('selectedDayBadge').innerText = dayData.badge;
-      document.getElementById('activeDayIndicator').innerText = `Viewing ${dayData.dayFull}`;
 
       const detailContainer = document.getElementById('activeDayDetailContainer');
       if (detailContainer) {
@@ -453,7 +648,6 @@
     function switchWeek(weekNum) {
       currentWeek = parseInt(weekNum);
       const prog = weeklyPrograms[currentWeek] || weeklyPrograms[1];
-
       const allDays = document.getElementById('allDaysContainer');
       if (allDays) {
         allDays.innerHTML = prog.schedule.map((item, idx) => `
@@ -469,9 +663,6 @@
           </div>
         `).join('');
       }
-
-      selectCalendarDay(selectedCalendarDayIdx);
-      switchGymSession(activeGymDay);
     }
 
     function switchGymSession(dayNum) {
@@ -502,24 +693,171 @@
       }
     }
 
-    function openCustomActivityModal() { document.getElementById('customActivityModal').classList.remove('hidden'); }
+    function openCustomActivityModal() {
+      document.getElementById('customDateInput').value = new Date().toISOString().split('T')[0];
+      document.getElementById('customActivityModal').classList.remove('hidden');
+    }
     function closeCustomActivityModal() { document.getElementById('customActivityModal').classList.add('hidden'); }
     function saveCustomActivity() {
+      const date = document.getElementById('customDateInput').value;
       const title = document.getElementById('customTitle').value.trim();
-      if (!title) return alert('Enter activity title');
+      if (!title) return alert('Enter an activity title');
       closeCustomActivityModal();
-      alert(`Logged ${title}`);
+      alert(`Logged: ${title} (${date})`);
     }
 
-    async function syncGhinData() {
+    // FEATURE 2: WEDGE MATRIX FUNCTIONS
+    function openWedgeModal() {
+      document.getElementById('inp_50_half').value = wedgeMatrix["50"].half;
+      document.getElementById('inp_50_three').value = wedgeMatrix["50"].three;
+      document.getElementById('inp_50_full').value = wedgeMatrix["50"].full;
+      document.getElementById('inp_54_half').value = wedgeMatrix["54"].half;
+      document.getElementById('inp_54_three').value = wedgeMatrix["54"].three;
+      document.getElementById('inp_54_full').value = wedgeMatrix["54"].full;
+      document.getElementById('inp_58_half').value = wedgeMatrix["58"].half;
+      document.getElementById('inp_58_three').value = wedgeMatrix["58"].three;
+      document.getElementById('inp_58_full').value = wedgeMatrix["58"].full;
+      document.getElementById('wedgeModal').classList.remove('hidden');
+    }
+    function closeWedgeModal() { document.getElementById('wedgeModal').classList.add('hidden'); }
+    function saveWedgeMatrix() {
+      wedgeMatrix["50"] = {
+        half: parseInt(document.getElementById('inp_50_half').value) || 0,
+        three: parseInt(document.getElementById('inp_50_three').value) || 0,
+        full: parseInt(document.getElementById('inp_50_full').value) || 0
+      };
+      wedgeMatrix["54"] = {
+        half: parseInt(document.getElementById('inp_54_half').value) || 0,
+        three: parseInt(document.getElementById('inp_54_three').value) || 0,
+        full: parseInt(document.getElementById('inp_54_full').value) || 0
+      };
+      wedgeMatrix["58"] = {
+        half: parseInt(document.getElementById('inp_58_half').value) || 0,
+        three: parseInt(document.getElementById('inp_58_three').value) || 0,
+        full: parseInt(document.getElementById('inp_58_full').value) || 0
+      };
+      localStorage.setItem('sb_wedge_matrix', JSON.stringify(wedgeMatrix));
+      renderWedgeMatrix();
+      closeWedgeModal();
+    }
+    function renderWedgeMatrix() {
+      for (const club of ["50", "54", "58"]) {
+        document.getElementById(`wm_${club}_half`).innerText = wedgeMatrix[club].half + " yds";
+        document.getElementById(`wm_${club}_three`).innerText = wedgeMatrix[club].three + " yds";
+        document.getElementById(`wm_${club}_full`).innerText = wedgeMatrix[club].full + " yds";
+      }
+    }
+
+    // FEATURE 5: BAG GAPPING CALCULATOR
+    function renderBagGapping() {
+      const table = document.getElementById('bagGappingTable');
+      if (!table) return;
+
+      const grouped = {};
+      trackmanShots.forEach(s => {
+        if (!grouped[s.club]) grouped[s.club] = { carries: [], speeds: [], smashes: [] };
+        grouped[s.club].carries.push(parseFloat(s.carry));
+        grouped[s.club].speeds.push(parseFloat(s.speed));
+        if (s.smash) grouped[s.club].smashes.push(parseFloat(s.smash));
+      });
+
+      table.innerHTML = Object.keys(grouped).map(club => {
+        const d = grouped[club];
+        const avgCarry = Math.round(d.carries.reduce((a, b) => a + b, 0) / d.carries.length);
+        const avgSpeed = (d.speeds.reduce((a, b) => a + b, 0) / d.speeds.length).toFixed(1);
+        const avgSmash = d.smashes.length > 0 ? (d.smashes.reduce((a, b) => a + b, 0) / d.smashes.length).toFixed(2) : '--';
+        return `
+          <tr class="border-b border-emerald-950/40">
+            <td class="py-1.5 px-2 font-bold text-white">${club}</td>
+            <td class="py-1.5 px-2 text-emerald-300 font-semibold">${avgCarry} yds</td>
+            <td class="py-1.5 px-2 text-slate-300">${avgSpeed} mph</td>
+            <td class="py-1.5 px-2 text-slate-400">${avgSmash}</td>
+            <td class="py-1.5 px-2 text-slate-500">${d.carries.length}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // OCR TRACKMAN
+    async function processTrackmanImage(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const statusBox = document.getElementById('ocrStatus');
+      const resultForm = document.getElementById('ocrResultForm');
+      statusBox.classList.remove('hidden');
+      resultForm.classList.add('hidden');
+
+      try {
+        const worker = await Tesseract.createWorker('eng');
+        const ret = await worker.recognize(file);
+        await worker.terminate();
+        const raw = ret.data.text;
+        statusBox.classList.add('hidden');
+
+        let speed = null, carry = null, smash = null;
+        const speeds = raw.match(/\b(1[0-9]{2}(?:\.[0-9])?)\b/g);
+        if (speeds) speed = parseFloat(speeds[0]);
+        const carries = raw.match(/\b([1-3][0-9]{2})\b/g);
+        if (carries) {
+          const validCarry = carries.find(c => parseFloat(c) !== speed);
+          if (validCarry) carry = parseInt(validCarry);
+        }
+        const smashes = raw.match(/\b(1\.[3-5][0-9])\b/g);
+        if (smashes) smash = parseFloat(smashes[0]);
+
+        document.getElementById('parsedSpeed').value = speed || '';
+        document.getElementById('parsedCarry').value = carry || '';
+        document.getElementById('parsedSmash').value = smash || 1.48;
+        resultForm.classList.remove('hidden');
+      } catch (err) {
+        statusBox.classList.add('hidden');
+        alert("Enter numbers manually");
+      }
+    }
+
+    function confirmParsedShot() {
+      const club = document.getElementById('parsedClub').value;
+      const speed = parseFloat(document.getElementById('parsedSpeed').value);
+      const carry = parseInt(document.getElementById('parsedCarry').value);
+      const smash = parseFloat(document.getElementById('parsedSmash').value) || 1.48;
+      if (!speed || !carry) return alert("Verify speed and carry");
+
+      trackmanShots.unshift({ club, speed: speed.toFixed(1), carry, smash: smash.toFixed(2) });
+      localStorage.setItem('sb_trackman_shots', JSON.stringify(trackmanShots));
+      renderTrackmanTable();
+      renderBagGapping();
+      document.getElementById('ocrResultForm').classList.add('hidden');
+      alert("Shot recorded");
+    }
+
+    function renderTrackmanTable() {
+      const tbody = document.getElementById('trackmanShotsTable');
+      if (!tbody) return;
+      tbody.innerHTML = trackmanShots.slice(0, 8).map(s => `
+        <tr class="border-b border-emerald-950/40">
+          <td class="py-1.5 px-2 font-bold text-white">${s.club}</td>
+          <td class="py-1.5 px-2 text-slate-300">${s.carry} yds</td>
+          <td class="py-1.5 px-2 text-emerald-300">${s.speed} mph</td>
+          <td class="py-1.5 px-2 text-slate-400">${s.smash || '--'}</td>
+        </tr>
+      `).join('');
+    }
+
+    // FEATURE 3 & 4: SYNC & COUNTING SCORES SIMULATOR
+    async function syncGhinData(interactive = true) {
       const email = document.getElementById('ghinEmail').value.trim();
       const password = document.getElementById('ghinPassword').value.trim();
       const btn = document.getElementById('ghinSyncBtn');
 
-      if (!email || !password) return alert("Please enter your GHIN credentials.");
+      if (!email || !password) {
+        if (interactive) alert("Enter GHIN credentials below.");
+        return;
+      }
 
-      btn.disabled = true;
-      btn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i>`;
+      if (interactive) {
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i>`;
+      }
 
       try {
         const res = await fetch(WORKER_ENDPOINT, {
@@ -529,6 +867,9 @@
         });
         const data = await res.json();
         if (data.error) throw new Error(data.error);
+
+        ghinConfig.lastSync = Date.now();
+        localStorage.setItem('sb_ghin_config', JSON.stringify(ghinConfig));
 
         if (Array.isArray(data.scores) && data.scores.length > 0) {
           ghinScores = data.scores.map(s => ({
@@ -544,12 +885,14 @@
         }
 
         renderScoringTab();
-        alert(`GHIN Connected!\nLive Index: ${data.handicapIndex || '8.1'}\n${ghinScores.length} rounds imported.`);
+        if (interactive) alert(`GHIN Synced!\nLive Index: ${data.handicapIndex || '8.1'}\n${ghinScores.length} rounds loaded.`);
       } catch (err) {
-        alert("Sync Failed: " + err.message);
+        if (interactive) alert("Sync error: " + err.message);
       } finally {
-        btn.disabled = false;
-        btn.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i> Sync`;
+        if (interactive) {
+          btn.disabled = false;
+          btn.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i> Sync`;
+        }
       }
     }
 
@@ -558,18 +901,30 @@
       if (!listContainer) return;
       document.getElementById('scoresCountLabel').innerText = `${ghinScores.length} Rounds Synced`;
 
+      // FEATURE 4: SIMULATOR CALCULATION
+      const countingScores = ghinScores.filter(s => s.isUsed).map(s => parseFloat(s.diff)).sort((a, b) => a - b);
+      if (countingScores.length > 0) {
+        const eighthDiff = countingScores[countingScores.length - 1].toFixed(1);
+        document.getElementById('sim8thDiff').innerText = eighthDiff;
+        document.getElementById('impactSimSummary').innerHTML = `Your 8th counting differential is <strong class="text-amber-300">${eighthDiff}</strong>.`;
+        document.getElementById('simTargetAdvice').innerHTML = `Shoot a differential below <strong class="text-emerald-400">${eighthDiff}</strong> in your next round to knock off this score and lower your 8.1 Index.`;
+      }
+
       if (ghinScores.length === 0) {
         listContainer.innerHTML = `<p class="text-xs text-slate-500 py-3 text-center">No rounds synced yet. Tap 'Sync' above.</p>`;
       } else {
         listContainer.innerHTML = ghinScores.map(s => `
-          <div class="bg-[#0e1811] p-3 rounded-xl border ${s.isUsed ? 'border-amber-500/40' : 'border-emerald-950'} flex justify-between items-center">
+          <div class="bg-[#0e1811] p-3 rounded-xl border ${s.isUsed ? 'border-amber-500/40 bg-gradient-to-r from-[#142316] to-[#0e1811]' : 'border-emerald-950'} flex justify-between items-center">
             <div>
-              <span class="font-bold text-white text-xs">${s.course}</span>
-              <p class="text-[10px] text-slate-400">${s.date} &bull; Rating: ${s.rating}/${s.slope}</p>
+              <div class="flex items-center gap-1.5 mb-0.5">
+                <span class="font-bold text-white text-xs">${s.course}</span>
+                ${s.isUsed ? '<span class="text-[8px] bg-amber-400 text-amber-950 font-black px-1.5 py-0.2 rounded uppercase">Counting</span>' : ''}
+              </div>
+              <p class="text-[10px] text-slate-400">${s.date} &bull; ${s.rating}/${s.slope}</p>
             </div>
             <div class="text-right">
-              <span class="text-xs font-black text-emerald-300">${s.score}</span>
-              <p class="text-[10px] ${s.isUsed ? 'text-amber-400 font-bold' : 'text-slate-400'}">Diff: ${s.diff}</p>
+              <span class="text-xs font-black bg-emerald-950 text-emerald-300 border border-emerald-800/60 px-2 py-1 rounded inline-block mb-0.5">${s.score}</span>
+              <p class="text-[10px] font-bold ${s.isUsed ? 'text-amber-400' : 'text-slate-400'}">Diff: ${s.diff}</p>
             </div>
           </div>
         `).join('');
@@ -587,17 +942,31 @@
       const reversed = [...ghinScores].reverse();
       const labels = reversed.length > 0 ? reversed.map(r => r.date) : ['R1', 'R2', 'R3', 'R4', 'R5'];
       const dataPoints = reversed.length > 0 ? reversed.map(r => parseFloat(r.diff)) : [8.4, 8.2, 8.1, 7.8, 8.1];
+      const pointColors = reversed.length > 0 ? reversed.map(r => r.isUsed ? '#f59e0b' : '#10b981') : ['#10b981', '#10b981', '#10b981', '#10b981', '#10b981'];
 
       chartInstance = new Chart(ctx, {
         type: 'line',
         data: {
           labels,
-          datasets: [{
-            data: dataPoints,
-            borderColor: '#10b981',
-            tension: 0.35,
-            pointRadius: 3
-          }]
+          datasets: [
+            {
+              label: 'Differential',
+              data: dataPoints,
+              borderColor: '#10b981',
+              backgroundColor: 'rgba(16, 185, 129, 0.15)',
+              pointBackgroundColor: pointColors,
+              pointRadius: reversed.length > 0 ? reversed.map(r => r.isUsed ? 5 : 3) : 3,
+              tension: 0.35,
+              fill: true
+            },
+            {
+              label: 'Scratch (0.0)',
+              data: labels.map(() => 0.0),
+              borderColor: '#f59e0b',
+              borderDash: [4, 4],
+              pointRadius: 0
+            }
+          ]
         },
         options: {
           responsive: true,
@@ -612,26 +981,7 @@
       });
     }
 
-    function renderTrackmanTable() {
-      const tbody = document.getElementById('trackmanShotsTable');
-      if (!tbody) return;
-      tbody.innerHTML = trackmanShots.map(s => `
-        <tr class="border-b border-emerald-950/40">
-          <td class="py-2 px-2 font-bold text-white">${s.club}</td>
-          <td class="py-2 px-2 text-emerald-300">${s.speed} mph</td>
-          <td class="py-2 px-2 text-slate-300">${s.carry} yds</td>
-          <td class="py-2 px-2 text-slate-400">${s.smash || '--'}</td>
-        </tr>
-      `).join('');
-    }
-
-    window.onload = function() {
-      setupRealWeeklyCalendar();
-      switchWeek(1);
-      switchGymSession(1);
-      renderTrackmanTable();
-      renderScoringTab();
-    };
+    window.onload = init;
   </script>
 </body>
 </html>
