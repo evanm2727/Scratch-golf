@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Scratch Blueprint | Golf & GHIN</title>
   
-  <!-- PWA Standalone Setup -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Scratch Blueprint">
@@ -32,7 +31,6 @@
     .custom-scrollbar::-webkit-scrollbar { display: none; }
     .custom-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     
-    /* Ensure bottom navigation bar always receives touch/clicks */
     #bottom-nav {
       position: fixed;
       bottom: 0;
@@ -71,7 +69,7 @@
   </header>
 
   <!-- Main Scrollable App Container -->
-  <main class="flex-1 overflow-y-auto px-4 py-3 max-w-lg mx-auto w-full custom-scrollbar pb-28 relative z-10">
+  <main class="flex-1 overflow-y-auto px-4 py-3 max-w-lg mx-auto w-full custom-scrollbar pb-32 relative z-10">
 
     <!-- TAB 1: SCHEDULE -->
     <div id="tab-schedule" class="tab-pane space-y-3">
@@ -93,6 +91,7 @@
         <div class="grid grid-cols-7 gap-1" id="calendarDaysRow"></div>
       </div>
 
+      <!-- Selected Protocol Card -->
       <div class="bg-gradient-to-r from-emerald-950 to-emerald-900/60 p-3.5 rounded-2xl border border-emerald-800/50 flex justify-between items-center">
         <div>
           <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider" id="selectedDayName">Today's Protocol</span>
@@ -106,11 +105,15 @@
         </div>
       </div>
 
+      <!-- Detail Card For Active Day -->
       <div id="activeDayDetailContainer"></div>
+      
+      <!-- Custom Logs -->
       <div id="selectedDayCustomActivities" class="space-y-2"></div>
 
+      <!-- Full Week Protocol Reference List (Always Visible) -->
       <div class="pt-2">
-        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Protocol Reference</p>
+        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Protocol Reference (Tap to inspect)</p>
         <div id="allDaysContainer" class="space-y-2"></div>
       </div>
     </div>
@@ -131,7 +134,6 @@
         </div>
       </div>
 
-      <!-- Workout Overview Card -->
       <div class="bg-[#122017] p-3.5 rounded-xl border border-emerald-800/40">
         <div class="flex justify-between items-center mb-1">
           <h3 class="text-xs font-bold text-emerald-300" id="gymWorkoutTitle">Day 1: Ground Reaction & Primary Drive</h3>
@@ -140,14 +142,11 @@
         <p class="text-[11px] text-slate-300 leading-relaxed" id="gymWorkoutFocus"></p>
       </div>
 
-      <!-- 4-5 Movements Container -->
       <div id="gymExerciseList" class="space-y-3"></div>
     </div>
 
     <!-- TAB 3: TRACKMAN & WEDGE MATRIX -->
     <div id="tab-trackman" class="tab-pane hidden space-y-3">
-      
-      <!-- WEDGE MATRIX TRACKER -->
       <div class="bg-gradient-to-br from-[#122619] to-[#0e1a12] p-3.5 rounded-2xl border border-emerald-500/40">
         <div class="flex justify-between items-center mb-2">
           <div>
@@ -189,7 +188,6 @@
         </div>
       </div>
 
-      <!-- OCR SCANNER -->
       <div class="bg-[#122017] p-3.5 rounded-2xl border border-emerald-800/40">
         <div class="flex justify-between items-center mb-1">
           <h2 class="text-xs font-bold text-white flex items-center gap-2">
@@ -252,7 +250,6 @@
         </div>
       </div>
 
-      <!-- BAG GAPPING BENCHMARKS -->
       <div class="bg-[#122017] p-3 rounded-2xl border border-emerald-800/40">
         <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center justify-between">
           <span>Bag Gapping Benchmarks</span>
@@ -274,7 +271,6 @@
         </div>
       </div>
 
-      <!-- SHOT LOG TABLE -->
       <div class="bg-[#122017] p-3 rounded-2xl border border-emerald-800/40">
         <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Logged Shots History</h3>
         <div class="overflow-x-auto">
@@ -295,8 +291,6 @@
 
     <!-- TAB 4: SCORING & GHIN -->
     <div id="tab-scoring" class="tab-pane hidden space-y-3">
-      
-      <!-- HERO HANDICAP CARD -->
       <div class="bg-gradient-to-br from-[#122619] to-[#0d1a12] p-4 rounded-2xl border border-emerald-500/50 shadow-xl">
         <div class="flex justify-between items-start mb-3">
           <div>
@@ -323,7 +317,6 @@
         </div>
       </div>
 
-      <!-- COUNTING SCORES IMPACT SIMULATOR -->
       <div class="bg-[#122017] p-3.5 rounded-2xl border border-amber-500/40 shadow">
         <div class="flex justify-between items-center mb-1">
           <span class="text-[10px] font-black uppercase tracking-wider text-amber-400">Handicap Movement Target</span>
@@ -337,7 +330,6 @@
         </p>
       </div>
 
-      <!-- Credentials Section -->
       <details class="bg-[#122017] rounded-xl border border-emerald-900/40 p-2 text-xs">
         <summary class="text-slate-400 cursor-pointer font-semibold flex justify-between items-center px-1">
           <span><i class="fa-solid fa-key text-emerald-400 mr-1.5"></i> GHIN Login Credentials</span>
@@ -355,7 +347,6 @@
         </div>
       </details>
 
-      <!-- Chart Container -->
       <div class="bg-[#122017] p-3 rounded-2xl border border-emerald-800/40">
         <div class="flex justify-between items-center mb-2 px-1">
           <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Differential Progression</h3>
@@ -366,7 +357,6 @@
         </div>
       </div>
 
-      <!-- 20-Round Ledger -->
       <div class="bg-[#122017] p-3 rounded-2xl border border-emerald-800/40">
         <div class="flex justify-between items-center mb-2 px-1">
           <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Official 20-Round Ledger</h3>
@@ -1197,6 +1187,22 @@
       { club: 'PW', speed: 108.5, carry: 142, smash: 1.37 }
     ];
 
+    function init() {
+      setupRealWeeklyCalendar();
+      switchWeek(1);
+      switchGymSession(1);
+      renderWedgeMatrix();
+      renderBagGapping();
+      renderTrackmanTable();
+      renderScoringTab();
+
+      const now = Date.now();
+      const twelveHours = 12 * 60 * 60 * 1000;
+      if (ghinConfig.email && ghinConfig.password && (now - (ghinConfig.lastSync || 0) > twelveHours)) {
+        syncGhinData(false);
+      }
+    }
+
     function showTab(tabId) {
       document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
       document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -1283,7 +1289,7 @@
             <div class="flex justify-between items-start mb-2">
               <div>
                 <p class="text-xs font-bold text-emerald-300">${dayData.type} &bull; ${dayData.time}</p>
-                <p class="text-[11px] text-slate-300 mt-0.5">${dayData.focus}</p>
+                <p class="text-[11px] text-slate-300 mt-0.5 leading-relaxed">${dayData.focus}</p>
               </div>
               <button type="button" onclick="${dayData.badge === 'GYM' ? "showTab('gym')" : dayData.badge === 'SIM' ? "showTab('trackman')" : "showTab('scoring')"}" class="bg-[#1c3626] hover:bg-emerald-600 text-emerald-300 hover:text-white text-[11px] font-bold px-2.5 py-1 rounded-lg border border-emerald-700/50">
                 Open &rarr;
@@ -1292,6 +1298,7 @@
           </div>
         `;
       }
+      renderDayCustomActivities();
     }
 
     function switchWeek(weekNum) {
@@ -1312,6 +1319,7 @@
           </div>
         `).join('');
       }
+      selectCalendarDay(selectedCalendarDayIdx);
       switchGymSession(activeGymDay);
     }
 
@@ -1349,7 +1357,7 @@
               <span class="text-[10px] text-slate-400 font-medium">
                 <i class="fa-solid fa-golf-ball-tee text-emerald-400 mr-1"></i>${ex.golfTransfer}
               </span>
-              <button type="button" onclick="openDiagramModal('${ex.name.replace(/'/g, "\\'")}', '${ex.diagram}', '${ex.setup.replace(/'/g, "\\'")}', '${ex.golfTransfer.replace(/'/g, "\\'")}')" class="text-[10px] font-bold text-emerald-300 hover:text-white bg-[#193222] hover:bg-emerald-700 px-2 py-1 rounded-lg border border-emerald-700/50 flex items-center gap-1 shrink-0 ml-2">
+              <button type="button" onclick="openDiagramModalByIndex(${idx})" class="text-[10px] font-bold text-emerald-300 hover:text-white bg-[#193222] hover:bg-emerald-700 px-2 py-1 rounded-lg border border-emerald-700/50 flex items-center gap-1 shrink-0 ml-2">
                 <i class="fa-solid fa-diagram-project"></i> Form Guide
               </button>
             </div>
@@ -1358,12 +1366,17 @@
       }
     }
 
-    function openDiagramModal(name, diagramKey, setupText, transferText) {
-      document.getElementById('diagTitle').innerText = name;
-      document.getElementById('diagSetupText').innerText = setupText;
-      document.getElementById('diagCueText').innerText = transferText;
+    function openDiagramModalByIndex(idx) {
+      const prog = weeklyPrograms[currentWeek] || weeklyPrograms[1];
+      const workout = prog.gymWorkouts[activeGymDay] || prog.gymWorkouts[1];
+      const ex = workout.exercises[idx];
+      if (!ex) return;
+
+      document.getElementById('diagTitle').innerText = ex.name;
+      document.getElementById('diagSetupText').innerText = ex.setup;
+      document.getElementById('diagCueText').innerText = ex.golfTransfer;
       
-      const svgCode = diagramTemplates[diagramKey] || diagramTemplates['hinge'];
+      const svgCode = diagramTemplates[ex.diagram] || diagramTemplates['hinge'];
       document.getElementById('diagramSvgContainer').innerHTML = svgCode;
       
       document.getElementById('exerciseDiagramModal').classList.remove('hidden');
@@ -1381,9 +1394,47 @@
     function saveCustomActivity() {
       const date = document.getElementById('customDateInput').value;
       const title = document.getElementById('customTitle').value.trim();
+      const type = document.getElementById('customType').value;
+      const duration = document.getElementById('customDuration').value.trim() || 'Custom';
+      const notes = document.getElementById('customNotes').value.trim();
+
       if (!title) return alert('Enter an activity title');
+      if (!customActivities[selectedCalendarDayIdx]) customActivities[selectedCalendarDayIdx] = [];
+      customActivities[selectedCalendarDayIdx].push({ date, title, type, duration, notes });
+      localStorage.setItem('sb_custom_activities', JSON.stringify(customActivities));
       closeCustomActivityModal();
-      alert(`Logged: ${title} (${date})`);
+      renderDayCustomActivities();
+    }
+
+    function renderDayCustomActivities() {
+      const container = document.getElementById('selectedDayCustomActivities');
+      if (!container) return;
+      const list = customActivities[selectedCalendarDayIdx] || [];
+      if (list.length === 0) { container.innerHTML = ''; return; }
+      container.innerHTML = `
+        <p class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider mt-2 mb-1">Logged Custom Sessions</p>
+        ${list.map((item, idx) => `
+          <div class="bg-[#0f1b13] p-2.5 rounded-xl border border-emerald-800/40 flex justify-between items-start">
+            <div>
+              <div class="flex items-center gap-1.5 mb-0.5">
+                <span class="text-xs font-bold text-white">${item.title}</span>
+                <span class="text-[8px] bg-slate-800 text-emerald-300 px-1.5 py-0.2 rounded font-bold">${item.type}</span>
+                <span class="text-[9px] text-slate-400">&bull; ${item.duration}</span>
+              </div>
+              ${item.notes ? `<p class="text-[11px] text-slate-300">${item.notes}</p>` : ''}
+            </div>
+            <button onclick="deleteCustomActivity(${idx})" class="text-slate-500 hover:text-red-400 text-xs px-1"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        `).join('')}
+      `;
+    }
+
+    function deleteCustomActivity(idx) {
+      if (customActivities[selectedCalendarDayIdx]) {
+        customActivities[selectedCalendarDayIdx].splice(idx, 1);
+        localStorage.setItem('sb_custom_activities', JSON.stringify(customActivities));
+        renderDayCustomActivities();
+      }
     }
 
     function openWedgeModal() {
@@ -1656,10 +1707,9 @@
       });
     }
 
-    // Attach tabs and initialize when DOM is ready
-    window.addEventListener('DOMContentLoaded', () => {
+    window.onload = function() {
       init();
-    });
+    };
   </script>
 </body>
 </html>
