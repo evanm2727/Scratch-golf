@@ -5,13 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Scratch Blueprint | Golf & GHIN</title>
   
-  <!-- Standalone Mobile App Configuration -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Scratch Blueprint">
-  <meta name="theme-color" content="#0b130e">
+  <meta name="theme-color" content="#080c09">
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%20width=%22192%22%20height=%22192%22><rect width=%22192%22 height=%22192%22 fill=%22%2310b981%22 rx=%2240%22/><text x=%2250%25%22 y=%2255%25%22 font-size=%2290%22 text-anchor=%22middle%22 dominant-baseline=%22central%22 fill=%22%23042f2e%22 font-family=%22sans-serif%22 font-weight=%22bold%22>SB</text></svg>">
-  <link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22Scratch%20Blueprint%22%2C%22short_name%22%3A%22Scratch%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230b130e%22%2C%22theme_color%22%3A%22%230b130e%22%7D">
+  <link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22Scratch%20Blueprint%22%2C%22short_name%22%3A%22Scratch%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23080c09%22%2C%22theme_color%22%3A%22%23080c09%22%7D">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -21,7 +20,7 @@
   <style>
     html, body {
       height: 100%;
-      background-color: #0b130e;
+      background-color: #080c09;
       color: #f1f5f9;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
       -webkit-tap-highlight-color: transparent;
@@ -49,18 +48,18 @@
 <body class="flex flex-col h-screen overflow-hidden">
 
   <!-- Header -->
-  <header class="safe-top px-4 pb-2 border-b border-emerald-950 bg-[#0d1811]/95 backdrop-blur shrink-0 z-40">
+  <header class="safe-top px-4 pb-2.5 border-b border-white/[0.06] bg-[#0c120e]/95 backdrop-blur-md shrink-0 z-40">
     <div class="flex justify-between items-center max-w-lg mx-auto">
       <div>
         <div class="flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <p class="text-[10px] font-bold tracking-widest uppercase text-emerald-400" id="headerHandicapLabel">USGA Index: 8.1 &rarr; 0.0 Target</p>
+          <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>
+          <p class="text-[9px] font-black tracking-widest uppercase text-emerald-400" id="headerHandicapLabel">USGA Index: 8.1 &rarr; 0.0 Target</p>
         </div>
-        <h1 class="text-lg font-black tracking-tight text-white flex items-center gap-2">
+        <h1 class="text-base font-black tracking-tight text-white flex items-center gap-2 mt-0.5">
           SCRATCH BLUEPRINT
         </h1>
       </div>
-      <select id="weekSelector" onchange="switchWeek(this.value)" class="bg-[#15241b] border border-emerald-600/40 text-emerald-300 text-xs font-semibold rounded-lg px-2.5 py-1.5 focus:outline-none">
+      <select id="weekSelector" onchange="switchWeek(this.value)" class="bg-[#111713] border border-white/[0.08] text-emerald-300 text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none shadow-sm">
         <optgroup label="Block 1: Foundation">
           <option value="1">Week 1: Ground Force Base</option>
           <option value="2">Week 2: Rotary Velocity</option>
@@ -88,34 +87,34 @@
 
     <!-- TAB 1: SCHEDULE -->
     <div id="tab-schedule" class="tab-pane space-y-3">
-      <div class="bg-[#101e14] p-3 rounded-2xl border border-emerald-800/40 shadow">
+      <div class="bg-[#0f1411] p-3 rounded-2xl border border-white/[0.06] shadow-lg">
         <div class="flex justify-between items-center mb-2 px-1">
-          <div class="flex items-center gap-2">
-            <button type="button" onclick="changeWeekOffset(-1)" class="w-7 h-7 flex items-center justify-center rounded-lg bg-[#15251a] border border-emerald-800/60 text-emerald-300 text-xs hover:bg-[#1f3827]">
-              <i class="fa-solid fa-chevron-left"></i>
+          <div class="flex items-center gap-1.5">
+            <button type="button" onclick="changeWeekOffset(-1)" class="w-6 h-6 flex items-center justify-center rounded-lg bg-[#141b16] border border-white/[0.06] text-slate-300 text-xs hover:bg-[#1c261f]">
+              <i class="fa-solid fa-chevron-left text-[10px]"></i>
             </button>
-            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300" id="currentCalendarMonth">Week Schedule</h2>
-            <button type="button" onclick="changeWeekOffset(1)" class="w-7 h-7 flex items-center justify-center rounded-lg bg-[#15251a] border border-emerald-800/60 text-emerald-300 text-xs hover:bg-[#1f3827]">
-              <i class="fa-solid fa-chevron-right"></i>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200" id="currentCalendarMonth">Week Schedule</h2>
+            <button type="button" onclick="changeWeekOffset(1)" class="w-6 h-6 flex items-center justify-center rounded-lg bg-[#141b16] border border-white/[0.06] text-slate-300 text-xs hover:bg-[#1c261f]">
+              <i class="fa-solid fa-chevron-right text-[10px]"></i>
             </button>
           </div>
-          <button type="button" onclick="resetToCurrentWeek()" class="text-[10px] bg-[#172b1e] border border-emerald-700/50 text-emerald-300 px-2 py-1 rounded font-bold">
+          <button type="button" onclick="resetToCurrentWeek()" class="text-[10px] bg-[#141b16] border border-white/[0.06] text-emerald-300 px-2.5 py-1 rounded-lg font-bold hover:bg-[#1c261f]">
             Current
           </button>
         </div>
         <div class="grid grid-cols-7 gap-1" id="calendarDaysRow"></div>
       </div>
 
-      <div class="bg-gradient-to-r from-emerald-950 to-emerald-900/60 p-3.5 rounded-2xl border border-emerald-800/50 flex justify-between items-center">
+      <div class="bg-gradient-to-r from-[#111713] to-[#151e18] p-3.5 rounded-2xl border border-white/[0.06] flex justify-between items-center shadow-lg">
         <div>
-          <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider" id="selectedDayName">Today's Protocol</span>
-          <h3 class="text-sm font-black text-white" id="selectedDayType">Gym Lift 1</h3>
+          <span class="text-[9px] font-black text-emerald-400 uppercase tracking-widest" id="selectedDayName">Today's Protocol</span>
+          <h3 class="text-sm font-black text-white mt-0.5" id="selectedDayType">Gym Lift 1</h3>
         </div>
         <div class="flex items-center gap-1.5">
-          <button type="button" onclick="openCustomActivityModal()" class="text-[10px] bg-[#1a3324] hover:bg-emerald-600 text-emerald-300 hover:text-white font-bold px-2 py-1 rounded border border-emerald-700/50 flex items-center gap-1">
-            <i class="fa-solid fa-plus"></i> Custom Log
+          <button type="button" onclick="openCustomActivityModal()" class="text-[10px] bg-[#18221b] hover:bg-[#202e24] text-emerald-300 font-bold px-2.5 py-1.5 rounded-xl border border-white/[0.06] flex items-center gap-1">
+            <i class="fa-solid fa-plus text-[9px]"></i> Log
           </button>
-          <span class="text-[10px] bg-emerald-400 text-emerald-950 font-black px-2 py-1 rounded" id="selectedDayBadge">GYM</span>
+          <span class="text-[9px] bg-emerald-500 text-slate-950 font-black px-2 py-1 rounded-lg tracking-wider" id="selectedDayBadge">GYM</span>
         </div>
       </div>
 
@@ -123,120 +122,120 @@
       <div id="selectedDayCustomActivities" class="space-y-2"></div>
 
       <div class="pt-2">
-        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Protocol Reference</p>
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Protocol Reference</p>
         <div id="allDaysContainer" class="space-y-2"></div>
       </div>
     </div>
 
-    <!-- TAB 2: TRAIN (7-DAY TOUR TRAINING HUB) -->
+    <!-- TAB 2: TRAIN (MINDBODY INSET PILL TRACK & TRACKMAN DATA CARDS) -->
     <div id="tab-train" class="tab-pane hidden space-y-3">
-      <div class="flex justify-between items-center">
+      <div class="flex justify-between items-center px-1">
         <div>
-          <h2 class="text-sm font-bold text-white flex items-center gap-1.5">
-            <i class="fa-solid fa-dumbbell text-emerald-400"></i> Tour Training Hub
+          <h2 class="text-sm font-black text-white flex items-center gap-1.5">
+            <i class="fa-solid fa-bolt text-emerald-400"></i> Tour Training Hub
           </h2>
           <p class="text-[11px] text-slate-400">Gym splits, Studio combines, course rounds & recovery</p>
         </div>
       </div>
 
-      <!-- 7-Day Day Selector Bar -->
-      <div class="flex gap-1 overflow-x-auto custom-scrollbar bg-[#101e14] p-1.5 rounded-xl border border-emerald-900/60 text-xs">
-        <button type="button" onclick="switchTrainDay(1)" id="trainDayBtn1" class="flex-1 py-1 rounded font-bold text-white bg-emerald-700 whitespace-nowrap px-2">Mon (Gym)</button>
-        <button type="button" onclick="switchTrainDay(2)" id="trainDayBtn2" class="flex-1 py-1 rounded font-bold text-slate-400 hover:text-white whitespace-nowrap px-2">Tue (Sim)</button>
-        <button type="button" onclick="switchTrainDay(3)" id="trainDayBtn3" class="flex-1 py-1 rounded font-bold text-slate-400 hover:text-white whitespace-nowrap px-2">Wed (Gym)</button>
-        <button type="button" onclick="switchTrainDay(4)" id="trainDayBtn4" class="flex-1 py-1 rounded font-bold text-slate-400 hover:text-white whitespace-nowrap px-2">Thu (Sim)</button>
-        <button type="button" onclick="switchTrainDay(5)" id="trainDayBtn5" class="flex-1 py-1 rounded font-bold text-slate-400 hover:text-white whitespace-nowrap px-2">Fri (Gym)</button>
-        <button type="button" onclick="switchTrainDay(6)" id="trainDayBtn6" class="flex-1 py-1 rounded font-bold text-slate-400 hover:text-white whitespace-nowrap px-2">Sat (Play)</button>
-        <button type="button" onclick="switchTrainDay(7)" id="trainDayBtn7" class="flex-1 py-1 rounded font-bold text-slate-400 hover:text-white whitespace-nowrap px-2">Sun (Rest)</button>
+      <!-- Mindbody Inset Day Segment Control -->
+      <div class="bg-[#0b0e0c] p-1 rounded-2xl border border-white/[0.05] flex gap-1 overflow-x-auto custom-scrollbar shadow-inner text-xs">
+        <button type="button" onclick="switchTrainDay(1)" id="trainDayBtn1" class="flex-1 py-1.5 px-3 rounded-xl font-bold text-white bg-emerald-500/20 border border-emerald-500/30 whitespace-nowrap text-center transition">Mon (Gym)</button>
+        <button type="button" onclick="switchTrainDay(2)" id="trainDayBtn2" class="flex-1 py-1.5 px-3 rounded-xl font-medium text-slate-400 hover:text-white whitespace-nowrap text-center transition">Tue (Sim)</button>
+        <button type="button" onclick="switchTrainDay(3)" id="trainDayBtn3" class="flex-1 py-1.5 px-3 rounded-xl font-medium text-slate-400 hover:text-white whitespace-nowrap text-center transition">Wed (Gym)</button>
+        <button type="button" onclick="switchTrainDay(4)" id="trainDayBtn4" class="flex-1 py-1.5 px-3 rounded-xl font-medium text-slate-400 hover:text-white whitespace-nowrap text-center transition">Thu (Sim)</button>
+        <button type="button" onclick="switchTrainDay(5)" id="trainDayBtn5" class="flex-1 py-1.5 px-3 rounded-xl font-medium text-slate-400 hover:text-white whitespace-nowrap text-center transition">Fri (Gym)</button>
+        <button type="button" onclick="switchTrainDay(6)" id="trainDayBtn6" class="flex-1 py-1.5 px-3 rounded-xl font-medium text-slate-400 hover:text-white whitespace-nowrap text-center transition">Sat (Play)</button>
+        <button type="button" onclick="switchTrainDay(7)" id="trainDayBtn7" class="flex-1 py-1.5 px-3 rounded-xl font-medium text-slate-400 hover:text-white whitespace-nowrap text-center transition">Sun (Rest)</button>
       </div>
 
-      <!-- Overview Header Card -->
-      <div class="bg-[#122017] p-3.5 rounded-xl border border-emerald-800/40">
+      <!-- Training Overview Card -->
+      <div class="bg-[#0f1411] p-3.5 rounded-2xl border border-white/[0.06] shadow-lg">
         <div class="flex justify-between items-center mb-1">
-          <h3 class="text-xs font-bold text-emerald-300" id="trainSessionTitle">Monday: Force Base Split</h3>
-          <span class="text-[10px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded font-bold border border-emerald-800/50" id="trainSessionDuration">50 Mins</span>
+          <h3 class="text-xs font-black text-white" id="trainSessionTitle">Monday: Force Base Split</h3>
+          <span class="text-[9px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-md font-bold border border-emerald-500/20" id="trainSessionDuration">50 Mins</span>
         </div>
-        <p class="text-[11px] text-slate-300 leading-relaxed" id="trainSessionFocus"></p>
+        <p class="text-[11px] text-slate-300 leading-relaxed mt-0.5" id="trainSessionFocus"></p>
       </div>
 
-      <!-- Training Checklist Container -->
+      <!-- Training Exercises / Drills Container -->
       <div id="trainContentList" class="space-y-3"></div>
     </div>
 
     <!-- TAB 3: TRACKMAN & WEDGE MATRIX -->
     <div id="tab-trackman" class="tab-pane hidden space-y-3">
-      <div class="bg-gradient-to-br from-[#122619] to-[#0e1a12] p-3.5 rounded-2xl border border-emerald-500/40">
-        <div class="flex justify-between items-center mb-2">
+      <div class="bg-[#0f1411] p-3.5 rounded-2xl border border-white/[0.06] shadow-lg">
+        <div class="flex justify-between items-center mb-2.5">
           <div>
-            <h2 class="text-xs font-black uppercase text-emerald-300 flex items-center gap-1.5">
-              <i class="fa-solid fa-bullseye text-emerald-400"></i> Wedge Clock Matrix
+            <h2 class="text-xs font-black uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+              <i class="fa-solid fa-bullseye"></i> Wedge Clock Matrix
             </h2>
             <p class="text-[10px] text-slate-400">Calibrated carry yardages inside 120y</p>
           </div>
-          <button type="button" onclick="openWedgeModal()" class="text-[10px] bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-2.5 py-1 rounded-lg">
-            <i class="fa-solid fa-pen"></i> Edit Yardages
+          <button type="button" onclick="openWedgeModal()" class="text-[10px] bg-[#141b16] hover:bg-[#1b251e] text-emerald-300 font-bold px-2.5 py-1 rounded-lg border border-white/[0.06]">
+            <i class="fa-solid fa-pen text-[9px] mr-1"></i> Edit
           </button>
         </div>
         
         <div class="grid grid-cols-4 gap-1.5 text-center text-xs">
-          <div class="bg-[#0b150f] p-2 rounded-xl border border-emerald-900/60">
-            <span class="text-[9px] font-bold text-slate-400 uppercase block">Club</span>
-            <span class="font-extrabold text-emerald-400 mt-1 block">50° (GW)</span>
-            <span class="font-extrabold text-emerald-400 mt-2 block">54° (SW)</span>
-            <span class="font-extrabold text-emerald-400 mt-2 block">58° (LW)</span>
+          <div class="bg-[#0b0e0c] p-2 rounded-xl border border-white/[0.04]">
+            <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">Club</span>
+            <span class="font-bold text-emerald-400 mt-1 block">50°</span>
+            <span class="font-bold text-emerald-400 mt-2 block">54°</span>
+            <span class="font-bold text-emerald-400 mt-2 block">58°</span>
           </div>
-          <div class="bg-[#0b150f] p-2 rounded-xl border border-emerald-900/60">
-            <span class="text-[9px] font-bold text-slate-400 uppercase block">1/2 (Hip)</span>
-            <span class="font-bold text-white mt-1 block" id="wm_50_half">65 yds</span>
-            <span class="font-bold text-white mt-2 block" id="wm_54_half">55 yds</span>
-            <span class="font-bold text-white mt-2 block" id="wm_58_half">45 yds</span>
+          <div class="bg-[#0b0e0c] p-2 rounded-xl border border-white/[0.04]">
+            <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">1/2 Hip</span>
+            <span class="font-bold text-white mt-1 block font-mono" id="wm_50_half">65 yds</span>
+            <span class="font-bold text-white mt-2 block font-mono" id="wm_54_half">55 yds</span>
+            <span class="font-bold text-white mt-2 block font-mono" id="wm_58_half">45 yds</span>
           </div>
-          <div class="bg-[#0b150f] p-2 rounded-xl border border-emerald-900/60">
-            <span class="text-[9px] font-bold text-slate-400 uppercase block">3/4 (Chest)</span>
-            <span class="font-bold text-white mt-1 block" id="wm_50_three">95 yds</span>
-            <span class="font-bold text-white mt-2 block" id="wm_54_three">85 yds</span>
-            <span class="font-bold text-white mt-2 block" id="wm_58_three">72 yds</span>
+          <div class="bg-[#0b0e0c] p-2 rounded-xl border border-white/[0.04]">
+            <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">3/4 Chest</span>
+            <span class="font-bold text-white mt-1 block font-mono" id="wm_50_three">95 yds</span>
+            <span class="font-bold text-white mt-2 block font-mono" id="wm_54_three">85 yds</span>
+            <span class="font-bold text-white mt-2 block font-mono" id="wm_58_three">72 yds</span>
           </div>
-          <div class="bg-[#0b150f] p-2 rounded-xl border border-emerald-900/60">
-            <span class="text-[9px] font-bold text-slate-400 uppercase block">Full Swing</span>
-            <span class="font-bold text-emerald-300 mt-1 block" id="wm_50_full">118 yds</span>
-            <span class="font-bold text-emerald-300 mt-2 block" id="wm_54_full">108 yds</span>
-            <span class="font-bold text-emerald-300 mt-2 block" id="wm_58_full">95 yds</span>
+          <div class="bg-[#0b0e0c] p-2 rounded-xl border border-white/[0.04]">
+            <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">Full Swing</span>
+            <span class="font-bold text-emerald-300 mt-1 block font-mono" id="wm_50_full">118 yds</span>
+            <span class="font-bold text-emerald-300 mt-2 block font-mono" id="wm_54_full">108 yds</span>
+            <span class="font-bold text-emerald-300 mt-2 block font-mono" id="wm_58_full">95 yds</span>
           </div>
         </div>
       </div>
 
-      <div class="bg-[#122017] p-3.5 rounded-2xl border border-emerald-800/40">
+      <div class="bg-[#0f1411] p-3.5 rounded-2xl border border-white/[0.06] shadow-lg">
         <div class="flex justify-between items-center mb-1">
-          <h2 class="text-xs font-bold text-white flex items-center gap-2">
+          <h2 class="text-xs font-black text-white flex items-center gap-2">
             <i class="fa-solid fa-camera text-emerald-400"></i> TrackMan Monitor Reader
           </h2>
-          <span class="text-[9px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/40 font-bold">OCR</span>
+          <span class="text-[9px] bg-emerald-500/10 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/20 font-bold">OCR</span>
         </div>
-        <p class="text-[10px] text-slate-300 mb-2.5">Capture monitor readout or upload photo.</p>
+        <p class="text-[10px] text-slate-400 mb-2.5">Capture studio monitor readout tile or photo.</p>
 
         <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="processTrackmanImage(event)">
         <input type="file" id="galleryInput" accept="image/*" class="hidden" onchange="processTrackmanImage(event)">
 
         <div class="grid grid-cols-2 gap-2">
-          <button type="button" onclick="document.getElementById('cameraInput').click()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 shadow">
+          <button type="button" onclick="document.getElementById('cameraInput').click()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 shadow">
             <i class="fa-solid fa-camera"></i> Camera
           </button>
-          <button type="button" onclick="document.getElementById('galleryInput').click()" class="bg-[#1b3425] hover:bg-[#234531] text-emerald-300 font-bold text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 border border-emerald-700/50">
+          <button type="button" onclick="document.getElementById('galleryInput').click()" class="bg-[#141b16] hover:bg-[#1a231d] text-emerald-300 font-bold text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 border border-white/[0.06]">
             <i class="fa-solid fa-images"></i> Photos
           </button>
         </div>
 
-        <div id="ocrStatus" class="hidden mt-3 p-3 rounded-xl bg-[#0b160f] border border-emerald-800/40 text-center">
+        <div id="ocrStatus" class="hidden mt-3 p-3 rounded-xl bg-[#080c09] border border-white/[0.06] text-center">
           <div class="inline-block animate-spin text-emerald-400 text-base mb-1"><i class="fa-solid fa-circle-notch"></i></div>
           <p class="text-xs text-slate-300 font-medium">Scanning monitor metrics...</p>
         </div>
 
-        <div id="ocrResultForm" class="hidden mt-3 pt-3 border-t border-emerald-900/60">
+        <div id="ocrResultForm" class="hidden mt-3 pt-3 border-t border-white/[0.06]">
           <div class="grid grid-cols-4 gap-2 mb-2 text-xs">
             <div>
-              <label class="text-[10px] text-slate-400">Club</label>
-              <select id="parsedClub" class="w-full bg-[#17271e] rounded p-1.5 border border-emerald-800/40 text-white text-xs">
+              <label class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Club</label>
+              <select id="parsedClub" class="w-full bg-[#141b16] rounded-lg p-1.5 border border-white/[0.06] text-white text-xs">
                 <option value="Driver">Driver</option>
                 <option value="3-Wood">3-Wood</option>
                 <option value="2-Iron">2-Iron</option>
@@ -250,16 +249,16 @@
               </select>
             </div>
             <div>
-              <label class="text-[10px] text-slate-400">Ball Spd</label>
-              <input type="number" step="0.1" id="parsedSpeed" class="w-full bg-[#17271e] rounded p-1.5 border border-emerald-800/40 text-emerald-300 font-bold text-xs">
+              <label class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Ball Spd</label>
+              <input type="number" step="0.1" id="parsedSpeed" class="w-full bg-[#141b16] rounded-lg p-1.5 border border-white/[0.06] text-emerald-300 font-bold text-xs">
             </div>
             <div>
-              <label class="text-[10px] text-slate-400">Carry</label>
-              <input type="number" id="parsedCarry" class="w-full bg-[#17271e] rounded p-1.5 border border-emerald-800/40 text-slate-200 text-xs">
+              <label class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Carry</label>
+              <input type="number" id="parsedCarry" class="w-full bg-[#141b16] rounded-lg p-1.5 border border-white/[0.06] text-slate-200 text-xs">
             </div>
             <div>
-              <label class="text-[10px] text-slate-400">Smash</label>
-              <input type="number" step="0.01" id="parsedSmash" class="w-full bg-[#17271e] rounded p-1.5 border border-emerald-800/40 text-slate-200 text-xs">
+              <label class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Smash</label>
+              <input type="number" step="0.01" id="parsedSmash" class="w-full bg-[#141b16] rounded-lg p-1.5 border border-white/[0.06] text-slate-200 text-xs">
             </div>
           </div>
           <button type="button" onclick="confirmParsedShot()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2 rounded-xl">
@@ -268,20 +267,20 @@
         </div>
       </div>
 
-      <div class="bg-[#122017] p-3 rounded-2xl border border-emerald-800/40">
-        <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center justify-between">
+      <div class="bg-[#0f1411] p-3 rounded-2xl border border-white/[0.06] shadow-lg">
+        <h3 class="text-xs font-black text-slate-300 uppercase tracking-wider mb-2 flex items-center justify-between">
           <span>Bag Gapping Benchmarks</span>
           <span class="text-[9px] text-emerald-400 font-semibold">Real-Time Averages</span>
         </h3>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs text-slate-300">
-            <thead class="text-[9px] text-emerald-400 uppercase bg-[#0d1711] border-b border-emerald-900/60">
+            <thead class="text-[8px] text-emerald-400 uppercase tracking-widest bg-[#0b0e0c] border-b border-white/[0.06]">
               <tr>
-                <th class="py-1 px-2">Club</th>
-                <th class="py-1 px-2">Avg Carry</th>
-                <th class="py-1 px-2">Avg Ball Spd</th>
-                <th class="py-1 px-2">Avg Smash</th>
-                <th class="py-1 px-2">Shots</th>
+                <th class="py-1.5 px-2">Club</th>
+                <th class="py-1.5 px-2">Avg Carry</th>
+                <th class="py-1.5 px-2">Avg Ball Spd</th>
+                <th class="py-1.5 px-2">Avg Smash</th>
+                <th class="py-1.5 px-2">Shots</th>
               </tr>
             </thead>
             <tbody id="bagGappingTable"></tbody>
@@ -289,16 +288,16 @@
         </div>
       </div>
 
-      <div class="bg-[#122017] p-3 rounded-2xl border border-emerald-800/40">
-        <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Logged Shots History</h3>
+      <div class="bg-[#0f1411] p-3 rounded-2xl border border-white/[0.06] shadow-lg">
+        <h3 class="text-xs font-black text-slate-300 uppercase tracking-wider mb-2">Logged Shots History</h3>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs text-slate-300">
-            <thead class="text-[9px] text-emerald-400 uppercase bg-[#0d1711] border-b border-emerald-900/60">
+            <thead class="text-[8px] text-emerald-400 uppercase tracking-widest bg-[#0b0e0c] border-b border-white/[0.06]">
               <tr>
-                <th class="py-1 px-2">Club</th>
-                <th class="py-1 px-2">Carry</th>
-                <th class="py-1 px-2">Ball Spd</th>
-                <th class="py-1 px-2">Smash</th>
+                <th class="py-1.5 px-2">Club</th>
+                <th class="py-1.5 px-2">Carry</th>
+                <th class="py-1.5 px-2">Ball Spd</th>
+                <th class="py-1.5 px-2">Smash</th>
               </tr>
             </thead>
             <tbody id="trackmanShotsTable"></tbody>
@@ -309,75 +308,75 @@
 
     <!-- TAB 4: SCORING & GHIN -->
     <div id="tab-scoring" class="tab-pane hidden space-y-3">
-      <div class="bg-gradient-to-br from-[#122619] to-[#0d1a12] p-4 rounded-2xl border border-emerald-500/50 shadow-xl">
+      <div class="bg-gradient-to-br from-[#111713] to-[#0c120e] p-4 rounded-2xl border border-white/[0.08] shadow-xl">
         <div class="flex justify-between items-start mb-3">
           <div>
-            <span class="text-[10px] font-black uppercase tracking-wider text-emerald-400">Official USGA Index</span>
+            <span class="text-[9px] font-black uppercase tracking-widest text-emerald-400">Official USGA Index</span>
             <div class="flex items-baseline gap-2 mt-0.5">
               <span class="text-4xl font-black text-white tracking-tight" id="heroHandicap">8.1</span>
-              <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300" id="handicapTrendBadge">Live</span>
+              <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-white/[0.06] text-slate-300 border border-white/[0.04]" id="handicapTrendBadge">Live</span>
             </div>
             <p class="text-[11px] text-slate-400 mt-1" id="golferNameLabel">Evan McCollough &bull; GHIN 13093434</p>
           </div>
           <button type="button" onclick="syncGhinData(true)" id="ghinSyncBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3 py-2 rounded-xl flex items-center gap-1.5 shadow">
-            <i class="fa-solid fa-arrows-rotate"></i> Sync
+            <i class="fa-solid fa-arrows-rotate text-[10px]"></i> Sync
           </button>
         </div>
 
-        <div class="space-y-1 pt-2 border-t border-emerald-900/50">
+        <div class="space-y-1.5 pt-2 border-t border-white/[0.06]">
           <div class="flex justify-between text-[10px] font-semibold text-slate-300">
             <span>Road to Scratch</span>
             <span id="scratchProgressText">8.1 pts to Scratch (0.0)</span>
           </div>
-          <div class="w-full bg-[#0a140d] h-2 rounded-full overflow-hidden border border-emerald-950">
+          <div class="w-full bg-[#080c09] h-2 rounded-full overflow-hidden border border-white/[0.04]">
             <div id="scratchProgressBar" class="bg-emerald-400 h-full transition-all duration-500" style="width: 19%"></div>
           </div>
         </div>
       </div>
 
-      <div class="bg-[#122017] p-3.5 rounded-2xl border border-amber-500/40 shadow">
+      <div class="bg-[#0f1411] p-3.5 rounded-2xl border border-amber-500/30 shadow-lg">
         <div class="flex justify-between items-center mb-1">
-          <span class="text-[10px] font-black uppercase tracking-wider text-amber-400">Handicap Movement Target</span>
-          <span class="text-[9px] bg-amber-500/20 text-amber-300 font-bold px-1.5 py-0.5 rounded">WHS Rules</span>
+          <span class="text-[9px] font-black uppercase tracking-widest text-amber-400">Handicap Movement Target</span>
+          <span class="text-[8px] bg-amber-500/10 text-amber-300 font-bold px-1.5 py-0.5 rounded border border-amber-500/20">WHS Rules</span>
         </div>
         <p class="text-xs text-slate-200 mt-1" id="impactSimSummary">
-          Your 8th counting differential is <strong class="text-amber-300" id="sim8thDiff">--</strong>.
+          Your 8th counting differential is <strong class="text-amber-300 font-mono" id="sim8thDiff">--</strong>.
         </p>
         <p class="text-[11px] text-slate-400 mt-1" id="simTargetAdvice">
           Shoot better than this differential in your next round to immediately reduce your 8.1 Index.
         </p>
       </div>
 
-      <details class="bg-[#122017] rounded-xl border border-emerald-900/40 p-2 text-xs">
+      <details class="bg-[#0f1411] rounded-xl border border-white/[0.06] p-2 text-xs">
         <summary class="text-slate-400 cursor-pointer font-semibold flex justify-between items-center px-1">
           <span><i class="fa-solid fa-key text-emerald-400 mr-1.5"></i> GHIN Login Credentials</span>
           <span class="text-[10px] text-emerald-400">Edit</span>
         </summary>
         <div class="pt-3 space-y-2">
           <div>
-            <label class="text-[10px] text-slate-400 block mb-0.5">GHIN Email</label>
-            <input type="text" id="ghinEmail" value="evanm2727@gmail.com" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/40 text-white">
+            <label class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">GHIN Email</label>
+            <input type="text" id="ghinEmail" value="evanm2727@gmail.com" class="w-full bg-[#141b16] text-xs p-2 rounded-lg border border-white/[0.06] text-white">
           </div>
           <div>
-            <label class="text-[10px] text-slate-400 block mb-0.5">Password</label>
-            <input type="password" id="ghinPassword" placeholder="Enter GHIN password" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/40 text-white">
+            <label class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Password</label>
+            <input type="password" id="ghinPassword" placeholder="Enter GHIN password" class="w-full bg-[#141b16] text-xs p-2 rounded-lg border border-white/[0.06] text-white">
           </div>
         </div>
       </details>
 
-      <div class="bg-[#122017] p-3 rounded-2xl border border-emerald-800/40">
+      <div class="bg-[#0f1411] p-3 rounded-2xl border border-white/[0.06] shadow-lg">
         <div class="flex justify-between items-center mb-2 px-1">
-          <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Differential Progression</h3>
-          <span class="text-[10px] text-amber-400 font-bold">&bull; Gold = Counting</span>
+          <h3 class="text-xs font-black text-slate-300 uppercase tracking-wider">Differential Progression</h3>
+          <span class="text-[9px] text-amber-400 font-bold">&bull; Gold = Counting</span>
         </div>
         <div class="relative w-full h-44 pointer-events-none">
           <canvas id="scoringChart" class="w-full h-full"></canvas>
         </div>
       </div>
 
-      <div class="bg-[#122017] p-3 rounded-2xl border border-emerald-800/40">
-        <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Official 20-Round Ledger</h3>
-        <span class="text-[10px] text-slate-400" id="scoresCountLabel">0 Rounds Synced</span>
+      <div class="bg-[#0f1411] p-3 rounded-2xl border border-white/[0.06] shadow-lg">
+        <h3 class="text-xs font-black text-slate-300 uppercase tracking-wider mb-2">Official 20-Round Ledger</h3>
+        <span class="text-[10px] text-slate-400 block mb-2" id="scoresCountLabel">0 Rounds Synced</span>
         <div id="ghinScoresList" class="space-y-2"></div>
       </div>
     </div>
@@ -386,17 +385,17 @@
 
   <!-- MODAL: DUAL-ACTION HD COACHING & DIRECT YOUTUBE SEARCH FALLBACK -->
   <div id="exerciseDiagramModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
-    <div class="bg-[#122017] border border-emerald-600/60 rounded-3xl p-5 w-full max-w-sm space-y-3.5 shadow-2xl">
+    <div class="bg-[#0f1411] border border-white/[0.08] rounded-3xl p-5 w-full max-w-sm space-y-3.5 shadow-2xl">
       <div class="flex justify-between items-center">
         <div>
-          <span class="text-[9px] font-black uppercase tracking-wider text-emerald-400">Form Tutorial</span>
+          <span class="text-[9px] font-black uppercase tracking-widest text-emerald-400">Form Tutorial</span>
           <h3 class="text-sm font-black text-white" id="diagTitle">Exercise</h3>
         </div>
         <button type="button" onclick="closeDiagramModal()" class="text-slate-400 hover:text-white text-base"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
-      <div class="w-full h-36 bg-[#07130a] rounded-2xl border border-emerald-900/60 flex flex-col items-center justify-center p-3 text-center relative overflow-hidden">
-        <div class="w-12 h-12 rounded-full bg-red-600/20 border border-red-500/50 flex items-center justify-center text-red-400 text-xl mb-2">
+      <div class="w-full h-36 bg-[#080c09] rounded-2xl border border-white/[0.06] flex flex-col items-center justify-center p-3 text-center relative overflow-hidden">
+        <div class="w-12 h-12 rounded-full bg-red-600/20 border border-red-500/40 flex items-center justify-center text-red-400 text-xl mb-2">
           <i class="fa-solid fa-play ml-0.5"></i>
         </div>
         <h4 class="text-xs font-bold text-white mb-0.5" id="diagBoxTitle">Exercise Form</h4>
@@ -404,26 +403,25 @@
       </div>
 
       <div class="space-y-2 text-xs">
-        <div class="bg-[#16271c] p-2.5 rounded-xl border border-emerald-800/40">
-          <span class="text-[9px] font-bold text-emerald-300 uppercase block mb-0.5">Execution & Joint Path</span>
+        <div class="bg-[#141b16] p-2.5 rounded-xl border border-white/[0.06]">
+          <span class="text-[9px] font-bold text-emerald-400 uppercase block mb-0.5">Execution & Joint Path</span>
           <p class="text-[11px] text-slate-200 leading-snug" id="diagSetupText"></p>
         </div>
-        <div class="bg-[#16271c] p-2.5 rounded-xl border border-emerald-800/40">
+        <div class="bg-[#141b16] p-2.5 rounded-xl border border-white/[0.06]">
           <span class="text-[9px] font-bold text-amber-300 uppercase block mb-0.5">Kinetic Chain Swing Transfer</span>
           <p class="text-[11px] text-slate-300 leading-snug" id="diagCueText"></p>
         </div>
       </div>
 
-      <!-- Dual Action Launcher: Direct Link + Clean Search Fallback -->
       <div class="flex gap-2">
         <a id="diagDirectVideoLink" href="#" target="_blank" class="flex-1 bg-red-700 hover:bg-red-600 text-white font-bold text-xs py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow text-center">
           <i class="fa-brands fa-youtube"></i> Watch HD Demo
         </a>
-        <a id="diagSearchVideoLink" href="#" target="_blank" class="flex-1 bg-[#1a3324] hover:bg-[#234531] text-emerald-300 border border-emerald-700/60 font-bold text-xs py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow text-center">
+        <a id="diagSearchVideoLink" href="#" target="_blank" class="flex-1 bg-[#141b16] hover:bg-[#1c261f] text-emerald-300 border border-white/[0.06] font-bold text-xs py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow text-center">
           <i class="fa-solid fa-magnifying-glass text-[10px]"></i> Search YouTube
         </a>
       </div>
-      <button type="button" onclick="closeDiagramModal()" class="w-full bg-[#15251a] hover:bg-[#1b3425] text-slate-300 font-bold text-xs py-2 rounded-xl border border-emerald-900/60 transition mt-1">
+      <button type="button" onclick="closeDiagramModal()" class="w-full bg-[#141b16] hover:bg-[#1c261f] text-slate-300 font-bold text-xs py-2 rounded-xl border border-white/[0.06] transition mt-1">
         Close
       </button>
     </div>
@@ -431,7 +429,7 @@
 
   <!-- MODAL: SELECT ALTERNATE EXERCISE -->
   <div id="alternateModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-[#122017] border border-emerald-700/60 rounded-2xl p-4 w-full max-w-sm space-y-3 shadow-2xl">
+    <div class="bg-[#0f1411] border border-white/[0.08] rounded-2xl p-4 w-full max-w-sm space-y-3 shadow-2xl">
       <div class="flex justify-between items-center">
         <div>
           <span class="text-[9px] font-bold uppercase tracking-wider text-emerald-400">Machine/Space Busy?</span>
@@ -447,25 +445,25 @@
 
   <!-- MODAL: CUSTOM ACTIVITY WITH DATE PICKER -->
   <div id="customActivityModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-[#122017] border border-emerald-700/60 rounded-2xl p-4 w-full max-w-sm space-y-3 shadow-2xl">
+    <div class="bg-[#0f1411] border border-white/[0.08] rounded-2xl p-4 w-full max-w-sm space-y-3 shadow-2xl">
       <div class="flex justify-between items-center">
-        <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+        <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
           <i class="fa-solid fa-pen-to-square text-emerald-400"></i> Log Custom Session
         </h3>
         <button type="button" onclick="closeCustomActivityModal()" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div>
-        <label class="text-[10px] text-slate-400 block mb-1">Date</label>
-        <input type="date" id="customDateInput" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/50 text-white">
+        <label class="text-[9px] text-slate-400 uppercase font-bold block mb-1">Date</label>
+        <input type="date" id="customDateInput" class="w-full bg-[#141b16] text-xs p-2 rounded-lg border border-white/[0.06] text-white">
       </div>
       <div>
-        <label class="text-[10px] text-slate-400 block mb-1">Activity Title</label>
-        <input type="text" id="customTitle" placeholder="e.g. 9-Hole Twilight, Speed Session" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/50 text-white">
+        <label class="text-[9px] text-slate-400 uppercase font-bold block mb-1">Activity Title</label>
+        <input type="text" id="customTitle" placeholder="e.g. 9-Hole Twilight, Speed Session" class="w-full bg-[#141b16] text-xs p-2 rounded-lg border border-white/[0.06] text-white">
       </div>
       <div class="grid grid-cols-2 gap-2">
         <div>
-          <label class="text-[10px] text-slate-400 block mb-1">Category</label>
-          <select id="customType" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/50 text-white">
+          <label class="text-[9px] text-slate-400 uppercase font-bold block mb-1">Category</label>
+          <select id="customType" class="w-full bg-[#141b16] text-xs p-2 rounded-lg border border-white/[0.06] text-white">
             <option value="Golf">Golf</option>
             <option value="Gym">Gym</option>
             <option value="Sim">Simulator</option>
@@ -473,13 +471,13 @@
           </select>
         </div>
         <div>
-          <label class="text-[10px] text-slate-400 block mb-1">Duration</label>
-          <input type="text" id="customDuration" placeholder="45 min" class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/50 text-white">
+          <label class="text-[9px] text-slate-400 uppercase font-bold block mb-1">Duration</label>
+          <input type="text" id="customDuration" placeholder="45 min" class="w-full bg-[#141b16] text-xs p-2 rounded-lg border border-white/[0.06] text-white">
         </div>
       </div>
       <div>
-        <label class="text-[10px] text-slate-400 block mb-1">Notes / Feels</label>
-        <textarea id="customNotes" rows="2" placeholder="Strike feel, focus cues..." class="w-full bg-[#17271e] text-xs p-2 rounded-lg border border-emerald-800/50 text-white"></textarea>
+        <label class="text-[9px] text-slate-400 uppercase font-bold block mb-1">Notes / Feels</label>
+        <textarea id="customNotes" rows="2" placeholder="Strike feel, focus cues..." class="w-full bg-[#141b16] text-xs p-2 rounded-lg border border-white/[0.06] text-white"></textarea>
       </div>
       <button type="button" onclick="saveCustomActivity()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow">
         Save Activity
@@ -489,29 +487,29 @@
 
   <!-- MODAL: EDIT WEDGE MATRIX -->
   <div id="wedgeModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-[#122017] border border-emerald-700/60 rounded-2xl p-4 w-full max-w-sm space-y-3 shadow-2xl">
+    <div class="bg-[#0f1411] border border-white/[0.08] rounded-2xl p-4 w-full max-w-sm space-y-3 shadow-2xl">
       <div class="flex justify-between items-center">
-        <h3 class="text-xs font-bold text-white uppercase tracking-wider">Configure Wedge Matrix</h3>
+        <h3 class="text-xs font-black text-white uppercase tracking-wider">Configure Wedge Matrix</h3>
         <button type="button" onclick="closeWedgeModal()" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="space-y-2 text-xs">
-        <p class="text-[10px] font-bold text-emerald-400 uppercase">50° Gap Wedge</p>
+        <p class="text-[9px] font-black text-emerald-400 uppercase">50° Gap Wedge</p>
         <div class="grid grid-cols-3 gap-1.5">
-          <input type="number" id="inp_50_half" placeholder="1/2" class="bg-[#17271e] p-1.5 rounded border border-emerald-800/40 text-center text-white">
-          <input type="number" id="inp_50_three" placeholder="3/4" class="bg-[#17271e] p-1.5 rounded border border-emerald-800/40 text-center text-white">
-          <input type="number" id="inp_50_full" placeholder="Full" class="bg-[#17271e] p-1.5 rounded border border-emerald-800/40 text-center text-white">
+          <input type="number" id="inp_50_half" placeholder="1/2" class="bg-[#141b16] p-1.5 rounded-lg border border-white/[0.06] text-center text-white">
+          <input type="number" id="inp_50_three" placeholder="3/4" class="bg-[#141b16] p-1.5 rounded-lg border border-white/[0.06] text-center text-white">
+          <input type="number" id="inp_50_full" placeholder="Full" class="bg-[#141b16] p-1.5 rounded-lg border border-white/[0.06] text-center text-white">
         </div>
-        <p class="text-[10px] font-bold text-emerald-400 uppercase pt-1">54° Sand Wedge</p>
+        <p class="text-[9px] font-black text-emerald-400 uppercase pt-1">54° Sand Wedge</p>
         <div class="grid grid-cols-3 gap-1.5">
-          <input type="number" id="inp_54_half" placeholder="1/2" class="bg-[#17271e] p-1.5 rounded border border-emerald-800/40 text-center text-white">
-          <input type="number" id="inp_54_three" placeholder="3/4" class="bg-[#17271e] p-1.5 rounded border border-emerald-800/40 text-center text-white">
-          <input type="number" id="inp_54_full" placeholder="Full" class="bg-[#17271e] p-1.5 rounded border border-emerald-800/40 text-center text-white">
+          <input type="number" id="inp_54_half" placeholder="1/2" class="bg-[#141b16] p-1.5 rounded-lg border border-white/[0.06] text-center text-white">
+          <input type="number" id="inp_54_three" placeholder="3/4" class="bg-[#141b16] p-1.5 rounded-lg border border-white/[0.06] text-center text-white">
+          <input type="number" id="inp_54_full" placeholder="Full" class="bg-[#141b16] p-1.5 rounded-lg border border-white/[0.06] text-center text-white">
         </div>
-        <p class="text-[10px] font-bold text-emerald-400 uppercase pt-1">58° Lob Wedge</p>
+        <p class="text-[9px] font-black text-emerald-400 uppercase pt-1">58° Lob Wedge</p>
         <div class="grid grid-cols-3 gap-1.5">
-          <input type="number" id="inp_58_half" placeholder="1/2" class="bg-[#17271e] p-1.5 rounded border border-emerald-800/40 text-center text-white">
-          <input type="number" id="inp_58_three" placeholder="3/4" class="bg-[#17271e] p-1.5 rounded border border-emerald-800/40 text-center text-white">
-          <input type="number" id="inp_58_full" placeholder="Full" class="bg-[#17271e] p-1.5 rounded border border-emerald-800/40 text-center text-white">
+          <input type="number" id="inp_58_half" placeholder="1/2" class="bg-[#141b16] p-1.5 rounded-lg border border-white/[0.06] text-center text-white">
+          <input type="number" id="inp_58_three" placeholder="3/4" class="bg-[#141b16] p-1.5 rounded-lg border border-white/[0.06] text-center text-white">
+          <input type="number" id="inp_58_full" placeholder="Full" class="bg-[#141b16] p-1.5 rounded-lg border border-white/[0.06] text-center text-white">
         </div>
       </div>
       <button type="button" onclick="saveWedgeMatrix()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 rounded-xl shadow mt-2">
@@ -520,29 +518,30 @@
     </div>
   </div>
 
-  <!-- Bottom Navigation Bar -->
-  <nav id="bottom-nav" class="bg-[#0d1811]/98 border-t border-emerald-950 px-6 pt-2 safe-bottom-nav flex justify-between items-center max-w-lg mx-auto">
+  <!-- Bottom Navigation Bar (Gym renamed to Train) -->
+  <nav id="bottom-nav" class="bg-[#0b0e0c]/98 border-t border-white/[0.06] px-6 pt-2 safe-bottom-nav flex justify-between items-center max-w-lg mx-auto">
     <button type="button" onclick="showTab('schedule')" class="nav-btn flex flex-col items-center text-emerald-400 cursor-pointer py-1 px-3" data-tab="schedule">
-      <i class="fa-solid fa-calendar-week text-lg pointer-events-none"></i>
-      <span class="text-[10px] font-semibold mt-1 pointer-events-none">Calendar</span>
+      <i class="fa-solid fa-calendar-week text-base pointer-events-none"></i>
+      <span class="text-[9px] font-semibold mt-1 pointer-events-none">Calendar</span>
     </button>
     <button type="button" onclick="showTab('train')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-emerald-300 cursor-pointer py-1 px-3" data-tab="train">
-      <i class="fa-solid fa-dumbbell text-lg pointer-events-none"></i>
-      <span class="text-[10px] font-semibold mt-1 pointer-events-none">Train</span>
+      <i class="fa-solid fa-bolt text-base pointer-events-none"></i>
+      <span class="text-[9px] font-semibold mt-1 pointer-events-none">Train</span>
     </button>
     <button type="button" onclick="showTab('trackman')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-emerald-300 cursor-pointer py-1 px-3" data-tab="trackman">
-      <i class="fa-solid fa-bullseye text-lg pointer-events-none"></i>
-      <span class="text-[10px] font-semibold mt-1 pointer-events-none">TrackMan</span>
+      <i class="fa-solid fa-bullseye text-base pointer-events-none"></i>
+      <span class="text-[9px] font-semibold mt-1 pointer-events-none">TrackMan</span>
     </button>
     <button type="button" onclick="showTab('scoring')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-emerald-300 cursor-pointer py-1 px-3" data-tab="scoring">
-      <i class="fa-solid fa-chart-line text-lg pointer-events-none"></i>
-      <span class="text-[10px] font-semibold mt-1 pointer-events-none">GHIN & Scores</span>
+      <i class="fa-solid fa-chart-line text-base pointer-events-none"></i>
+      <span class="text-[9px] font-semibold mt-1 pointer-events-none">GHIN</span>
     </button>
   </nav>
 
   <script>
-    // 4 RECURRING GOLF MACROCYCLES (12 WEEKS) WITH DIRECT YOUTUBE LINKS
     const WORKER_ENDPOINT = "https://gentle-glade-d97c.evanm2727.workers.dev";
+
+    // 4 DISTINCT TRAINING WEEKS - UNIQUE EXERCISES FOR EVERY DAY AND WEEK
     const exerciseTemplates = {
       1: {
         title: "Block 1: Ground Force Base",
@@ -1514,32 +1513,113 @@
       }
     };
 
-    // NON-GYM PROTOCOLS (DAYS 2, 4, 6, 7)
-    const nonGymProtocols = {
+    // PERIODIZED SIMULATOR DRILLS ACCORDING TO WEEKLY GYM BIOMECHANICS
+    const weeklySimDrills = {
+      1: {
+        2: {
+          title: "Studio Sim Combine 1: Ground Launch & Peak Apex (60 Mins)",
+          duration: "60 Mins",
+          badge: "SIM",
+          focus: "Launch angle push calibration, 100% intent driver ground-force ladder & low-window wedge ladder.",
+          drills: [
+            { id: "w1_s1_lowtee", title: "Low-Tee Launch Angle Calibration (Driver - 8 Balls)", cue: "Tee 1/2 ball lower than normal. Push through lead heel at impact to keep launch > 12.5° without adding backspin." },
+            { id: "w1_s1_push", title: "100% Intent Ground-Push Protocol (5 Balls)", cue: "Focus cue: 'Leave the turf with both feet at impact.' Verify ball speed exceeds 171 mph with smash > 1.48." },
+            { id: "w1_s1_wedge", title: "Wedge Low-Window Flight Ladder (75, 85, 95 yds)", cue: "Hit 4 balls each distance keeping peak apex under 75ft while maintaining stock carry distance." },
+            { id: "w1_s1_iron", title: "6-Iron Peak Height Verification (5 Balls)", cue: "Confirm 95ft+ apex and 49°+ land angle using lead side vertical thrust." }
+          ]
+        },
+        4: {
+          title: "Studio Sim Combine 2: Stinger Corridor & Trail Foot Drive (60 Mins)",
+          duration: "60 Mins",
+          badge: "SIM",
+          focus: "2-Iron Stinger corridor dispersion + Long Iron proximity.",
+          drills: [
+            { id: "w1_s2_warmup", title: "Low-Flight Stinger Warm-Up (4-Iron - 5 Balls)", cue: "Punch under 50ft flight window off trail instep push." },
+            { id: "w1_s2_stinger", title: "2-Iron Corridor Dispersion Test (10 Balls)", cue: "Drive off trail instep into firm lead leg. Maintain 240-248yd carry inside 18-yard fairway corridor." },
+            { id: "w1_s2_prox", title: "Long Iron Approach Proximity (4i & 5i - 10 Balls)", cue: "Alternate clubs each ball targeting green center." },
+            { id: "w1_s2_fairway", title: "3-Wood Fairway Finder Calibration (5 Balls)", cue: "Target 260-265yd carry with minimal curve." }
+          ]
+        }
+      },
       2: {
-        title: "Studio Sim Combine 1 (60 Mins)",
-        duration: "60 Mins",
-        badge: "SIM",
-        focus: "Driver peak ball speed + 60-105yd Clock Wedge matrix.",
-        drills: [
-          { id: "sim1_warmup", title: "Dynamic Warm-Up: 50% Wedge Flighting", cue: "Hit 10 balls with 58° at smooth 50-yard flight." },
-          { id: "sim1_wedge_matrix", title: "Wedge Matrix Ladder (75, 85, 95, 105 yds)", cue: "Hit 3 balls each to verify carry distance numbers." },
-          { id: "sim1_iron_apex", title: "Mid-Iron Flighting (6-Iron & 8-Iron)", cue: "Confirm 95ft+ peak height and 48°+ land angle." },
-          { id: "sim1_driver_overspeed", title: "Driver Max-Intent Protocol (5 Balls)", cue: "Swing at 100% intent targeting 170+ mph ball speed." }
-        ]
+        2: {
+          title: "Studio Sim Combine 1: Rotary Clearance & Wedge Spin (60 Mins)",
+          duration: "60 Mins",
+          badge: "SIM",
+          focus: "Step-through full pelvic clearance drills & 400 RPM wedge spin consistency.",
+          drills: [
+            { id: "w2_s1_step", title: "Step-Through Wedge Rotary Clearance (10 Balls)", cue: "Step trail foot forward after impact to guarantee complete pelvic clearing rotation and zero hang-back." },
+            { id: "w2_s1_spin", title: "Wedge Spin Consistency Check (85 & 95 yds - 10 Balls)", cue: "Maintain tight spin consistency within a 400 RPM standard deviation window." },
+            { id: "w2_s1_path", title: "Driver Path-to-Face Calibration (8 Balls)", cue: "Keep club path strictly between +1.5° and +3.0° in-to-out with neutral face-to-path." },
+            { id: "w2_s1_carry", title: "8-Iron Stock Distance Test (5 Balls)", cue: "Verify 168-yard carry baseline with zero pull bias." }
+          ]
+        },
+        4: {
+          title: "Studio Sim Combine 2: 3-Wood Dispersion & Window Shaping (60 Mins)",
+          duration: "60 Mins",
+          badge: "SIM",
+          focus: "3-Wood dispersion discipline & high-draw vs low-cut flight windows.",
+          drills: [
+            { id: "w2_s2_threewood", title: "3-Wood Tight Corridor Test (8 Balls)", cue: "Smooth shoulder turn, aggressive rotary clearance. Maintain carry floor > 255 yards." },
+            { id: "w2_s2_shape", title: "Window Shaping (6-Iron High Draw vs Low Fade)", cue: "Alternate 5 high draws and 5 low cuts to verify clubface angle awareness." },
+            { id: "w2_s2_combine", title: "Random Target Proximity (125 - 195 yds - 10 Balls)", cue: "Switch targets and clubs on every single shot." },
+            { id: "w2_s2_speed", title: "Driver Re-Calibration (5 Balls)", cue: "Stock swing tempo targeting 170+ mph ball speed." }
+          ]
+        }
+      },
+      3: {
+        2: {
+          title: "Studio Sim Combine 1: Peak Overspeed Intent (60 Mins)",
+          duration: "60 Mins",
+          badge: "SIM",
+          focus: "Non-dominant overspeed warm-up & 172+ mph driver speed combine.",
+          drills: [
+            { id: "w3_s1_warmup", title: "Dynamic Overspeed Neural Warm-Up", cue: "5 max-effort non-dominant swings (lefty) followed by 5 max-speed alignment stick whips." },
+            { id: "w3_s1_speed", title: "Driver 100% Intent Speed Ladder (7 Balls)", cue: "Pure intent on maximum ball speed (>172 mph). Focus solely on speed for balls 1-4, then dial in corridor on 5-7." },
+            { id: "w3_s1_target", title: "Pressure Scoring Circle (105-yd GW - 5 Balls)", cue: "Track percentage inside a 15-foot proximity circle." },
+            { id: "w3_s1_longiron", title: "4-Iron Max Carry Output (5 Balls)", cue: "High-trajectory 225-yard green-holding launches." }
+          ]
+        },
+        4: {
+          title: "Studio Sim Combine 2: Official TrackMan Combine (60 Mins)",
+          duration: "60 Mins",
+          badge: "SIM",
+          focus: "Full TrackMan 10-target combine test with penalty scoring.",
+          drills: [
+            { id: "w3_s2_combine", title: "Official 10-Target TrackMan Combine", cue: "3 balls each at 60y, 80y, 100y, 120y, 140y, 160y, 180y, 200y, and 3 Drivers." },
+            { id: "w3_s2_penalties", title: "Penalty Assessment Round", cue: "Deduct 5 points for every shot missing outside 15% of target distance." },
+            { id: "w3_s2_pressure", title: "18th Hole Match Play Driver Simulation (3 Balls)", cue: "Must hit inside a 24-yard virtual fairway." }
+          ]
+        }
       },
       4: {
-        title: "Studio Sim Combine 2 (60 Mins)",
-        duration: "60 Mins",
-        badge: "SIM",
-        focus: "2-Iron Stinger corridor dispersion + Long Iron proximity.",
-        drills: [
-          { id: "sim2_warmup", title: "Low-Flight Stinger Warm-Up", cue: "5 balls with 4-Iron punching under 50ft flight window." },
-          { id: "sim2_two_iron", title: "2-Iron Corridor Dispersion Test (10 Balls)", cue: "Maintain 240-248yd carry within 15-yard fairway corridor." },
-          { id: "sim2_three_wood", title: "3-Wood Fairway Finder Calibration", cue: "Target 260-265yd carry with minimal curve." },
-          { id: "sim2_test", title: "TrackMan 10-Shot Proximity Combine", cue: "Random targets between 125 and 215 yards." }
-        ]
-      },
+        2: {
+          title: "Studio Sim Combine 1: Touch & Flight Windowing (50 Mins)",
+          duration: "50 Mins",
+          badge: "SIM",
+          focus: "Clock wedge touch (30, 45, 60, 75 yds) & trajectory laddering.",
+          drills: [
+            { id: "w4_s1_touch", title: "Clock Wedge Touch Ladder (30, 45, 60, 75 yds)", cue: "Hit 5 balls to each distance. Focus strictly on landing spot, not rollout." },
+            { id: "w4_s1_ladder", title: "7-Iron 3-Trajectory Window Ladder", cue: "Hit 1 low punch, 1 stock shot, and 1 high moonball to the same 175-yard pin." },
+            { id: "w4_s1_tempo", title: "Driver Smooth Cadence Check (5 Balls)", cue: "Smooth 80% tempo ensuring solid smash factor (1.49)." }
+          ]
+        },
+        4: {
+          title: "Studio Sim Combine 2: Tournament Simulation (50 Mins)",
+          duration: "50 Mins",
+          badge: "SIM",
+          focus: "Virtual 9-hole tournament round simulation with full pre-shot routine.",
+          drills: [
+            { id: "w4_s2_virtual", title: "Virtual 9-Hole Simulation (Pebble or Torrey)", cue: "Execute full pre-shot routine on every shot. Never hit the same club twice in a row." },
+            { id: "w4_s2_lag", title: "Lag Putting Pace Control (15 Mins)", cue: "Calibrate distance speed to a flat virtual edge." },
+            { id: "w4_s2_tee", title: "Fairway Finder Confirmation (3 Balls)", cue: "Hit your go-to tee club (2-Iron or 3-Wood)." }
+          ]
+        }
+      }
+    };
+
+    // PLAY & RECOVERY PROTOCOLS (DAYS 6 & 7)
+    const playAndRecoveryProtocols = {
       6: {
         title: "18-Hole Course Round (Saturday)",
         duration: "4.5 Hours",
@@ -1566,772 +1646,9 @@
       }
     };
 
-    function getProgramForWeek(weekNum) {
-      const cycleIndex = ((weekNum - 1) % 4) + 1;
-      return exerciseTemplates[cycleIndex] || exerciseTemplates[1];
-    }
-
-    let currentWeek = 1;
-    let activeTrainDay = 1;
-    let selectedCalendarDayIdx = 0;
-    let calendarWeekOffset = 0;
-
-    // PERSISTENT STORAGE
-    let customActivities = JSON.parse(localStorage.getItem('sb_custom_activities')) || {};
-    let ghinConfig = JSON.parse(localStorage.getItem('sb_ghin_config')) || { email: 'evanm2727@gmail.com', password: '', index: '8.1', previousIndex: '8.1', lastSync: 0 };
-    let ghinScores = JSON.parse(localStorage.getItem('sb_ghin_scores')) || [];
-    let gymLogs = JSON.parse(localStorage.getItem('sb_gym_logs')) || {};
-    let drillLogs = JSON.parse(localStorage.getItem('sb_drill_logs')) || {};
-    let activeSwaps = JSON.parse(localStorage.getItem('sb_active_swaps')) || {};
-
-    let wedgeMatrix = JSON.parse(localStorage.getItem('sb_wedge_matrix')) || {
-      "50": { half: 65, three: 95, full: 118 },
-      "54": { half: 55, three: 85, full: 108 },
-      "58": { half: 45, three: 72, full: 95 }
-    };
-
-    let trackmanShots = JSON.parse(localStorage.getItem('sb_trackman_shots')) || [
-      { club: 'Driver', speed: 172.4, carry: 298, smash: 1.49 },
-      { club: '3-Wood', speed: 158.0, carry: 262, smash: 1.46 },
-      { club: '2-Iron', speed: 151.2, carry: 246, smash: 1.44 },
-      { club: '4-Iron', speed: 142.1, carry: 224, smash: 1.43 },
-      { club: '6-Iron', speed: 130.5, carry: 197, smash: 1.41 },
-      { club: '8-Iron', speed: 119.0, carry: 168, smash: 1.39 },
-      { club: 'PW', speed: 108.5, carry: 142, smash: 1.37 }
-    ];
-
-    function showTab(tabId) {
-      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.classList.remove('text-emerald-400');
-        btn.classList.add('text-slate-500');
-      });
-      const target = document.getElementById('tab-' + tabId);
-      if (target) target.classList.remove('hidden');
-      const activeBtn = document.querySelector(`.nav-btn[data-tab="${tabId}"]`);
-      if (activeBtn) {
-        activeBtn.classList.remove('text-slate-500');
-        activeBtn.classList.add('text-emerald-400');
-      }
-      if (tabId === 'scoring') initChart();
-    }
-
-    function changeWeekOffset(delta) {
-      calendarWeekOffset += delta;
-      setupRealWeeklyCalendar();
-    }
-    function resetToCurrentWeek() {
-      calendarWeekOffset = 0;
-      setupRealWeeklyCalendar();
-    }
-    function setupRealWeeklyCalendar() {
-      const now = new Date();
-      now.setDate(now.getDate() + (calendarWeekOffset * 7));
-      const jsDay = now.getDay();
-      const mondayOffset = (jsDay === 0) ? -6 : 1 - jsDay;
-      const mondayDate = new Date(now);
-      mondayDate.setDate(now.getDate() + mondayOffset);
-
-      const daysShort = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-      const calendarRow = document.getElementById('calendarDaysRow');
-      if (!calendarRow) return;
-      calendarRow.innerHTML = '';
-
-      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-      document.getElementById('currentCalendarMonth').innerText = `${monthNames[mondayDate.getMonth()]} ${mondayDate.getFullYear()}`;
-
-      const realToday = new Date();
-      for (let i = 0; i < 7; i++) {
-        const d = new Date(mondayDate);
-        d.setDate(mondayDate.getDate() + i);
-        const dayNumber = d.getDate();
-        const isToday = (calendarWeekOffset === 0 && d.toDateString() === realToday.toDateString());
-
-        const pill = document.createElement('button');
-        pill.type = 'button';
-        pill.className = `cal-pill flex flex-col items-center py-2 px-1 rounded-xl text-center border cursor-pointer ${
-          isToday ? 'bg-emerald-600 text-white border-emerald-400 shadow-md ring-1 ring-emerald-300' : 'bg-[#15251a] text-slate-300 border-emerald-900/50 hover:bg-[#1c3324]'
-        }`;
-        pill.onclick = () => selectCalendarDay(i, d);
-        pill.innerHTML = `
-          <span class="text-[9px] font-bold uppercase tracking-wider">${daysShort[i]}</span>
-          <span class="text-xs font-black mt-0.5">${dayNumber}</span>
-          ${isToday ? '<span class="text-[7px] font-black uppercase text-emerald-100 mt-0.5 tracking-tight">TODAY</span>' : ''}
-        `;
-        calendarRow.appendChild(pill);
-      }
-      selectCalendarDay(selectedCalendarDayIdx, mondayDate);
-    }
-
-    function selectCalendarDay(dayIdx, dateObj) {
-      selectedCalendarDayIdx = dayIdx;
-      document.querySelectorAll('.cal-pill').forEach((btn, idx) => {
-        if (idx === dayIdx) btn.classList.add('ring-2', 'ring-emerald-400');
-        else btn.classList.remove('ring-2', 'ring-emerald-400');
-      });
-
-      const prog = getProgramForWeek(currentWeek);
-      const dayData = prog.schedule[dayIdx] || prog.schedule[0];
-
-      document.getElementById('selectedDayName').innerText = dayData.dayFull;
-      document.getElementById('selectedDayType').innerText = dayData.type;
-      document.getElementById('selectedDayBadge').innerText = dayData.badge;
-
-      const detailContainer = document.getElementById('activeDayDetailContainer');
-      if (detailContainer) {
-        detailContainer.innerHTML = `
-          <div class="bg-[#122017] p-3.5 rounded-2xl border border-emerald-600/40 shadow">
-            <div class="flex justify-between items-start mb-2">
-              <div>
-                <p class="text-xs font-bold text-emerald-300">${dayData.type} &bull; ${dayData.time}</p>
-                <p class="text-[11px] text-slate-300 mt-0.5 leading-relaxed">${dayData.focus}</p>
-              </div>
-              <button type="button" onclick="goToDayInTrainTab(${dayIdx + 1})" class="bg-[#1c3626] hover:bg-emerald-600 text-emerald-300 hover:text-white text-[11px] font-bold px-2.5 py-1 rounded-lg border border-emerald-700/50">
-                Open &rarr;
-              </button>
-            </div>
-          </div>
-        `;
-      }
-      renderDayCustomActivities();
-    }
-
-    function goToDayInTrainTab(dayNum) {
-      switchTrainDay(dayNum);
-      showTab('train');
-    }
-
-    function switchWeek(weekNum) {
-      currentWeek = parseInt(weekNum);
-      const prog = getProgramForWeek(currentWeek);
-      const allDays = document.getElementById('allDaysContainer');
-      if (allDays) {
-        allDays.innerHTML = prog.schedule.map((item, idx) => `
-          <div onclick="selectCalendarDay(${idx})" class="bg-[#122017] p-3 rounded-xl border border-emerald-950 flex justify-between items-center cursor-pointer hover:border-emerald-700 transition">
-            <div>
-              <div class="flex items-center gap-2 mb-0.5">
-                <span class="text-xs font-bold text-white">${item.dayFull}</span>
-                <span class="text-[9px] font-extrabold px-1.5 py-0.2 rounded bg-slate-800 text-emerald-300">${item.badge}</span>
-              </div>
-              <p class="text-[11px] text-slate-400">${item.type} &bull; ${item.time}</p>
-            </div>
-            <span class="text-slate-500 text-xs"><i class="fa-solid fa-chevron-right"></i></span>
-          </div>
-        `).join('');
-      }
-      selectCalendarDay(selectedCalendarDayIdx);
-      switchTrainDay(activeTrainDay);
-    }
-
     // ==========================================
-    // TRAIN HUB: FULL 7-DAY CONTENT ENGINE
+    // INITIALIZATION & TAB DISPATCH
     // ==========================================
-    function switchTrainDay(dayNum) {
-      activeTrainDay = dayNum;
-      for (let i = 1; i <= 7; i++) {
-        const btn = document.getElementById(`trainDayBtn${i}`);
-        if (!btn) continue;
-        if (i === dayNum) {
-          btn.className = "flex-1 py-1 rounded font-bold text-white bg-emerald-700 whitespace-nowrap px-2";
-        } else {
-          btn.className = "flex-1 py-1 rounded font-bold text-slate-400 hover:text-white whitespace-nowrap px-2";
-        }
-      }
-
-      renderTrainContent();
-    }
-
-    function getGymStorageKey(origExId) {
-      return `w${currentWeek}_d${activeTrainDay}_${origExId}`;
-    }
-
-    function getDrillStorageKey(drillId) {
-      return `w${currentWeek}_d${activeTrainDay}_drill_${drillId}`;
-    }
-
-    function renderTrainContent() {
-      const container = document.getElementById('trainContentList');
-      if (!container) return;
-
-      const isGymDay = (activeTrainDay === 1 || activeTrainDay === 3 || activeTrainDay === 5);
-
-      if (isGymDay) {
-        const prog = getProgramForWeek(currentWeek);
-        const workout = prog.gymWorkouts[activeTrainDay] || prog.gymWorkouts[1];
-        document.getElementById('trainSessionTitle').innerText = workout.title;
-        document.getElementById('trainSessionDuration').innerText = "50 Mins";
-        document.getElementById('trainSessionFocus').innerText = workout.focus;
-
-        container.innerHTML = workout.exercises.map((origEx, idx) => {
-          const storageKey = getGymStorageKey(origEx.id);
-          const activeSwapIdx = activeSwaps[storageKey];
-          const isSwapped = (activeSwapIdx !== undefined && origEx.alternates && origEx.alternates[activeSwapIdx]);
-          
-          const ex = isSwapped ? {
-            ...origEx,
-            name: origEx.alternates[activeSwapIdx].name,
-            cue: origEx.alternates[activeSwapIdx].note,
-            videoUrl: origEx.alternates[activeSwapIdx].videoUrl || origEx.videoUrl
-          } : origEx;
-
-          const log = gymLogs[storageKey] || { completed: false, sets: [] };
-
-          return `
-            <div class="bg-[#122017] p-3.5 rounded-2xl border ${log.completed ? 'border-emerald-500/80 bg-gradient-to-b from-[#14261a] to-[#0f1d13]' : 'border-emerald-900/60'} shadow-sm space-y-2.5">
-              <div class="flex justify-between items-start gap-2">
-                <div class="flex items-start gap-2.5">
-                  <button type="button" onclick="toggleExerciseComplete('${origEx.id}')" class="mt-0.5 w-6 h-6 rounded-lg flex items-center justify-center border transition ${log.completed ? 'bg-emerald-500 border-emerald-400 text-white' : 'bg-[#182a1f] border-emerald-800/80 text-transparent hover:text-emerald-400/50'}">
-                    <i class="fa-solid fa-check text-xs"></i>
-                  </button>
-                  <div>
-                    <h4 class="text-xs font-black ${log.completed ? 'text-emerald-300 line-through' : 'text-white'} flex items-center gap-1.5 flex-wrap">
-                      <span class="text-emerald-400 font-extrabold">${idx + 1}.</span> ${ex.name}
-                      ${isSwapped ? '<span class="text-[8px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1 py-0.2 rounded font-bold uppercase">Alternate</span>' : ''}
-                    </h4>
-                    <p class="text-[10px] text-amber-300/90 font-semibold mt-0.5"><i class="fa-solid fa-bullseye text-[9px] mr-1"></i>${ex.cue}</p>
-                  </div>
-                </div>
-                <span class="text-[10px] text-emerald-400 font-bold bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800/40 shrink-0">${origEx.sets}</span>
-              </div>
-
-              <!-- Weight & Rep Inputs -->
-              <div class="bg-[#0b160f] p-2.5 rounded-xl border border-emerald-950 flex flex-wrap items-center justify-between gap-2">
-                <div class="flex items-center gap-1.5 text-xs flex-1">
-                  <div class="flex-1">
-                    <span class="text-[9px] text-slate-400 uppercase block font-semibold">Weight (lbs)</span>
-                    <input type="number" id="weight_${origEx.id}" placeholder="e.g. 225" class="w-full bg-[#16271c] text-emerald-300 font-bold p-1 rounded border border-emerald-800/40 text-xs">
-                  </div>
-                  <div class="w-16">
-                    <span class="text-[9px] text-slate-400 uppercase block font-semibold">Reps</span>
-                    <input type="number" id="reps_${origEx.id}" placeholder="5" class="w-full bg-[#16271c] text-white font-bold p-1 rounded border border-emerald-800/40 text-xs text-center">
-                  </div>
-                </div>
-                <button type="button" onclick="logExerciseSet('${origEx.id}')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3 py-2 rounded-lg mt-3 flex items-center gap-1 shrink-0 shadow">
-                  <i class="fa-solid fa-plus text-[10px]"></i> Log Set
-                </button>
-              </div>
-
-              <!-- Sets Chips -->
-              ${log.sets.length > 0 ? `
-                <div class="flex flex-wrap gap-1.5 pt-0.5">
-                  ${log.sets.map((s, sIdx) => `
-                    <span class="text-[10px] bg-[#1a3324] border border-emerald-700/50 text-emerald-300 px-2 py-0.5 rounded-md font-bold flex items-center gap-1.5">
-                      Set ${sIdx + 1}: ${s.weight} lbs × ${s.reps}
-                      <button type="button" onclick="deleteExerciseSet('${origEx.id}', ${sIdx})" class="text-slate-500 hover:text-red-400"><i class="fa-solid fa-xmark text-[9px]"></i></button>
-                    </span>
-                  `).join('')}
-                </div>
-              ` : ''}
-
-              <!-- Alternates & Tutorial Button -->
-              <div class="flex items-center justify-between pt-1 border-t border-emerald-950/80">
-                <button type="button" onclick="openAlternateModal('${origEx.id}', ${idx})" class="text-[10px] font-bold text-amber-300 hover:text-white bg-[#221c12] hover:bg-amber-900/60 px-2.5 py-1 rounded-lg border border-amber-700/40 flex items-center gap-1.5">
-                  <i class="fa-solid fa-shuffle text-[9px]"></i> Swap (3 Alternates)
-                </button>
-                <button type="button" onclick="openDiagramModalByIndex(${idx})" class="text-[10px] font-bold text-emerald-300 hover:text-white bg-[#193222] hover:bg-emerald-700 px-2.5 py-1 rounded-lg border border-emerald-700/50 flex items-center gap-1.5">
-                  <i class="fa-solid fa-circle-play text-[10px]"></i> Correct Form
-                </button>
-              </div>
-            </div>
-          `;
-        }).join('');
-      } else {
-        // Non-Gym Days: Studio, Round, Recovery Checklists
-        const proto = nonGymProtocols[activeTrainDay] || nonGymProtocols[2];
-        document.getElementById('trainSessionTitle').innerText = proto.title;
-        document.getElementById('trainSessionDuration').innerText = proto.duration;
-        document.getElementById('trainSessionFocus').innerText = proto.focus;
-
-        container.innerHTML = proto.drills.map((drill, idx) => {
-          const drillKey = getDrillStorageKey(drill.id);
-          const isDone = drillLogs[drillKey] || false;
-
-          return `
-            <div class="bg-[#122017] p-3.5 rounded-2xl border ${isDone ? 'border-emerald-500/80 bg-gradient-to-b from-[#14261a] to-[#0f1d13]' : 'border-emerald-900/60'} shadow-sm space-y-2">
-              <div class="flex items-start gap-2.5">
-                <button type="button" onclick="toggleDrillComplete('${drill.id}')" class="mt-0.5 w-6 h-6 rounded-lg flex items-center justify-center border transition ${isDone ? 'bg-emerald-500 border-emerald-400 text-white' : 'bg-[#182a1f] border-emerald-800/80 text-transparent hover:text-emerald-400/50'}">
-                  <i class="fa-solid fa-check text-xs"></i>
-                </button>
-                <div class="flex-1">
-                  <h4 class="text-xs font-black ${isDone ? 'text-emerald-300 line-through' : 'text-white'} flex items-center gap-1.5">
-                    <span class="text-emerald-400 font-extrabold">${idx + 1}.</span> ${drill.title}
-                  </h4>
-                  <p class="text-[11px] text-slate-300 leading-snug mt-1">${drill.cue}</p>
-                </div>
-              </div>
-            </div>
-          `;
-        }).join('');
-      }
-    }
-
-    function toggleDrillComplete(drillId) {
-      const drillKey = getDrillStorageKey(drillId);
-      drillLogs[drillKey] = !drillLogs[drillKey];
-      localStorage.setItem('sb_drill_logs', JSON.stringify(drillLogs));
-      renderTrainContent();
-    }
-
-    function toggleExerciseComplete(origExId) {
-      const storageKey = getGymStorageKey(origExId);
-      if (!gymLogs[storageKey]) gymLogs[storageKey] = { completed: false, sets: [] };
-      gymLogs[storageKey].completed = !gymLogs[storageKey].completed;
-      localStorage.setItem('sb_gym_logs', JSON.stringify(gymLogs));
-      renderTrainContent();
-    }
-
-    function logExerciseSet(origExId) {
-      const storageKey = getGymStorageKey(origExId);
-      const weightInput = document.getElementById(`weight_${origExId}`);
-      const repsInput = document.getElementById(`reps_${origExId}`);
-      const weight = parseFloat(weightInput.value);
-      const reps = parseInt(repsInput.value) || 5;
-
-      if (!weight) return alert('Enter weight in lbs.');
-
-      if (!gymLogs[storageKey]) gymLogs[storageKey] = { completed: false, sets: [] };
-      gymLogs[storageKey].sets.push({ weight, reps });
-      gymLogs[storageKey].completed = true;
-      localStorage.setItem('sb_gym_logs', JSON.stringify(gymLogs));
-
-      weightInput.value = '';
-      repsInput.value = '';
-      renderTrainContent();
-    }
-
-    function deleteExerciseSet(origExId, setIdx) {
-      const storageKey = getGymStorageKey(origExId);
-      if (gymLogs[storageKey] && gymLogs[storageKey].sets) {
-        gymLogs[storageKey].sets.splice(setIdx, 1);
-        if (gymLogs[storageKey].sets.length === 0) gymLogs[storageKey].completed = false;
-        localStorage.setItem('sb_gym_logs', JSON.stringify(gymLogs));
-        renderTrainContent();
-      }
-    }
-
-    // ALTERNATES MODAL
-    let currentSwapStorageKey = null;
-    function openAlternateModal(origExId, exIdx) {
-      currentSwapStorageKey = getGymStorageKey(origExId);
-      const prog = getProgramForWeek(currentWeek);
-      const workout = prog.gymWorkouts[activeTrainDay] || prog.gymWorkouts[1];
-      const origEx = workout.exercises[exIdx];
-
-      document.getElementById('altModalTitle').innerText = `Substitutes for: ${origEx.name}`;
-      const list = document.getElementById('alternatesOptionList');
-
-      list.innerHTML = `
-        <button type="button" onclick="selectAlternate(null)" class="w-full text-left p-2.5 rounded-xl border border-emerald-800/50 bg-[#16271c] hover:bg-emerald-800/40">
-          <p class="text-xs font-bold text-white">Default: ${origEx.name}</p>
-          <p class="text-[10px] text-slate-300">Standard prescribed exercise</p>
-        </button>
-        ${origEx.alternates.map((alt, aIdx) => `
-          <button type="button" onclick="selectAlternate(${aIdx})" class="w-full text-left p-2.5 rounded-xl border border-amber-900/60 bg-[#1b2219] hover:bg-emerald-800/30">
-            <p class="text-xs font-bold text-amber-300">Option ${aIdx + 1}:${alt.name}</p>
-            <p class="text-[10px] text-slate-300">${alt.note}</p>
-          </button>
-        `).join('')}
-      `;
-
-      document.getElementById('alternateModal').classList.remove('hidden');
-    }
-
-    function selectAlternate(aIdx) {
-      if (currentSwapStorageKey) {
-        if (aIdx === null) delete activeSwaps[currentSwapStorageKey];
-        else activeSwaps[currentSwapStorageKey] = aIdx;
-        localStorage.setItem('sb_active_swaps', JSON.stringify(activeSwaps));
-        closeAlternateModal();
-        renderTrainContent();
-      }
-    }
-    function closeAlternateModal() {
-      document.getElementById('alternateModal').classList.add('hidden');
-    }
-
-    // CORRECT FORM COACHING MODAL WITH DUAL LINK FALLBACK
-    function openDiagramModalByIndex(idx) {
-      const prog = getProgramForWeek(currentWeek);
-      const workout = prog.gymWorkouts[activeTrainDay] || prog.gymWorkouts[1];
-      const origEx = workout.exercises[idx];
-      if (!origEx) return;
-
-      const storageKey = getGymStorageKey(origEx.id);
-      const activeSwapIdx = activeSwaps[storageKey];
-      const isSwapped = (activeSwapIdx !== undefined && origEx.alternates && origEx.alternates[activeSwapIdx]);
-      
-      const ex = isSwapped ? origEx.alternates[activeSwapIdx] : origEx;
-      
-      const verifiedVideoMap = {
-        "Trap Bar Deadlift (Velocity Focus)": "https://www.youtube.com/watch?v=dfYIApfWS5o",
-        "Barbell Conventional Deadlift": "https://www.youtube.com/watch?v=op9kVnSso6Q",
-        "Bulgarian Split Squat (Lead Leg Brake)": "https://www.youtube.com/watch?v=EiBXgDJ_g-Q",
-        "Half-Kneeling Pallof Press with Hold": "https://www.youtube.com/watch?v=LA6Uc5yIV1c",
-        "Speed Front Squat (Fast Ascent)": "https://www.youtube.com/watch?v=v-mQm_droLE",
-        "Neutral Grip Pull-Ups": "https://www.youtube.com/watch?v=eGo4IYlbE5g"
-      };
-
-      const searchQuery = encodeURIComponent(`${ex.name} proper form tutorial golf`);
-      const searchUrl = `https://www.youtube.com/results?search_query=${searchQuery}`;
-      const targetVideoUrl = verifiedVideoMap[ex.name] || ex.videoUrl || searchUrl;
-
-      document.getElementById('diagTitle').innerText = ex.name;
-      document.getElementById('diagBoxTitle').innerText = ex.name;
-      document.getElementById('diagSetupText').innerText = origEx.setup || "Execute with controlled cadence, neutral spine, and full intent.";
-      document.getElementById('diagCueText').innerText = origEx.golfTransfer || "Transfers ground force directly through the kinetic chain into clubhead release.";
-
-      const directBtn = document.getElementById('diagDirectVideoLink');
-      const searchBtn = document.getElementById('diagSearchVideoLink');
-      
-      directBtn.href = targetVideoUrl;
-      searchBtn.href = searchUrl;
-
-      document.getElementById('exerciseDiagramModal').classList.remove('hidden');
-    }
-
-    function closeDiagramModal() {
-      document.getElementById('exerciseDiagramModal').classList.add('hidden');
-    }
-
-    // CUSTOM LOGGING
-    function openCustomActivityModal() {
-      document.getElementById('customDateInput').value = new Date().toISOString().split('T')[0];
-      document.getElementById('customActivityModal').classList.remove('hidden');
-    }
-    function closeCustomActivityModal() { document.getElementById('customActivityModal').classList.add('hidden'); }
-    function saveCustomActivity() {
-      const date = document.getElementById('customDateInput').value;
-      const title = document.getElementById('customTitle').value.trim();
-      const type = document.getElementById('customType').value;
-      const duration = document.getElementById('customDuration').value.trim() || 'Custom';
-      const notes = document.getElementById('customNotes').value.trim();
-
-      if (!title) return alert('Enter an activity title');
-      if (!customActivities[selectedCalendarDayIdx]) customActivities[selectedCalendarDayIdx] = [];
-      customActivities[selectedCalendarDayIdx].push({ date, title, type, duration, notes });
-      localStorage.setItem('sb_custom_activities', JSON.stringify(customActivities));
-      closeCustomActivityModal();
-      renderDayCustomActivities();
-    }
-
-    function renderDayCustomActivities() {
-      const container = document.getElementById('selectedDayCustomActivities');
-      if (!container) return;
-      const list = customActivities[selectedCalendarDayIdx] || [];
-      if (list.length === 0) { container.innerHTML = ''; return; }
-      container.innerHTML = `
-        <p class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider mt-2 mb-1">Logged Custom Sessions</p>
-        ${list.map((item, idx) => `
-          <div class="bg-[#0f1b13] p-2.5 rounded-xl border border-emerald-800/40 flex justify-between items-start">
-            <div>
-              <div class="flex items-center gap-1.5 mb-0.5">
-                <span class="text-xs font-bold text-white">${item.title}</span>
-                <span class="text-[8px] bg-slate-800 text-emerald-300 px-1.5 py-0.2 rounded font-bold">${item.type}</span>
-                <span class="text-[9px] text-slate-400">&bull; ${item.duration}</span>
-              </div>
-              ${item.notes ? `<p class="text-[11px] text-slate-300">${item.notes}</p>` : ''}
-            </div>
-            <button onclick="deleteCustomActivity(${idx})" class="text-slate-500 hover:text-red-400 text-xs px-1"><i class="fa-solid fa-trash"></i></button>
-          </div>
-        `).join('')}
-      `;
-    }
-
-    function deleteCustomActivity(idx) {
-      if (customActivities[selectedCalendarDayIdx]) {
-        customActivities[selectedCalendarDayIdx].splice(idx, 1);
-        localStorage.setItem('sb_custom_activities', JSON.stringify(customActivities));
-        renderDayCustomActivities();
-      }
-    }
-
-    // WEDGE MATRIX
-    function openWedgeModal() {
-      document.getElementById('inp_50_half').value = wedgeMatrix["50"].half;
-      document.getElementById('inp_50_three').value = wedgeMatrix["50"].three;
-      document.getElementById('inp_50_full').value = wedgeMatrix["50"].full;
-      document.getElementById('inp_54_half').value = wedgeMatrix["54"].half;
-      document.getElementById('inp_54_three').value = wedgeMatrix["54"].three;
-      document.getElementById('inp_54_full').value = wedgeMatrix["54"].full;
-      document.getElementById('inp_58_half').value = wedgeMatrix["58"].half;
-      document.getElementById('inp_58_three').value = wedgeMatrix["58"].three;
-      document.getElementById('inp_58_full').value = wedgeMatrix["58"].full;
-      document.getElementById('wedgeModal').classList.remove('hidden');
-    }
-    function closeWedgeModal() { document.getElementById('wedgeModal').classList.add('hidden'); }
-    function saveWedgeMatrix() {
-      wedgeMatrix["50"] = {
-        half: parseInt(document.getElementById('inp_50_half').value) || 0,
-        three: parseInt(document.getElementById('inp_50_three').value) || 0,
-        full: parseInt(document.getElementById('inp_50_full').value) || 0
-      };
-      wedgeMatrix["54"] = {
-        half: parseInt(document.getElementById('inp_54_half').value) || 0,
-        three: parseInt(document.getElementById('inp_54_three').value) || 0,
-        full: parseInt(document.getElementById('inp_54_full').value) || 0
-      };
-      wedgeMatrix["58"] = {
-        half: parseInt(document.getElementById('inp_58_half').value) || 0,
-        three: parseInt(document.getElementById('inp_58_three').value) || 0,
-        full: parseInt(document.getElementById('inp_58_full').value) || 0
-      };
-      localStorage.setItem('sb_wedge_matrix', JSON.stringify(wedgeMatrix));
-      renderWedgeMatrix();
-      closeWedgeModal();
-    }
-    function renderWedgeMatrix() {
-      for (const club of ["50", "54", "58"]) {
-        document.getElementById(`wm_${club}_half`).innerText = wedgeMatrix[club].half + " yds";
-        document.getElementById(`wm_${club}_three`).innerText = wedgeMatrix[club].three + " yds";
-        document.getElementById(`wm_${club}_full`).innerText = wedgeMatrix[club].full + " yds";
-      }
-    }
-
-    // TRACKMAN OCR & BAG GAPPING
-    function renderBagGapping() {
-      const table = document.getElementById('bagGappingTable');
-      if (!table) return;
-
-      const grouped = {};
-      trackmanShots.forEach(s => {
-        if (!grouped[s.club]) grouped[s.club] = { carries: [], speeds: [], smashes: [] };
-        grouped[s.club].carries.push(parseFloat(s.carry));
-        grouped[s.club].speeds.push(parseFloat(s.speed));
-        if (s.smash) grouped[s.club].smashes.push(parseFloat(s.smash));
-      });
-
-      table.innerHTML = Object.keys(grouped).map(club => {
-        const d = grouped[club];
-        const avgCarry = Math.round(d.carries.reduce((a, b) => a + b, 0) / d.carries.length);
-        const avgSpeed = (d.speeds.reduce((a, b) => a + b, 0) / d.speeds.length).toFixed(1);
-        const avgSmash = d.smashes.length > 0 ? (d.smashes.reduce((a, b) => a + b, 0) / d.smashes.length).toFixed(2) : '--';
-        return `
-          <tr class="border-b border-emerald-950/40">
-            <td class="py-1.5 px-2 font-bold text-white">${club}</td>
-            <td class="py-1.5 px-2 text-emerald-300 font-semibold">${avgCarry} yds</td>
-            <td class="py-1.5 px-2 text-slate-300">${avgSpeed} mph</td>
-            <td class="py-1.5 px-2 text-slate-400">${avgSmash}</td>
-            <td class="py-1.5 px-2 text-slate-500">${d.carries.length}</td>
-          </tr>
-        `;
-      }).join('');
-    }
-
-    async function processTrackmanImage(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const statusBox = document.getElementById('ocrStatus');
-      const resultForm = document.getElementById('ocrResultForm');
-      statusBox.classList.remove('hidden');
-      resultForm.classList.add('hidden');
-
-      try {
-        const worker = await Tesseract.createWorker('eng');
-        const ret = await worker.recognize(file);
-        await worker.terminate();
-        const raw = ret.data.text;
-        statusBox.classList.add('hidden');
-
-        let speed = null, carry = null, smash = null;
-        const speeds = raw.match(/\b(1[0-9]{2}(?:\.[0-9])?)\b/g);
-        if (speeds) speed = parseFloat(speeds[0]);
-        const carries = raw.match(/\b([1-3][0-9]{2})\b/g);
-        if (carries) {
-          const validCarry = carries.find(c => parseFloat(c) !== speed);
-          if (validCarry) carry = parseInt(validCarry);
-        }
-        const smashes = raw.match(/\b(1\.[3-5][0-9])\b/g);
-        if (smashes) smash = parseFloat(smashes[0]);
-
-        document.getElementById('parsedSpeed').value = speed || '';
-        document.getElementById('parsedCarry').value = carry || '';
-        document.getElementById('parsedSmash').value = smash || 1.48;
-        resultForm.classList.remove('hidden');
-      } catch (err) {
-        statusBox.classList.add('hidden');
-        alert("Enter numbers manually");
-      }
-    }
-
-    function confirmParsedShot() {
-      const club = document.getElementById('parsedClub').value;
-      const speed = parseFloat(document.getElementById('parsedSpeed').value);
-      const carry = parseInt(document.getElementById('parsedCarry').value);
-      const smash = parseFloat(document.getElementById('parsedSmash').value) || 1.48;
-      if (!speed || !carry) return alert("Verify speed and carry");
-
-      trackmanShots.unshift({ club, speed: speed.toFixed(1), carry, smash: smash.toFixed(2) });
-      localStorage.setItem('sb_trackman_shots', JSON.stringify(trackmanShots));
-      renderTrackmanTable();
-      renderBagGapping();
-      document.getElementById('ocrResultForm').classList.add('hidden');
-      alert("Shot recorded");
-    }
-
-    function renderTrackmanTable() {
-      const tbody = document.getElementById('trackmanShotsTable');
-      if (!tbody) return;
-      tbody.innerHTML = trackmanShots.slice(0, 8).map(s => `
-        <tr class="border-b border-emerald-950/40">
-          <td class="py-1.5 px-2 font-bold text-white">${s.club}</td>
-          <td class="py-1.5 px-2 text-slate-300">${s.carry} yds</td>
-          <td class="py-1.5 px-2 text-emerald-300">${s.speed} mph</td>
-          <td class="py-1.5 px-2 text-slate-400">${s.smash || '--'}</td>
-        </tr>
-      `).join('');
-    }
-
-    // GHIN SYNC & COURSE DISAMBIGUATION
-    async function syncGhinData(interactive = true) {
-      const email = document.getElementById('ghinEmail').value.trim();
-      const password = document.getElementById('ghinPassword').value.trim();
-      const btn = document.getElementById('ghinSyncBtn');
-
-      if (!email || !password) {
-        if (interactive) alert("Enter GHIN credentials below.");
-        return;
-      }
-
-      if (interactive) {
-        btn.disabled = true;
-        btn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i>`;
-      }
-
-      try {
-        const res = await fetch(WORKER_ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        });
-        const data = await res.json();
-        if (data.error) throw new Error(data.error);
-
-        ghinConfig.lastSync = Date.now();
-        localStorage.setItem('sb_ghin_config', JSON.stringify(ghinConfig));
-
-        if (Array.isArray(data.scores) && data.scores.length > 0) {
-          ghinScores = data.scores.map(s => {
-            let courseName = s.course_name || '18-Hole Round';
-            const rating = parseFloat(s.course_rating || 0);
-            const slope = parseFloat(s.slope_rating || 0);
-
-            if (courseName.trim().toUpperCase() === "NORTH") {
-              if (Math.abs(rating - 71.5) < 0.2 && Math.abs(slope - 125) < 2) {
-                courseName = "Torrey Pines (North)";
-              } else if (Math.abs(rating - 73.0) < 0.2 && Math.abs(slope - 127) < 2) {
-                courseName = "Admiral Baker (North)";
-              }
-            }
-
-            return {
-              course: courseName,
-              score: s.score || '--',
-              diff: parseFloat(s.differential || 0).toFixed(1),
-              isUsed: Boolean(s.used),
-              rating: s.course_rating || '--',
-              slope: s.slope_rating || '--',
-              date: s.played_at ? new Date(s.played_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: '2-digit' }) : 'Recent'
-            };
-          });
-          localStorage.setItem('sb_ghin_scores', JSON.stringify(ghinScores));
-        }
-
-        renderScoringTab();
-        if (interactive) alert(`GHIN Synced!\nLive Index: ${data.handicapIndex || '8.1'}\n${ghinScores.length} rounds loaded.`);
-      } catch (err) {
-        if (interactive) alert("Sync error: " + err.message);
-      } finally {
-        if (interactive) {
-          btn.disabled = false;
-          btn.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i> Sync`;
-        }
-      }
-    }
-
-    function renderScoringTab() {
-      const listContainer = document.getElementById('ghinScoresList');
-      if (!listContainer) return;
-      document.getElementById('scoresCountLabel').innerText = `${ghinScores.length} Rounds Synced`;
-
-      const countingScores = ghinScores.filter(s => s.isUsed).map(s => parseFloat(s.diff)).sort((a, b) => a - b);
-      if (countingScores.length > 0) {
-        const eighthDiff = countingScores[countingScores.length - 1].toFixed(1);
-        document.getElementById('sim8thDiff').innerText = eighthDiff;
-        document.getElementById('impactSimSummary').innerHTML = `Your 8th counting differential is <strong class="text-amber-300">${eighthDiff}</strong>.`;
-        document.getElementById('simTargetAdvice').innerHTML = `Shoot a differential below <strong class="text-emerald-400">${eighthDiff}</strong> in your next round to knock off this score and lower your 8.1 Index.`;
-      }
-
-      if (ghinScores.length === 0) {
-        listContainer.innerHTML = `<p class="text-xs text-slate-500 py-3 text-center">No rounds synced yet. Tap 'Sync' above.</p>`;
-      } else {
-        listContainer.innerHTML = ghinScores.map(s => `
-          <div class="bg-[#0e1811] p-3 rounded-xl border ${s.isUsed ? 'border-amber-500/40 bg-gradient-to-r from-[#142316] to-[#0e1811]' : 'border-emerald-950'} flex justify-between items-center">
-            <div>
-              <div class="flex items-center gap-1.5 mb-0.5">
-                <span class="font-bold text-white text-xs">${s.course}</span>
-                ${s.isUsed ? '<span class="text-[8px] bg-amber-400 text-amber-950 font-black px-1.5 py-0.2 rounded uppercase">Counting</span>' : ''}
-              </div>
-              <p class="text-[10px] text-slate-400">${s.date} &bull; ${s.rating}/${s.slope}</p>
-            </div>
-            <div class="text-right">
-              <span class="text-xs font-black bg-emerald-950 text-emerald-300 border border-emerald-800/60 px-2 py-1 rounded inline-block mb-0.5">${s.score}</span>
-              <p class="text-[10px] font-bold ${s.isUsed ? 'text-amber-400' : 'text-slate-400'}">Diff: ${s.diff}</p>
-            </div>
-          </div>
-        `).join('');
-      }
-      initChart();
-    }
-
-    let chartInstance = null;
-    function initChart() {
-      const canvas = document.getElementById('scoringChart');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      if (chartInstance) chartInstance.destroy();
-
-      const reversed = [...ghinScores].reverse();
-      const labels = reversed.length > 0 ? reversed.map(r => r.date) : ['R1', 'R2', 'R3', 'R4', 'R5'];
-      const dataPoints = reversed.length > 0 ? reversed.map(r => parseFloat(r.diff)) : [8.4, 8.2, 8.1, 7.8, 8.1];
-      const pointColors = reversed.length > 0 ? reversed.map(r => r.isUsed ? '#f59e0b' : '#10b981') : ['#10b981', '#10b981', '#10b981', '#10b981', '#10b981'];
-
-      chartInstance = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels,
-          datasets: [
-            {
-              label: 'Differential',
-              data: dataPoints,
-              borderColor: '#10b981',
-              backgroundColor: 'rgba(16, 185, 129, 0.15)',
-              pointBackgroundColor: pointColors,
-              pointRadius: reversed.length > 0 ? reversed.map(r => r.isUsed ? 5 : 3) : 3,
-              tension: 0.35,
-              fill: true
-            },
-            {
-              label: 'Scratch (0.0)',
-              data: labels.map(() => 0.0),
-              borderColor: '#f59e0b',
-              borderDash: [4, 4],
-              pointRadius: 0
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          events: [],
-          plugins: { legend: { display: false } },
-          scales: {
-            x: { ticks: { color: '#64748b', font: { size: 9 } } },
-            y: { ticks: { color: '#64748b', font: { size: 9 } } }
-          }
-        }
-      });
-    }
-
     function init() {
       setupRealWeeklyCalendar();
       switchWeek(1);
@@ -2354,4 +1671,3 @@
   </script>
 </body>
 </html>
-    
