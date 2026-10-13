@@ -127,7 +127,7 @@
       </div>
     </div>
 
-    <!-- TAB 2: TRAIN (EXPANDED GYM, SIMULATOR, PLAY & RECOVERY PROTOCOLS) -->
+    <!-- TAB 2: TRAIN -->
     <div id="tab-train" class="tab-pane hidden space-y-3">
       <div class="flex justify-between items-center">
         <div>
@@ -158,7 +158,7 @@
         <p class="text-[11px] text-slate-300 leading-relaxed" id="trainSessionFocus"></p>
       </div>
 
-      <!-- Interactive Exercise / Drill Checklist Container -->
+      <!-- Training Checklist Container -->
       <div id="trainContentList" class="space-y-3"></div>
     </div>
 
@@ -383,7 +383,7 @@
 
   </main>
 
-  <!-- MODAL: VERIFIED DIRECT YOUTUBE COACHING LESSON -->
+  <!-- MODAL: DUAL-ACTION HD COACHING & DIRECT YOUTUBE SEARCH FALLBACK -->
   <div id="exerciseDiagramModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
     <div class="bg-[#122017] border border-emerald-600/60 rounded-3xl p-5 w-full max-w-sm space-y-3.5 shadow-2xl">
       <div class="flex justify-between items-center">
@@ -394,12 +394,12 @@
         <button type="button" onclick="closeDiagramModal()" class="text-slate-400 hover:text-white text-base"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
-      <div class="w-full h-40 bg-[#07130a] rounded-2xl border border-emerald-900/60 flex flex-col items-center justify-center p-3 text-center relative overflow-hidden">
+      <div class="w-full h-36 bg-[#07130a] rounded-2xl border border-emerald-900/60 flex flex-col items-center justify-center p-3 text-center relative overflow-hidden">
         <div class="w-12 h-12 rounded-full bg-red-600/20 border border-red-500/50 flex items-center justify-center text-red-400 text-xl mb-2">
           <i class="fa-solid fa-play ml-0.5"></i>
         </div>
         <h4 class="text-xs font-bold text-white mb-0.5" id="diagBoxTitle">Exercise Form</h4>
-        <p class="text-[10px] text-slate-400 max-w-[220px]">Direct PGA Tour and strength coaching demonstration.</p>
+        <p class="text-[10px] text-slate-400 max-w-[220px]">PGA Tour & strength coach demonstration.</p>
       </div>
 
       <div class="space-y-2 text-xs">
@@ -413,14 +413,18 @@
         </div>
       </div>
 
+      <!-- Dual Action Launcher: Direct Link + Clean Search Fallback -->
       <div class="flex gap-2">
-        <a id="diagDirectVideoLink" href="#" target="_blank" class="flex-1 bg-red-700 hover:bg-red-600 text-white font-bold text-xs py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow">
+        <a id="diagDirectVideoLink" href="#" target="_blank" class="flex-1 bg-red-700 hover:bg-red-600 text-white font-bold text-xs py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow text-center">
           <i class="fa-brands fa-youtube"></i> Watch HD Demo
         </a>
-        <button type="button" onclick="closeDiagramModal()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow">
-          Done
-        </button>
+        <a id="diagSearchVideoLink" href="#" target="_blank" class="flex-1 bg-[#1a3324] hover:bg-[#234531] text-emerald-300 border border-emerald-700/60 font-bold text-xs py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow text-center">
+          <i class="fa-solid fa-magnifying-glass text-[10px]"></i> Search YouTube
+        </a>
       </div>
+      <button type="button" onclick="closeDiagramModal()" class="w-full bg-[#15251a] hover:bg-[#1b3425] text-slate-300 font-bold text-xs py-2 rounded-xl border border-emerald-900/60 transition mt-1">
+        Close
+      </button>
     </div>
   </div>
 
@@ -538,10 +542,10 @@
   <script>
     const WORKER_ENDPOINT = "https://gentle-glade-d97c.evanm2727.workers.dev";
 
-    // 4 FULL DISTINCT RECURRING TRAINING PHASES
+    // 4 RECURRING GOLF PHASES WITH VERIFIED DIRECT YOUTUBE LINKS
     const exerciseTemplates = {
       1: {
-        title: "Week 1: Ground Reaction Force Base",
+        title: "Block: Ground Force Base",
         schedule: [
           { day: "Mon", dayFull: "Monday", type: "Gym Lift 1", badge: "GYM", focus: "Ground Reaction: Trap Bar Deadlifts + Rotational MB Scoop Slams", time: "50 min" },
           { day: "Tue", dayFull: "Tuesday", type: "Studio Sim Combine 1", badge: "SIM", focus: "Driver Peak Ball Speed test + 60-105yd Clock Wedge matrix", time: "60 min" },
@@ -557,13 +561,13 @@
             focus: "Build maximum vertical ground reaction force (vGRF) for 170+ mph ball speed.",
             exercises: [
               {
-                id: "w1_trapbar",
+                id: "e_trapbar_dl",
                 name: "Trap Bar Deadlift (Velocity Focus)",
                 sets: "4 sets x 5 reps",
                 cue: "Violent hip extension, push floor away fast",
                 setup: "Stand centered in trap bar, feet hip-width. Hinge hips back, brace lats, drive heels straight into floor.",
                 golfTransfer: "Builds vertical thrust that transfers directly to peak launch on your 300-yard driver.",
-                videoUrl: "https://www.youtube.com/watch?v=yghzF9U1XqE",
+                videoUrl: "https://www.youtube.com/watch?v=dfYIApfWS5o",
                 alternates: [
                   { name: "Dumbbell Romanian Deadlift", note: "Use dumbbells if trap bar is occupied.", videoUrl: "https://www.youtube.com/watch?v=kYvjL10A74g" },
                   { name: "Barbell Conventional Deadlift", note: "Standard olympic bar. Pull bar tight to shins.", videoUrl: "https://www.youtube.com/watch?v=op9kVnSso6Q" },
@@ -571,7 +575,7 @@
                 ]
               },
               {
-                id: "w1_mb_toss",
+                id: "e_rotary_mb",
                 name: "Rotational MB Scoop Toss (into wall)",
                 sets: "4 sets x 5 / side",
                 cue: "Explode off trail foot, snap lead hip clear",
@@ -585,13 +589,13 @@
                 ]
               },
               {
-                id: "w1_split_squat",
+                id: "e_split_squat",
                 name: "Bulgarian Split Squat (Lead Leg Brake)",
                 sets: "3 sets x 8 / leg",
                 cue: "Control down tempo, drive through mid-foot",
                 setup: "Back foot elevated on bench. Lower until lead thigh is parallel to ground, drive up without swaying.",
                 golfTransfer: "Builds lead-leg braking capacity to stop forward slide and rotate around a firm lead post.",
-                videoUrl: "https://www.youtube.com/watch?v=2C-uNgKwPLE",
+                videoUrl: "https://www.youtube.com/watch?v=EiBXgDJ_g-Q",
                 alternates: [
                   { name: "Walking Dumbbell Lunges", note: "Step out with upright torso if all benches are taken.", videoUrl: "https://www.youtube.com/watch?v=D7KaRcUTQeE" },
                   { name: "Goblet Reverse Lunge", note: "Single DB or KB at chest. Step back into 90-degree bend.", videoUrl: "https://www.youtube.com/watch?v=1F_Lw3zKq4g" },
@@ -599,7 +603,7 @@
                 ]
               },
               {
-                id: "w1_incline_db",
+                id: "e_incline_db",
                 name: "Dumbbell Incline Bench Press",
                 sets: "3 sets x 8 reps",
                 cue: "Retract scaps, punch upward without shrugging",
@@ -613,13 +617,13 @@
                 ]
               },
               {
-                id: "w1_pallof",
+                id: "e_pallof_press",
                 name: "Half-Kneeling Pallof Press with Hold",
                 sets: "3 sets x 8 reps (3s hold)",
                 cue: "Anti-rotation: resist torso twist completely",
                 setup: "Inside knee down. Cable at chest height. Press hands out and hold 3 seconds without twisting.",
                 golfTransfer: "Prevents early extension and loss of spine angle through impact.",
-                videoUrl: "https://www.youtube.com/watch?v=xIu-Fk6dYmU",
+                videoUrl: "https://www.youtube.com/watch?v=LA6Uc5yIV1c",
                 alternates: [
                   { name: "Resistance Band Pallof Press", note: "Perform anywhere with a resistance band anchored to any post.", videoUrl: "https://www.youtube.com/watch?v=e1x_J_T3YpY" },
                   { name: "Side Plank with Straight-Arm Reach", note: "Floor isometric core drill if cable machines are busy.", videoUrl: "https://www.youtube.com/watch?v=K2VljzCC16g" },
@@ -633,7 +637,7 @@
             focus: "Train high-speed thoracic rotation alongside the braking muscles that stop the torso.",
             exercises: [
               {
-                id: "w1_landmine",
+                id: "e_landmine_punch",
                 name: "Landmine Rotational Punch",
                 sets: "4 sets x 6 / side",
                 cue: "Drive from back hip through serratus",
@@ -647,7 +651,7 @@
                 ]
               },
               {
-                id: "w1_chops",
+                id: "e_cable_chops",
                 name: "Half-Kneeling Cable Chops (High to Low)",
                 sets: "3 sets x 8 / side",
                 cue: "Lock pelvis still; rotate chest only",
@@ -661,7 +665,7 @@
                 ]
               },
               {
-                id: "w1_db_row",
+                id: "e_db_row",
                 name: "Single-Arm DB Neutral Row",
                 sets: "3 sets x 8 / arm",
                 cue: "Lat engagement to hold lead-arm structure",
@@ -675,7 +679,7 @@
                 ]
               },
               {
-                id: "w1_plyo_push",
+                id: "e_plyo_pushup",
                 name: "Plyometric Push-Ups (Fast Tempo)",
                 sets: "3 sets x 6 reps",
                 cue: "Explosive upward launch off palms",
@@ -689,7 +693,7 @@
                 ]
               },
               {
-                id: "w1_single_rdl",
+                id: "e_single_rdl",
                 name: "Single-Leg Romanian Deadlift (RDL)",
                 sets: "3 sets x 8 / leg",
                 cue: "Lead hamstring stretch, level hips",
@@ -705,11 +709,11 @@
             ]
           },
           5: {
-            title: "Day 5: Kinetic Transfer & Power (50 Mins)",
+            title: "Day 5: Full-Body Power & Kinetic Chain (50 Mins)",
             focus: "Coordinate power from feet to fingertips for ball speed transfer.",
             exercises: [
               {
-                id: "w1_jump_shrugs",
+                id: "e_jump_shrugs",
                 name: "Trap Bar Jump Shrugs (Low Weight)",
                 sets: "4 sets x 4 reps",
                 cue: "Max vertical jump explosion off toes",
@@ -723,7 +727,7 @@
                 ]
               },
               {
-                id: "w1_heiden",
+                id: "e_heiden_bounds",
                 name: "Lateral Bounds with Stick Landing",
                 sets: "4 sets x 5 / side",
                 cue: "Push laterally, stick and freeze lead hip",
@@ -737,7 +741,7 @@
                 ]
               },
               {
-                id: "w1_db_snatch",
+                id: "e_db_snatch",
                 name: "Single-Arm Dumbbell Snatch",
                 sets: "3 sets x 5 / arm",
                 cue: "Triple extension: ankle, knee, hip snap",
@@ -751,7 +755,7 @@
                 ]
               },
               {
-                id: "w1_sideplank_row",
+                id: "e_sideplank_row",
                 name: "Side Plank with Cable Row",
                 sets: "3 sets x 8 / side",
                 cue: "Anti-lateral flexion with pull",
@@ -765,7 +769,7 @@
                 ]
               },
               {
-                id: "w1_overhead_carry",
+                id: "e_overhead_carry",
                 name: "Overhead Farmer's Carry",
                 sets: "3 sets x 35 yards",
                 cue: "Ribcage down, locked shoulder stability",
@@ -833,7 +837,7 @@
                 cue: "Lock rib cage tight to pelvis",
                 setup: "Golf posture. Press cable straight out from sternum and resist rotary displacement.",
                 golfTransfer: "Maintains inclination to the ground throughout swing rotation.",
-                videoUrl: "https://www.youtube.com/watch?v=xIu-Fk6dYmU",
+                videoUrl: "https://www.youtube.com/watch?v=LA6Uc5yIV1c",
                 alternates: [
                   { name: "Band Pallof Press", note: "Use resistance band anchored at rib height.", videoUrl: "https://www.youtube.com/watch?v=e1x_J_T3YpY" },
                   { name: "Plank with Shoulder Taps", note: "Resist hip rotation.", videoUrl: "https://www.youtube.com/watch?v=K2VljzCC16g" },
@@ -850,7 +854,7 @@
                 videoUrl: "https://www.youtube.com/watch?v=D7KaRcUTQeE",
                 alternates: [
                   { name: "Reverse Lunges", note: "Step back to protect knee joints.", videoUrl: "https://www.youtube.com/watch?v=1F_Lw3zKq4g" },
-                  { name: "Split Squat (Static)", note: "No forward travel required.", videoUrl: "https://www.youtube.com/watch?v=2C-uNgKwPLE" },
+                  { name: "Split Squat (Static)", note: "No forward travel required.", videoUrl: "https://www.youtube.com/watch?v=EiBXgDJ_g-Q" },
                   { name: "Box Step-Ups", note: "Drive through box surface.", videoUrl: "https://www.youtube.com/watch?v=dQqApCGd5Ss" }
                 ]
               },
@@ -937,9 +941,9 @@
                 cue: "Scapular pinch at back",
                 setup: "Cables set at shoulder height. Pull arms out and back in a reverse fly motion.",
                 golfTransfer: "Protects shoulder joint integrity under high swing speeds.",
-                videoUrl: "https://www.youtube.com/watch?v=b_Xn2qL1vLg",
+                videoUrl: "https://www.youtube.com/watch?v=rep-qVOkqgk",
                 alternates: [
-                  { name: "Bent-Over Dumbbell Reverse Flyes", note: "Dumbbells on incline bench.", videoUrl: "https://www.youtube.com/watch?v=b_Xn2qL1vLg" },
+                  { name: "Bent-Over Dumbbell Reverse Flyes", note: "Dumbbells on incline bench.", videoUrl: "https://www.youtube.com/watch?v=rep-qVOkqgk" },
                   { name: "Face Pulls with Rope", note: "Cable pulled to bridge of nose.", videoUrl: "https://www.youtube.com/watch?v=rep-qVOkqgk" },
                   { name: "Band Pull-Aparts", note: "Resistance band held across chest.", videoUrl: "https://www.youtube.com/watch?v=rep-qVOkqgk" }
                 ]
@@ -971,7 +975,7 @@
                 cue: "Smooth pull, fast lockout",
                 setup: "Moderate weight. Drive heels into ground, explode through hips, fast lockout.",
                 golfTransfer: "Maximizes hip speed during transition.",
-                videoUrl: "https://www.youtube.com/watch?v=yghzF9U1XqE",
+                videoUrl: "https://www.youtube.com/watch?v=dfYIApfWS5o",
                 alternates: [
                   { name: "Barbell Speed Pulls", note: "60% 1RM bar deadlift.", videoUrl: "https://www.youtube.com/watch?v=op9kVnSso6Q" },
                   { name: "Dumbbell Speed Deadlift", note: "Two heavy DBs.", videoUrl: "https://www.youtube.com/watch?v=kYvjL10A74g" },
@@ -1165,11 +1169,11 @@
                 cue: "Lead hip deceleration",
                 setup: "Control down, explode up through lead foot.",
                 golfTransfer: "Firm lead-side wall to hit against.",
-                videoUrl: "https://www.youtube.com/watch?v=2C-uNgKwPLE",
+                videoUrl: "https://www.youtube.com/watch?v=EiBXgDJ_g-Q",
                 alternates: [
                   { name: "Walking Lunges with DBs", note: "Step out deep.", videoUrl: "https://www.youtube.com/watch?v=D7KaRcUTQeE" },
                   { name: "Step-Ups to Box", note: "18-inch box step-up.", videoUrl: "https://www.youtube.com/watch?v=dQqApCGd5Ss" },
-                  { name: "Single-Leg Press", note: "Machine leg press.", videoUrl: "https://www.youtube.com/watch?v=2C-uNgKwPLE" }
+                  { name: "Single-Leg Press", note: "Machine leg press.", videoUrl: "https://www.youtube.com/watch?v=EiBXgDJ_g-Q" }
                 ]
               },
               {
@@ -1227,7 +1231,7 @@
                 cue: "Max velocity off floor",
                 setup: "Light/moderate load moved as fast as possible.",
                 golfTransfer: "Rate of force development.",
-                videoUrl: "https://www.youtube.com/watch?v=yghzF9U1XqE",
+                videoUrl: "https://www.youtube.com/watch?v=dfYIApfWS5o",
                 alternates: [
                   { name: "Barbell Speed Deadlift", note: "Standard bar.", videoUrl: "https://www.youtube.com/watch?v=op9kVnSso6Q" },
                   { name: "Dumbbell Romanian Deadlift", note: "Fast lockout.", videoUrl: "https://www.youtube.com/watch?v=kYvjL10A74g" },
@@ -1317,7 +1321,7 @@
                 cue: "Smooth posture groove",
                 setup: "Focus strictly on pristine spine alignment and hip hinge.",
                 golfTransfer: "Neural groove without muscular soreness.",
-                videoUrl: "https://www.youtube.com/watch?v=yghzF9U1XqE",
+                videoUrl: "https://www.youtube.com/watch?v=dfYIApfWS5o",
                 alternates: [
                   { name: "Dumbbell RDL (Light)", note: "Hamstring stretch.", videoUrl: "https://www.youtube.com/watch?v=kYvjL10A74g" },
                   { name: "Kettlebell Deadlift", note: "Single KB between feet.", videoUrl: "https://www.youtube.com/watch?v=sENL5L2eS78" },
@@ -1335,7 +1339,7 @@
                 alternates: [
                   { name: "Bird-Dogs", note: "On hands and knees.", videoUrl: "https://www.youtube.com/watch?v=wiFNA3sqjCA" },
                   { name: "Standard Plank", note: "Forearm plank.", videoUrl: "https://www.youtube.com/watch?v=K2VljzCC16g" },
-                  { name: "Kneeling Pallof Hold", note: "Band hold.", videoUrl: "https://www.youtube.com/watch?v=xIu-Fk6dYmU" }
+                  { name: "Kneeling Pallof Hold", note: "Band hold.", videoUrl: "https://www.youtube.com/watch?v=LA6Uc5yIV1c" }
                 ]
               },
               {
@@ -1407,7 +1411,7 @@
                 cue: "Isometric tension",
                 setup: "Press cable handle out and hold against rotational pull.",
                 golfTransfer: "Anti-rotation posture endurance.",
-                videoUrl: "https://www.youtube.com/watch?v=xIu-Fk6dYmU",
+                videoUrl: "https://www.youtube.com/watch?v=LA6Uc5yIV1c",
                 alternates: [
                   { name: "Band Pallof Hold", note: "Resistance band hold.", videoUrl: "https://www.youtube.com/watch?v=e1x_J_T3YpY" },
                   { name: "Side Plank Hold", note: "Mat isometric.", videoUrl: "https://www.youtube.com/watch?v=K2VljzCC16g" },
@@ -1561,11 +1565,6 @@
         ]
       }
     };
-
-    function getProgramForWeek(weekNum) {
-      const cycleIndex = ((weekNum - 1) % 4) + 1;
-      return exerciseTemplates[cycleIndex] || exerciseTemplates[1];
-    }
 
     let currentWeek = 1;
     let activeTrainDay = 1;
@@ -1832,7 +1831,6 @@
           `;
         }).join('');
       } else {
-        // Non-Gym Days: Studio, Round, Recovery Checklists
         const proto = nonGymProtocols[activeTrainDay] || nonGymProtocols[2];
         document.getElementById('trainSessionTitle').innerText = proto.title;
         document.getElementById('trainSessionDuration').innerText = proto.duration;
@@ -1945,24 +1943,43 @@
       document.getElementById('alternateModal').classList.add('hidden');
     }
 
-    // CORRECT FORM COACHING MODAL WITH DIRECT VERIFIED YOUTUBE LINKS
+    // CORRECT FORM COACHING MODAL WITH DUAL LINK FALLBACK
     function openDiagramModalByIndex(idx) {
       const prog = getProgramForWeek(currentWeek);
       const workout = prog.gymWorkouts[activeTrainDay] || prog.gymWorkouts[1];
       const origEx = workout.exercises[idx];
+      if (!origEx) return;
+
       const storageKey = getGymStorageKey(origEx.id);
       const activeSwapIdx = activeSwaps[storageKey];
       const isSwapped = (activeSwapIdx !== undefined && origEx.alternates && origEx.alternates[activeSwapIdx]);
       
       const ex = isSwapped ? origEx.alternates[activeSwapIdx] : origEx;
-      const targetVideoUrl = ex.videoUrl || origEx.videoUrl;
+      
+      const verifiedVideoMap = {
+        "Trap Bar Deadlift (Velocity Focus)": "https://www.youtube.com/watch?v=dfYIApfWS5o",
+        "Barbell Conventional Deadlift": "https://www.youtube.com/watch?v=op9kVnSso6Q",
+        "Bulgarian Split Squat (Lead Leg Brake)": "https://www.youtube.com/watch?v=EiBXgDJ_g-Q",
+        "Half-Kneeling Pallof Press with Hold": "https://www.youtube.com/watch?v=LA6Uc5yIV1c",
+        "Speed Front Squat (Fast Ascent)": "https://www.youtube.com/watch?v=v-mQm_droLE",
+        "Neutral Grip Pull-Ups": "https://www.youtube.com/watch?v=eGo4IYlbE5g"
+      };
+
+      const searchQuery = encodeURIComponent(`${ex.name} proper form tutorial golf`);
+      const searchUrl = `https://www.youtube.com/results?search_query=${searchQuery}`;
+      const targetVideoUrl = verifiedVideoMap[ex.name] || ex.videoUrl || searchUrl;
 
       document.getElementById('diagTitle').innerText = ex.name;
       document.getElementById('diagBoxTitle').innerText = ex.name;
-      document.getElementById('diagSetupText').innerText = origEx.setup;
-      document.getElementById('diagCueText').innerText = origEx.golfTransfer;
+      document.getElementById('diagSetupText').innerText = origEx.setup || "Execute with controlled cadence, neutral spine, and full intent.";
+      document.getElementById('diagCueText').innerText = origEx.golfTransfer || "Transfers ground force directly through the kinetic chain into clubhead release.";
 
-      document.getElementById('diagDirectVideoLink').href = targetVideoUrl;
+      const directBtn = document.getElementById('diagDirectVideoLink');
+      const searchBtn = document.getElementById('diagSearchVideoLink');
+      
+      directBtn.href = targetVideoUrl;
+      searchBtn.href = searchUrl;
+
       document.getElementById('exerciseDiagramModal').classList.remove('hidden');
     }
 
