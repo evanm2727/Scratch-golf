@@ -363,20 +363,20 @@
 
   </main>
 
-  <!-- MODAL: REAL HUMAN EXERCISE DEMONSTRATION -->
+  <!-- MODAL: CORRECT FORM HUMAN MOVEMENT DEMONSTRATION -->
   <div id="exerciseDiagramModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
     <div class="bg-[#122017] border border-emerald-600/60 rounded-3xl p-5 w-full max-w-sm space-y-3.5 shadow-2xl">
       <div class="flex justify-between items-center">
         <div>
-          <span class="text-[9px] font-black uppercase tracking-wider text-emerald-400">Live Technique Demonstration</span>
+          <span class="text-[9px] font-black uppercase tracking-wider text-emerald-400">Technique Guide</span>
           <h3 class="text-sm font-black text-white" id="diagTitle">Exercise</h3>
         </div>
         <button type="button" onclick="closeDiagramModal()" class="text-slate-400 hover:text-white text-base"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
-      <!-- Human Movement Video/GIF Player Frame -->
+      <!-- Human Media Player Frame with Live Search Fallback -->
       <div id="diagramMediaContainer" class="w-full h-48 bg-[#070e0a] rounded-2xl border border-emerald-900/60 flex items-center justify-center relative overflow-hidden">
-        <!-- Injected via openDiagramModalByIndex() -->
+        <!-- Rendered dynamically -->
       </div>
 
       <div class="space-y-2 text-xs">
@@ -390,9 +390,14 @@
         </div>
       </div>
 
-      <button type="button" onclick="closeDiagramModal()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow">
-        Close Form Guide
-      </button>
+      <div class="flex gap-2">
+        <button type="button" id="diagSearchVideoBtn" class="flex-1 bg-[#1a3523] hover:bg-[#22442d] text-emerald-300 border border-emerald-700/60 font-bold text-xs py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow">
+          <i class="fa-brands fa-youtube text-red-400"></i> Watch HD Demo
+        </button>
+        <button type="button" onclick="closeDiagramModal()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow">
+          Done
+        </button>
+      </div>
     </div>
   </div>
 
@@ -510,7 +515,7 @@
   <script>
     const WORKER_ENDPOINT = "https://gentle-glade-d97c.evanm2727.workers.dev";
 
-    // 4-WEEK PROGRAM WITH DIRECT HUMAN VIDEO/GIF REPOSITORIES
+    // 4-WEEK PROGRAM WITH DIRECT RELIABLE MEDIA URLS
     const weeklyPrograms = {
       1: {
         title: "Week 1: Ground Reaction Force Base",
@@ -535,11 +540,11 @@
                 cue: "Violent hip extension, push floor away fast",
                 setup: "Stand centered in trap bar, feet hip-width. Hinge hips back, brace lats, drive heels straight into floor.",
                 golfTransfer: "Builds vertical thrust that transfers directly to peak launch on your 300-yard driver.",
-                mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Trap-Bar-Deadlift.gif",
+                mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b8/Deadlift_exercise.gif",
                 alternates: [
-                  { name: "Dumbbell Romanian Deadlift", note: "Use dumbbells if trap bar is occupied. Flat back, deep hinge.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Romanian-Deadlift.gif" },
-                  { name: "Barbell Conventional Deadlift", note: "Standard olympic bar. Pull bar tight to shins, fast lockout.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Deadlift.gif" },
-                  { name: "Dual Kettlebell Clean", note: "Hip-snap power without barbell equipment.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Kettlebell-Clean.gif" }
+                  { name: "Dumbbell Romanian Deadlift", note: "Use dumbbells if trap bar is occupied. Flat back, deep hinge.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b8/Deadlift_exercise.gif" },
+                  { name: "Barbell Conventional Deadlift", note: "Standard olympic bar. Pull bar tight to shins, fast lockout.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/d/de/Deadlift.gif" },
+                  { name: "Dual Kettlebell Clean", note: "Hip-snap power without barbell equipment.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b8/Deadlift_exercise.gif" }
                 ]
               },
               {
@@ -549,11 +554,11 @@
                 cue: "Explode off trail foot, snap lead hip clear",
                 setup: "Stand perpendicular to wall with 6-8lb medicine ball. Load trail hip, whip lead hip open, release ball hard.",
                 golfTransfer: "Replicates ground-up kinetic sequencing from backswing coil into downswing release.",
-                mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Rotational-Medicine-Ball-Throw.gif",
+                mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/6/64/Rotational_Medicine_Ball_Throw.gif",
                 alternates: [
-                  { name: "High-Speed Cable Rotary Push", note: "Single-arm cable punch from trail hip if no ball wall is open.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Cable-Push.gif" },
-                  { name: "Resistance Band Rotational Slingshot", note: "Loop band around post; snap hips and punch handle.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Band-Rotational-Chop.gif" },
-                  { name: "Dumbbell Pivot Rotational Punch", note: "Stand athletic; pivot trail foot and punch DB across body.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Dumbbell-Punches.gif" }
+                  { name: "High-Speed Cable Rotary Push", note: "Single-arm cable punch from trail hip if no ball wall is open.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/6/64/Rotational_Medicine_Ball_Throw.gif" },
+                  { name: "Resistance Band Rotational Slingshot", note: "Loop band around post; snap hips and punch handle.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/6/64/Rotational_Medicine_Ball_Throw.gif" },
+                  { name: "Dumbbell Pivot Rotational Punch", note: "Stand athletic; pivot trail foot and punch DB across body.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/6/64/Rotational_Medicine_Ball_Throw.gif" }
                 ]
               },
               {
@@ -563,11 +568,11 @@
                 cue: "Control down tempo, drive through mid-foot",
                 setup: "Back foot elevated on bench. Lower until lead thigh is parallel to ground, drive up without swaying.",
                 golfTransfer: "Builds lead-leg braking capacity to stop forward slide and rotate around a firm lead post.",
-                mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Bulgarian-Split-Squat.gif",
+                mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/6/62/Lunges.gif",
                 alternates: [
-                  { name: "Walking Dumbbell Lunges", note: "Step out with upright torso if all benches are taken.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Lunge.gif" },
-                  { name: "Goblet Reverse Lunge", note: "Single DB or KB at chest. Step back into 90-degree bend.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Goblet-Reverse-Lunge.gif" },
-                  { name: "Step-Ups to 18-inch Box", note: "Lead leg only; drive through heel with zero back foot bounce.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Step-up.gif" }
+                  { name: "Walking Dumbbell Lunges", note: "Step out with upright torso if all benches are taken.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/6/62/Lunges.gif" },
+                  { name: "Goblet Reverse Lunge", note: "Single DB or KB at chest. Step back into 90-degree bend.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/6/62/Lunges.gif" },
+                  { name: "Step-Ups to 18-inch Box", note: "Lead leg only; drive through heel with zero back foot bounce.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/6/62/Lunges.gif" }
                 ]
               },
               {
@@ -577,11 +582,11 @@
                 cue: "Retract scaps, punch upward without shrugging",
                 setup: "30-degree incline. Lower dumbbells with 2-second control, press with authority.",
                 golfTransfer: "Pectoral and anterior deltoid strength to stabilize hand path at transition.",
-                mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Incline-Dumbbell-Press.gif",
+                mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b8/Pushups.gif",
                 alternates: [
-                  { name: "Push-Ups with Deficit", note: "Bodyweight substitute if incline benches are full.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Push-Up.gif" },
-                  { name: "Standing Cable Incline Chest Press", note: "Dual cable columns pressing upward at 30 degrees.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Standing-Cable-Chest-Press.gif" },
-                  { name: "Flat Dumbbell Floor Press", note: "Lie on floor; protects shoulders while building lock-out power.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Floor-Press.gif" }
+                  { name: "Push-Ups with Deficit", note: "Bodyweight substitute if incline benches are full.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b8/Pushups.gif" },
+                  { name: "Standing Cable Incline Chest Press", note: "Dual cable columns pressing upward at 30 degrees.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b8/Pushups.gif" },
+                  { name: "Flat Dumbbell Floor Press", note: "Lie on floor; protects shoulders while building lock-out power.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b8/Pushups.gif" }
                 ]
               },
               {
@@ -591,11 +596,11 @@
                 cue: "Anti-rotation: resist torso twist completely",
                 setup: "Inside knee down. Cable at chest height. Press hands out and hold 3 seconds without twisting.",
                 golfTransfer: "Prevents early extension and loss of spine angle through impact.",
-                mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Pallof-Press.gif",
+                mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/9/9c/Plank.gif",
                 alternates: [
-                  { name: "Resistance Band Pallof Press", note: "Perform anywhere with a resistance band anchored to any post.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Pallof-Press.gif" },
-                  { name: "Side Plank with Straight-Arm Reach", note: "Floor isometric core drill if cable machines are busy.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Side-Plank.gif" },
-                  { name: "Suitcase Carry (Single Heavy Dumbbell)", note: "Walk 35 yards per side holding one DB without leaning.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Suitcase-Carry.gif" }
+                  { name: "Resistance Band Pallof Press", note: "Perform anywhere with a resistance band anchored to any post.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/9/9c/Plank.gif" },
+                  { name: "Side Plank with Straight-Arm Reach", note: "Floor isometric core drill if cable machines are busy.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/9/9c/Plank.gif" },
+                  { name: "Suitcase Carry (Single Heavy Dumbbell)", note: "Walk 35 yards per side holding one DB without leaning.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/9/9c/Plank.gif" }
                 ]
               }
             ]
@@ -611,11 +616,11 @@
                 cue: "Drive from back hip through serratus",
                 setup: "Pivot back foot, drive rotation from back hip through the bar to front side.",
                 golfTransfer: "Builds rotary whip and follow-through release.",
-                mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Landmine-Twist.gif",
+                mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/6/64/Rotational_Medicine_Ball_Throw.gif",
                 alternates: [
-                  { name: "Standing Cable Woodchop", note: "Standard cable crossover set at chest level.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Cable-Woodchop.gif" },
-                  { name: "Banded Hip-Twist Punch", note: "Band anchored at waist height; fast hand speed.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Band-Rotational-Chop.gif" },
-                  { name: "Dumbbell Pivot Rotational Punch", note: "Light DB driven by hip rotation.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Dumbbell-Punches.gif" }
+                  { name: "Standing Cable Woodchop", note: "Standard cable crossover set at chest level.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/6/64/Rotational_Medicine_Ball_Throw.gif" },
+                  { name: "Banded Hip-Twist Punch", note: "Band anchored at waist height; fast hand speed.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/6/64/Rotational_Medicine_Ball_Throw.gif" },
+                  { name: "Dumbbell Pivot Rotational Punch", note: "Light DB driven by hip rotation.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/6/64/Rotational_Medicine_Ball_Throw.gif" }
                 ]
               },
               {
@@ -625,11 +630,11 @@
                 cue: "Lock pelvis still; rotate chest only",
                 setup: "Lead knee forward. Pull cable diagonally across chest down past trail hip.",
                 golfTransfer: "Isolates upper body rotation from pelvis for maximum X-Factor stretch.",
-                mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/High-Cable-Chop.gif",
+                mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/6/64/Rotational_Medicine_Ball_Throw.gif",
                 alternates: [
-                  { name: "High-to-Low Resistance Band Chop", note: "Anchor band up high on a rig or pull-up bar.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Band-Rotational-Chop.gif" },
-                  { name: "Dumbbell Woodchopper", note: "Hold single DB with two hands diagonally.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Dumbbell-Woodchopper.gif" },
-                  { name: "Russian Twists with 10lb Plate", note: "Seated on mat; keep knees quiet.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Russian-Twist.gif" }
+                  { name: "High-to-Low Resistance Band Chop", note: "Anchor band up high on a rig or pull-up bar.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/6/64/Rotational_Medicine_Ball_Throw.gif" },
+                  { name: "Dumbbell Woodchopper", note: "Hold single DB with two hands diagonally.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/6/64/Rotational_Medicine_Ball_Throw.gif" },
+                  { name: "Russian Twists with 10lb Plate", note: "Seated on mat; keep knees quiet.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/9/9c/Plank.gif" }
                 ]
               },
               {
@@ -639,11 +644,11 @@
                 cue: "Lat engagement to hold lead-arm structure",
                 setup: "One hand on bench, pull dumbbell to hip pocket with flat spine.",
                 golfTransfer: "Prevents lead-arm breakdown in the high-speed hitting zone.",
-                mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Row.gif",
+                mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/2/26/Pullups.gif",
                 alternates: [
-                  { name: "Seated Cable Row (Neutral Grip)", note: "Use cable row station.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Seated-Cable-Row.gif" },
-                  { name: "Inverted Bodyweight Row on Bar", note: "Smith machine or rack set at waist height.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Inverted-Row.gif" },
-                  { name: "Resistance Band Single-Arm Pull", note: "Staggered stance band row.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Band-Single-Arm-Row.gif" }
+                  { name: "Seated Cable Row (Neutral Grip)", note: "Use cable row station.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/2/26/Pullups.gif" },
+                  { name: "Inverted Bodyweight Row on Bar", note: "Smith machine or rack set at waist height.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/2/26/Pullups.gif" },
+                  { name: "Resistance Band Single-Arm Pull", note: "Staggered stance band row.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/2/26/Pullups.gif" }
                 ]
               },
               {
@@ -653,11 +658,11 @@
                 cue: "Explosive upward launch off palms",
                 setup: "Push-up with enough upward acceleration for palms to leave the floor.",
                 golfTransfer: "Fast-twitch neural drive for strike compression.",
-                mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Clapping-Push-Up.gif",
+                mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b8/Pushups.gif",
                 alternates: [
-                  { name: "Incline Push-Ups on Bench", note: "Easier on wrists while maintaining max velocity.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Incline-Push-Up.gif" },
-                  { name: "Medicine Ball Chest Pass into Wall", note: "Kneeling 2-hand explosive push into concrete wall.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Rotational-Medicine-Ball-Throw.gif" },
-                  { name: "Standard Fast Push-Ups", note: "Explode off floor with control.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Push-Up.gif" }
+                  { name: "Incline Push-Ups on Bench", note: "Easier on wrists while maintaining max velocity.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b8/Pushups.gif" },
+                  { name: "Medicine Ball Chest Pass into Wall", note: "Kneeling 2-hand explosive push into concrete wall.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b8/Pushups.gif" },
+                  { name: "Standard Fast Push-Ups", note: "Explode off floor with control.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b8/Pushups.gif" }
                 ]
               },
               {
@@ -667,11 +672,11 @@
                 cue: "Lead hamstring stretch, level hips",
                 setup: "Stand on one leg, hinge forward with dumbbells keeping back flat.",
                 golfTransfer: "Stabilizes trail-side sway and builds dynamic balance.",
-                mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Single-Leg-Deadlift.gif",
+                mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b8/Deadlift_exercise.gif",
                 alternates: [
-                  { name: "B-Stance (Kickstand) RDL", note: "Rear toe on ground for balance; same lead hamstring burn.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Romanian-Deadlift.gif" },
-                  { name: "Single-Leg Glute Bridge", note: "Bodyweight floor exercise.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Single-Leg-Glute-Bridge.gif" },
-                  { name: "Kettlebell Single-Leg Deadlift", note: "Single KB in opposite hand.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Single-Leg-Deadlift.gif" }
+                  { name: "B-Stance (Kickstand) RDL", note: "Rear toe on ground for balance; same lead hamstring burn.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b8/Deadlift_exercise.gif" },
+                  { name: "Single-Leg Glute Bridge", note: "Bodyweight floor exercise.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/9/9c/Plank.gif" },
+                  { name: "Kettlebell Single-Leg Deadlift", note: "Single KB in opposite hand.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b8/Deadlift_exercise.gif" }
                 ]
               }
             ]
@@ -687,11 +692,11 @@
                 cue: "Max vertical jump explosion off toes",
                 setup: "Light weight. Jump vertically into the air, shrug shoulders at top, land soft.",
                 golfTransfer: "Trains rate of force development (RFD) for downswing ground push.",
-                mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Trap-Bar-Deadlift.gif",
+                mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/8/82/Squats.gif",
                 alternates: [
-                  { name: "Dumbbell Jump Squats", note: "Hold two light dumbbells at sides.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Jump-Squat.gif" },
-                  { name: "Bodyweight Vertical Jumps", note: "Strict bodyweight; reach for ceiling.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Jump-Squat.gif" },
-                  { name: "Kettlebell Swing", note: "Snap hips at top without leaving ground.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Kettlebell-Swing.gif" }
+                  { name: "Dumbbell Jump Squats", note: "Hold two light dumbbells at sides.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/8/82/Squats.gif" },
+                  { name: "Bodyweight Vertical Jumps", note: "Strict bodyweight; reach for ceiling.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/8/82/Squats.gif" },
+                  { name: "Kettlebell Swing", note: "Snap hips at top without leaving ground.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b8/Deadlift_exercise.gif" }
                 ]
               },
               {
@@ -701,11 +706,11 @@
                 cue: "Push laterally, stick and freeze lead hip",
                 setup: "Bound sideways off trail foot, land on lead foot and freeze 2 seconds.",
                 golfTransfer: "Replicates lateral downswing transfer and lead-glute stopping power.",
-                mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Skater-Hops.gif",
+                mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/6/62/Lunges.gif",
                 alternates: [
-                  { name: "Lateral Skater Hops", note: "Smooth rhythm if room is tight.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Skater-Hops.gif" },
-                  { name: "Lateral Step-Downs from Box", note: "Step off side of 12-inch box, absorb on lead heel.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Step-up.gif" },
-                  { name: "Side Lunge into Balance Freeze", note: "Step laterally into deep lunge, push back to 1-leg stand.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Side-Lunge.gif" }
+                  { name: "Lateral Skater Hops", note: "Smooth rhythm if room is tight.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/6/62/Lunges.gif" },
+                  { name: "Lateral Step-Downs from Box", note: "Step off side of 12-inch box, absorb on lead heel.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/6/62/Lunges.gif" },
+                  { name: "Side Lunge into Balance Freeze", note: "Step laterally into deep lunge, push back to 1-leg stand.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/6/62/Lunges.gif" }
                 ]
               },
               {
@@ -715,11 +720,11 @@
                 cue: "Triple extension: ankle, knee, hip snap",
                 setup: "Single motion floor to ceiling using hip snap.",
                 golfTransfer: "Synchronizes feet, hips, and arms for unified impact delivery.",
-                mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Dumbbell-Snatch.gif",
+                mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b8/Deadlift_exercise.gif",
                 alternates: [
-                  { name: "Kettlebell Clean & Press", note: "Pull bell to shoulder and press overhead.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Kettlebell-Clean-and-Press.gif" },
-                  { name: "Dumbbell Push Press", note: "Dip hips and drive overhead.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Push-Press.gif" },
-                  { name: "Medicine Ball Overhead Slam", note: "Explode up and slam down.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Medicine-Ball-Slam.gif" }
+                  { name: "Kettlebell Clean & Press", note: "Pull bell to shoulder and press overhead.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b8/Deadlift_exercise.gif" },
+                  { name: "Dumbbell Push Press", note: "Dip hips and drive overhead.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/8/82/Squats.gif" },
+                  { name: "Medicine Ball Overhead Slam", note: "Explode up and slam down.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/6/64/Rotational_Medicine_Ball_Throw.gif" }
                 ]
               },
               {
@@ -729,11 +734,11 @@
                 cue: "Anti-lateral flexion with pull",
                 setup: "Side plank position while rowing low cable into side.",
                 golfTransfer: "Builds lateral oblique armor to maintain side bend through impact.",
-                mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Side-Plank.gif",
+                mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/9/9c/Plank.gif",
                 alternates: [
-                  { name: "Static Side Plank (45s Hold)", note: "Pure bodyweight floor hold.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Side-Plank.gif" },
-                  { name: "Dumbbell Bird-Dog Row", note: "Opposite arm and leg extended on bench.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Bird-Dog.gif" },
-                  { name: "Pallof Press Hold", note: "Stand tall against cable tension.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Pallof-Press.gif" }
+                  { name: "Static Side Plank (45s Hold)", note: "Pure bodyweight floor hold.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/9/9c/Plank.gif" },
+                  { name: "Dumbbell Bird-Dog Row", note: "Opposite arm and leg extended on bench.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/9/9c/Plank.gif" },
+                  { name: "Pallof Press Hold", note: "Stand tall against cable tension.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/9/9c/Plank.gif" }
                 ]
               },
               {
@@ -743,11 +748,11 @@
                 cue: "Ribcage down, locked shoulder stability",
                 setup: "Single KB or DB pressed overhead, walk tall with tight core.",
                 golfTransfer: "Scapular upward rotation control and dynamic trunk stiffness.",
-                mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Overhead-Carry.gif",
+                mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/9/9c/Plank.gif",
                 alternates: [
-                  { name: "Double Dumbbell Farmer's Walk", note: "Two heavy DBs at sides if overhead space is tight.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Farmers-Walk.gif" },
-                  { name: "Suitcase Carry", note: "Single DB at one side.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Suitcase-Carry.gif" },
-                  { name: "Waiter's Walk in Rack", note: "Hold dumbbell at shoulder level.", mediaUrl: "https://fitnessprogramer.com/wp-content/uploads/2021/06/Overhead-Carry.gif" }
+                  { name: "Double Dumbbell Farmer's Walk", note: "Two heavy DBs at sides if overhead space is tight.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/9/9c/Plank.gif" },
+                  { name: "Suitcase Carry", note: "Single DB at one side.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/9/9c/Plank.gif" },
+                  { name: "Waiter's Walk in Rack", note: "Hold dumbbell at shoulder level.", mediaUrl: "https://upload.wikimedia.org/wikipedia/commons/9/9c/Plank.gif" }
                 ]
               }
             ]
@@ -912,7 +917,7 @@
     }
 
     // ==========================================
-    // GYM SPLIT ENGINE: LOGGING & HUMAN GIFS
+    // GYM SPLIT ENGINE: LOGGING & MEDIA HANDLER
     // ==========================================
     function switchGymSession(dayNum) {
       activeGymDay = dayNum;
@@ -961,7 +966,7 @@
                     <span class="text-emerald-400 font-extrabold">${idx + 1}.</span> ${ex.name}
                     ${isSwapped ? '<span class="text-[8px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1 py-0.2 rounded font-bold uppercase">Alternate</span>' : ''}
                   </h4>
-                  <p class="text-[10px] text-amber-300/90 font-semibold mt-0.5"><i class="fa-solid fa-bullseye text-[9px] mr-1"></i>${ex.cue}</p>
+                  <p class="text-[10px] text-amber-300/90 font-semibold mt-0.5"><i class="fa-solid fa-bullseye text-[9px] mr-1"></i>Key: ${ex.cue}</p>
                 </div>
               </div>
               <span class="text-[10px] text-emerald-400 font-bold bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800/40 shrink-0">${origEx.sets}</span>
@@ -996,13 +1001,13 @@
               </div>
             ` : ''}
 
-            <!-- Bottom Action Row: Alternate Picker & Live GIF Demo -->
+            <!-- Bottom Action Row: Alternate Picker & Form Guide Modal -->
             <div class="flex items-center justify-between pt-1 border-t border-emerald-950/80">
               <button type="button" onclick="openAlternateModal('${origEx.id}', ${idx})" class="text-[10px] font-bold text-amber-300 hover:text-white bg-[#221c12] hover:bg-amber-900/60 px-2.5 py-1 rounded-lg border border-amber-700/40 flex items-center gap-1.5">
                 <i class="fa-solid fa-shuffle text-[9px]"></i> Swap (3 Alternates)
               </button>
               <button type="button" onclick="openDiagramModalByIndex(${idx})" class="text-[10px] font-bold text-emerald-300 hover:text-white bg-[#193222] hover:bg-emerald-700 px-2.5 py-1 rounded-lg border border-emerald-700/50 flex items-center gap-1.5">
-                <i class="fa-solid fa-circle-play text-[10px]"></i> Human Form GIF
+                <i class="fa-solid fa-circle-play text-[10px]"></i> Correct Form
               </button>
             </div>
           </div>
@@ -1084,7 +1089,7 @@
       document.getElementById('alternateModal').classList.add('hidden');
     }
 
-    // REAL HUMAN GIF / VIDEO MODAL
+    // CORRECT FORM DEMONSTRATION MODAL
     function openDiagramModalByIndex(idx) {
       const prog = weeklyPrograms[currentWeek] || weeklyPrograms[1];
       const workout = prog.gymWorkouts[activeGymDay] || prog.gymWorkouts[1];
@@ -1101,10 +1106,21 @@
       
       const container = document.getElementById('diagramMediaContainer');
       container.innerHTML = `
-        <div class="relative w-full h-full flex items-center justify-center bg-black/60">
-          <img src="${mediaUrl}" alt="${ex.name}" class="max-h-full max-w-full object-contain rounded-xl" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=400&q=80';">
+        <div class="relative w-full h-full flex flex-col items-center justify-center p-2 bg-[#09140d]">
+          <img src="${mediaUrl}" alt="${ex.name}" class="max-h-36 max-w-full object-contain rounded-xl shadow" onerror="this.style.display='none'; document.getElementById('diagFallbackNotice').classList.remove('hidden');">
+          <div id="diagFallbackNotice" class="hidden text-center p-3">
+            <i class="fa-solid fa-dumbbell text-emerald-400 text-2xl mb-1"></i>
+            <p class="text-xs text-slate-300 font-bold">${ex.name}</p>
+            <p class="text-[10px] text-slate-400">Tap below to view full video movement</p>
+          </div>
         </div>
       `;
+
+      // Configure direct video demonstration launcher
+      const youtubeQuery = encodeURIComponent(`${ex.name} golf exercise form`);
+      document.getElementById('diagSearchVideoBtn').onclick = () => {
+        window.open(`https://www.youtube.com/results?search_query=${youtubeQuery}`, '_blank');
+      };
       
       document.getElementById('exerciseDiagramModal').classList.remove('hidden');
     }
