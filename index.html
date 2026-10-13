@@ -122,9 +122,9 @@
       </div>
     </div>
 
-    <!-- TAB 2: TRAIN (7-DAY PROTOCOLS + CNS AUTOREGULATION + REST CHIME) -->
+    <!-- TAB 2: TRAIN -->
     <div id="tab-train" class="tab-pane hidden space-y-3">
-      <!-- CNS Autoregulation Check -->
+      <!-- CNS Readiness Check -->
       <div class="bg-[#0c1217] p-3 rounded-2xl border border-white/[0.06] flex items-center justify-between shadow-lg">
         <div>
           <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8] block">CNS Readiness Status</span>
@@ -137,7 +137,7 @@
         </div>
       </div>
 
-      <!-- Mindbody Inset Day Segment Control -->
+      <!-- Day Segment Control -->
       <div class="bg-[#070b0e] p-1 rounded-2xl border border-white/[0.05] flex gap-1 overflow-x-auto custom-scrollbar shadow-inner text-xs">
         <button type="button" onclick="switchTrainDay(1)" id="trainDayBtn1" class="flex-1 py-1.5 px-3 rounded-xl font-bold text-white bg-[#38bdf8]/20 border border-[#38bdf8]/30 whitespace-nowrap text-center transition">Mon (Gym)</button>
         <button type="button" onclick="switchTrainDay(2)" id="trainDayBtn2" class="flex-1 py-1.5 px-3 rounded-xl font-medium text-slate-400 hover:text-white whitespace-nowrap text-center transition">Tue (Sim)</button>
@@ -176,11 +176,8 @@
       <div id="trainContentList" class="space-y-3"></div>
     </div>
 
-    <!-- TAB 3: TRACKMAN & WEDGE MATRIX + 2D DISPERSION + COASTAL DENSITY -->
+    <!-- TAB 3: TRACKMAN & WEDGE MATRIX -->
     <div id="tab-trackman" class="tab-pane hidden space-y-3">
-      
-     
-
       <!-- 2D Visual Corridor & Dispersion Heatmap -->
       <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl">
         <div class="flex justify-between items-center mb-2 px-1">
@@ -327,7 +324,162 @@
       </div>
     </div>
 
-    <!-- TAB 4: SCORING, GHIN & WHS SANDBOX SCENARIO -->
+    <!-- TAB 4: PLAY (ON-COURSE STRATEGY & PACE HUB) -->
+    <div id="tab-play" class="tab-pane hidden space-y-3">
+      <!-- Course & Tee Setup -->
+      <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl space-y-2.5">
+        <div class="flex justify-between items-center">
+          <div>
+            <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8]">Active Round Setup</span>
+            <h2 class="text-xs font-black text-white flex items-center gap-1.5 mt-0.5">
+              <i class="fa-solid fa-flag text-[#38bdf8]"></i> Course & Tee Preset
+            </h2>
+          </div>
+          <span class="text-[8px] bg-[#38bdf8]/10 text-[#38bdf8] font-bold px-1.5 py-0.5 rounded border border-[#38bdf8]/20">18Birdies Sync Companion</span>
+        </div>
+
+        <select id="playCoursePreset" onchange="selectPlayCourse(this.value)" class="w-full bg-[#111921] text-xs p-2 rounded-xl border border-white/[0.06] text-white focus:outline-none">
+          <option value="torrey_north_white">Torrey Pines (North) - White Tees (71.5 / 125)</option>
+          <option value="torrey_north_green">Torrey Pines (North) - Green Tees (73.6 / 130)</option>
+          <option value="admiral_north_blue">Admiral Baker (North) - Blue Tees (73.0 / 127)</option>
+          <option value="admiral_north_white">Admiral Baker (North) - White Tees (70.8 / 122)</option>
+          <option value="coronado_white">Coronado Golf Club - White Tees (70.5 / 118)</option>
+          <option value="custom">Custom Course Input...</option>
+        </select>
+
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div>
+            <span class="text-[8px] text-slate-500 uppercase font-bold block mb-0.5">Course Rating</span>
+            <input type="number" step="0.1" id="playRating" value="71.5" onchange="calculatePlayPace()" class="w-full bg-[#070b0e] p-1.5 rounded-lg border border-white/[0.04] text-white font-mono text-xs">
+          </div>
+          <div>
+            <span class="text-[8px] text-slate-500 uppercase font-bold block mb-0.5">Slope Rating</span>
+            <input type="number" id="playSlope" value="125" onchange="calculatePlayPace()" class="w-full bg-[#070b0e] p-1.5 rounded-lg border border-white/[0.04] text-white font-mono text-xs">
+          </div>
+        </div>
+      </div>
+
+      <!-- At-the-Turn Live Pace Dial -->
+      <div class="bg-gradient-to-br from-[#0c141d] to-[#070b0e] p-4 rounded-2xl border border-white/[0.08] shadow-xl space-y-2">
+        <div class="flex justify-between items-center">
+          <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8]">At-The-Turn Differential Pace</span>
+          <span class="text-[8px] bg-white/[0.06] text-slate-300 font-bold px-1.5 py-0.5 rounded">Live Benchmark</span>
+        </div>
+        <p class="text-[11px] text-slate-400">Glance at 18Birdies and enter score to verify your live handicap impact:</p>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div class="bg-[#070b0e] p-2.5 rounded-xl border border-white/[0.04]">
+            <span class="text-[8px] text-slate-500 uppercase font-black block mb-0.5">Thru Holes</span>
+            <select id="playThruHoles" onchange="calculatePlayPace()" class="w-full bg-transparent text-white font-bold text-xs focus:outline-none">
+              <option value="9">Thru 9 (Front)</option>
+              <option value="18" selected>Thru 18 (Final)</option>
+            </select>
+          </div>
+          <div class="bg-[#070b0e] p-2.5 rounded-xl border border-white/[0.04]">
+            <span class="text-[8px] text-slate-500 uppercase font-black block mb-0.5">Gross Score (or +/-)</span>
+            <input type="number" id="playCurrentScore" value="76" onchange="calculatePlayPace()" class="w-full bg-transparent text-[#38bdf8] font-mono font-black text-sm focus:outline-none">
+          </div>
+        </div>
+
+        <div class="bg-[#070b0e] p-3 rounded-xl border border-white/[0.04] flex items-center justify-between">
+          <div>
+            <span class="text-[8px] text-slate-500 uppercase font-black block tracking-widest">Pacing Differential</span>
+            <span class="text-xl font-black text-white font-mono" id="playLiveDiff">4.1</span>
+          </div>
+          <p class="text-[10px] text-right text-slate-300 max-w-[170px]" id="playPaceAdvice">
+            Pacing beats your 8th counting score (8.9) and reduces your 8.1 Index.
+          </p>
+        </div>
+      </div>
+
+      <!-- In-Round Quick Wedge Card -->
+      <div class="bg-[#0c1217] p-3 rounded-2xl border border-white/[0.07] shadow-xl">
+        <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8] block mb-1 px-1">In-Round Yardage Peek</span>
+        <div class="grid grid-cols-3 gap-1.5 text-center text-xs">
+          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
+            <span class="text-[8px] font-black text-slate-500 uppercase block">50° GW</span>
+            <span class="text-[10px] font-mono font-bold text-white block mt-0.5">65y &bull; 95y &bull; 118y</span>
+          </div>
+          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
+            <span class="text-[8px] font-black text-slate-500 uppercase block">54° SW</span>
+            <span class="text-[10px] font-mono font-bold text-white block mt-0.5">55y &bull; 85y &bull; 108y</span>
+          </div>
+          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
+            <span class="text-[8px] font-black text-slate-500 uppercase block">58° LW</span>
+            <span class="text-[10px] font-mono font-bold text-white block mt-0.5">45y &bull; 72y &bull; 95y</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DECADE Mental Rules Checklist -->
+      <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl space-y-2">
+        <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8] block">DECADE Course Guardrails</span>
+        <div class="space-y-1.5 text-xs text-slate-300">
+          <label class="flex items-center gap-2 p-1.5 rounded-lg bg-[#070b0e] border border-white/[0.04] cursor-pointer">
+            <input type="checkbox" class="accent-[#38bdf8]">
+            <span>Aim middle green on all approaches >150y.</span>
+          </label>
+          <label class="flex items-center gap-2 p-1.5 rounded-lg bg-[#070b0e] border border-white/[0.04] cursor-pointer">
+            <input type="checkbox" class="accent-[#38bdf8]">
+            <span>Tee club discipline (2-Iron / 3W if fairway <28y).</span>
+          </label>
+          <label class="flex items-center gap-2 p-1.5 rounded-lg bg-[#070b0e] border border-white/[0.04] cursor-pointer">
+            <input type="checkbox" class="accent-[#38bdf8]">
+            <span>No short-siding: favor fat side away from pins.</span>
+          </label>
+          <label class="flex items-center gap-2 p-1.5 rounded-lg bg-[#070b0e] border border-white/[0.04] cursor-pointer">
+            <input type="checkbox" class="accent-[#38bdf8]">
+            <span>Putt whenever off the green with tight lie.</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Post-Round Strokes Gained Delta Tagging -->
+      <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl space-y-2.5">
+        <div class="flex justify-between items-center">
+          <div>
+            <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8] block">Post-Round Audit</span>
+            <h2 class="text-xs font-black text-white flex items-center gap-1.5 mt-0.5">
+              <i class="fa-solid fa-chart-pie text-[#38bdf8]"></i> Strokes Gained Delta Tags
+            </h2>
+          </div>
+          <span class="text-[8px] bg-[#38bdf8]/10 text-[#38bdf8] font-bold px-1.5 py-0.5 rounded border border-[#38bdf8]/20">Round Leaks</span>
+        </div>
+        <p class="text-[11px] text-slate-400">Tag stroke leaks from your latest 18 to calibrate your Sunday recovery priorities:</p>
+
+        <div class="grid grid-cols-4 gap-1.5 text-center text-xs">
+          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
+            <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">OTT Drops</span>
+            <input type="number" id="sgOtt" min="0" value="0" class="w-full bg-transparent text-center font-mono font-bold text-white text-xs mt-1 focus:outline-none">
+            <span class="text-[8px] text-slate-500 block">Lost/Pen</span>
+          </div>
+          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
+            <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">GIR / 18</span>
+            <input type="number" id="sgGir" min="0" max="18" value="11" class="w-full bg-transparent text-center font-mono font-bold text-[#38bdf8] text-xs mt-1 focus:outline-none">
+            <span class="text-[8px] text-slate-500 block">Greens</span>
+          </div>
+          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
+            <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">Scramble %</span>
+            <input type="number" id="sgScramble" min="0" max="100" value="50" class="w-full bg-transparent text-center font-mono font-bold text-white text-xs mt-1 focus:outline-none">
+            <span class="text-[8px] text-slate-500 block">Up & Down</span>
+          </div>
+          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
+            <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">3-Putts</span>
+            <input type="number" id="sgThreePutts" min="0" value="1" class="w-full bg-transparent text-center font-mono font-bold text-amber-400 text-xs mt-1 focus:outline-none">
+            <span class="text-[8px] text-slate-500 block">Lag Misses</span>
+          </div>
+        </div>
+
+        <div class="bg-[#070b0e] p-2.5 rounded-xl border border-white/[0.04] flex items-center justify-between text-xs">
+          <span class="text-[10px] text-slate-300" id="sgFeedbackText">Logged: Baseline performance saved.</span>
+          <button type="button" onclick="savePlayRoundAudit()" class="bg-[#38bdf8] hover:bg-[#0ea5e9] text-slate-950 font-black text-[10px] px-2.5 py-1 rounded-lg transition shadow">
+            Save Round
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: SCORING & GHIN -->
     <div id="tab-scoring" class="tab-pane hidden space-y-3">
       <!-- Live Index Hero Tile -->
       <div class="bg-gradient-to-br from-[#0c141d] to-[#070b0e] p-4 rounded-2xl border border-white/[0.08] shadow-xl">
@@ -425,112 +577,7 @@
           <canvas id="scoringChart" class="w-full h-full"></canvas>
         </div>
       </div>
-<!-- Post-Round Strokes Gained Delta Tagging -->
-      <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl space-y-2.5">
-        <div class="flex justify-between items-center">
-          <div>
-            <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8] block">Post-Round Audit</span>
-            <h2 class="text-xs font-black text-white flex items-center gap-1.5 mt-0.5">
-              <i class="fa-solid fa-chart-pie text-[#38bdf8]"></i> Strokes Gained Delta Tags
-            </h2>
-          </div>
-          <span class="text-[8px] bg-[#38bdf8]/10 text-[#38bdf8] font-bold px-1.5 py-0.5 rounded border border-[#38bdf8]/20">Round Leaks</span>
-        </div>
 
-        <p class="text-[11px] text-slate-400">Tag stroke leaks from your latest 18 to calibrate your Sunday recovery priorities:</p>
-
-        <!-- 4-Category Tile Grid -->
-        <div class="grid grid-cols-4 gap-1.5 text-center text-xs">
-          <!-- OTT Penalties -->
-          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
-            <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">OTT Drops</span>
-            <input type="number" id="sgOtt" min="0" value="0" placeholder="0" class="w-full bg-transparent text-center font-mono font-bold text-white text-xs mt-1 focus:outline-none">
-            <span class="text-[8px] text-slate-500 block">Lost/Pen</span>
-          </div>
-
-          <!-- Approach GIR -->
-          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
-            <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">GIR / 18</span>
-            <input type="number" id="sgGir" min="0" max="18" value="11" placeholder="11" class="w-full bg-transparent text-center font-mono font-bold text-[#38bdf8] text-xs mt-1 focus:outline-none">
-            <span class="text-[8px] text-slate-500 block">Greens</span>
-          </div>
-
-          <!-- Short Game Up & Down -->
-          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
-            <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">Scramble %</span>
-            <input type="number" id="sgScramble" min="0" max="100" value="50" placeholder="50" class="w-full bg-transparent text-center font-mono font-bold text-white text-xs mt-1 focus:outline-none">
-            <span class="text-[8px] text-slate-500 block">Up & Down</span>
-          </div>
-
-          <!-- Putting 3-Putts -->
-          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
-            <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">3-Putts</span>
-            <input type="number" id="sgThreePutts" min="0" value="1" placeholder="1" class="w-full bg-transparent text-center font-mono font-bold text-amber-400 text-xs mt-1 focus:outline-none">
-            <span class="text-[8px] text-slate-500 block">Lag Misses</span>
-          </div>
-        </div>
-
-        <!-- Dynamic Training Feedback Banner -->
-        <div id="sgFeedbackBanner" class="bg-[#070b0e] p-2.5 rounded-xl border border-white/[0.04] flex items-center justify-between text-xs">
-          <span class="text-[10px] text-slate-300" id="sgFeedbackText">Logged: Baseline performance saved.</span>
-          <button type="button" onclick="saveStrokesGainedAudit()" class="bg-[#38bdf8] hover:bg-[#0ea5e9] text-slate-950 font-black text-[10px] px-2.5 py-1 rounded-lg transition shadow">
-            Save Audit
-          </button>
-        </div>
-      </div>
-      <!-- Post-Round Strokes Gained Delta Tagging -->
-      <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl space-y-2.5">
-        <div class="flex justify-between items-center">
-          <div>
-            <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8] block">Post-Round Audit</span>
-            <h2 class="text-xs font-black text-white flex items-center gap-1.5 mt-0.5">
-              <i class="fa-solid fa-chart-pie text-[#38bdf8]"></i> Strokes Gained Delta Tags
-            </h2>
-          </div>
-          <span class="text-[8px] bg-[#38bdf8]/10 text-[#38bdf8] font-bold px-1.5 py-0.5 rounded border border-[#38bdf8]/20">Round Leaks</span>
-        </div>
-
-        <p class="text-[11px] text-slate-400">Tag stroke leaks from your latest 18 to calibrate your Sunday recovery priorities:</p>
-
-        <!-- 4-Category Tile Grid -->
-        <div class="grid grid-cols-4 gap-1.5 text-center text-xs">
-          <!-- OTT Penalties -->
-          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
-            <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">OTT Drops</span>
-            <input type="number" id="sgOtt" min="0" value="0" placeholder="0" class="w-full bg-transparent text-center font-mono font-bold text-white text-xs mt-1 focus:outline-none">
-            <span class="text-[8px] text-slate-500 block">Lost/Pen</span>
-          </div>
-
-          <!-- Approach GIR -->
-          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
-            <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">GIR / 18</span>
-            <input type="number" id="sgGir" min="0" max="18" value="11" placeholder="11" class="w-full bg-transparent text-center font-mono font-bold text-[#38bdf8] text-xs mt-1 focus:outline-none">
-            <span class="text-[8px] text-slate-500 block">Greens</span>
-          </div>
-
-          <!-- Short Game Up & Down -->
-          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
-            <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">Scramble %</span>
-            <input type="number" id="sgScramble" min="0" max="100" value="50" placeholder="50" class="w-full bg-transparent text-center font-mono font-bold text-white text-xs mt-1 focus:outline-none">
-            <span class="text-[8px] text-slate-500 block">Up & Down</span>
-          </div>
-
-          <!-- Putting 3-Putts -->
-          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
-            <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">3-Putts</span>
-            <input type="number" id="sgThreePutts" min="0" value="1" placeholder="1" class="w-full bg-transparent text-center font-mono font-bold text-amber-400 text-xs mt-1 focus:outline-none">
-            <span class="text-[8px] text-slate-500 block">Lag Misses</span>
-          </div>
-        </div>
-
-        <!-- Dynamic Training Feedback Banner -->
-        <div id="sgFeedbackBanner" class="bg-[#070b0e] p-2.5 rounded-xl border border-white/[0.04] flex items-center justify-between text-xs">
-          <span class="text-[10px] text-slate-300" id="sgFeedbackText">Logged: Baseline performance saved.</span>
-          <button type="button" onclick="saveStrokesGainedAudit()" class="bg-[#38bdf8] hover:bg-[#0ea5e9] text-slate-950 font-black text-[10px] px-2.5 py-1 rounded-lg transition shadow">
-            Save Audit
-          </button>
-        </div>
-      </div>
       <!-- 20-Round Ledger with WHS Expiration Timeline -->
       <div class="bg-[#0c1217] p-3 rounded-2xl border border-white/[0.07] shadow-xl">
         <div class="flex justify-between items-center mb-2 px-1">
@@ -677,21 +724,25 @@
     </div>
   </div>
 
-  <!-- Bottom Navigation Bar (Powder Blue TrackMan Theme) -->
-  <nav id="bottom-nav" class="bg-[#070b0e]/98 border-t border-white/[0.06] px-6 pt-2 safe-bottom-nav flex justify-between items-center max-w-lg mx-auto backdrop-blur-xl">
-    <button type="button" onclick="showTab('schedule')" class="nav-btn flex flex-col items-center text-[#38bdf8] cursor-pointer py-1 px-3" data-tab="schedule">
+  <!-- Bottom Navigation Bar (5 TABS: Calendar, Train, TrackMan, PLAY, GHIN) -->
+  <nav id="bottom-nav" class="bg-[#070b0e]/98 border-t border-white/[0.06] px-4 pt-2 safe-bottom-nav flex justify-between items-center max-w-lg mx-auto backdrop-blur-xl">
+    <button type="button" onclick="showTab('schedule')" class="nav-btn flex flex-col items-center text-[#38bdf8] cursor-pointer py-1 px-2.5" data-tab="schedule">
       <i class="fa-solid fa-calendar-week text-base pointer-events-none"></i>
       <span class="text-[9px] font-semibold mt-1 pointer-events-none">Calendar</span>
     </button>
-    <button type="button" onclick="showTab('train')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-[#38bdf8] cursor-pointer py-1 px-3" data-tab="train">
+    <button type="button" onclick="showTab('train')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-[#38bdf8] cursor-pointer py-1 px-2.5" data-tab="train">
       <i class="fa-solid fa-bolt text-base pointer-events-none"></i>
       <span class="text-[9px] font-semibold mt-1 pointer-events-none">Train</span>
     </button>
-    <button type="button" onclick="showTab('trackman')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-[#38bdf8] cursor-pointer py-1 px-3" data-tab="trackman">
+    <button type="button" onclick="showTab('trackman')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-[#38bdf8] cursor-pointer py-1 px-2.5" data-tab="trackman">
       <i class="fa-solid fa-bullseye text-base pointer-events-none"></i>
       <span class="text-[9px] font-semibold mt-1 pointer-events-none">TrackMan</span>
     </button>
-    <button type="button" onclick="showTab('scoring')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-[#38bdf8] cursor-pointer py-1 px-3" data-tab="scoring">
+    <button type="button" onclick="showTab('play')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-[#38bdf8] cursor-pointer py-1 px-2.5" data-tab="play">
+      <i class="fa-solid fa-flag text-base pointer-events-none"></i>
+      <span class="text-[9px] font-semibold mt-1 pointer-events-none">PLAY</span>
+    </button>
+    <button type="button" onclick="showTab('scoring')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-[#38bdf8] cursor-pointer py-1 px-2.5" data-tab="scoring">
       <i class="fa-solid fa-chart-line text-base pointer-events-none"></i>
       <span class="text-[9px] font-semibold mt-1 pointer-events-none">GHIN</span>
     </button>
@@ -1858,6 +1909,7 @@
       }
       if (tabId === 'scoring') initChart();
       if (tabId === 'trackman') renderDispersionCanvas();
+      if (tabId === 'play') renderPlayTab();
     }
 
     function changeWeekOffset(delta) {
@@ -2037,7 +2089,7 @@
     }
 
     // ==========================================
-    // TRAIN HUB: 7-DAY SPLIT ENGINE
+    // TRAIN HUB: 7-DAY CONTENT ENGINE
     // ==========================================
     function switchTrainDay(dayNum) {
       activeTrainDay = dayNum;
@@ -2314,7 +2366,7 @@
     }
 
     // ==========================================
-    // TRACKMAN TAB: 2D CORRIDOR & COASTAL DENSITY
+    // TRACKMAN TAB: 2D CORRIDOR HEATMAP
     // ==========================================
     function renderDispersionCanvas() {
       const canvas = document.getElementById('dispersionCanvas');
@@ -2349,14 +2401,13 @@
 
       plottedShots.forEach(s => {
         const carry = parseFloat(s.carry) || 200;
-        const offline = parseFloat(s.offline) || 0; // Yards L/R
+        const offline = parseFloat(s.offline) || 0;
 
         const y = h - ((carry - 100) / 220) * h;
         const x = midX + (offline / 25) * corridorHalfWidth;
 
         if (Math.abs(offline) <= 12.5) inCorridorCount++;
 
-        // Plot Ball
         ctx.beginPath();
         ctx.arc(x, y, 4, 0, Math.PI * 2);
         ctx.fillStyle = s.club === 'Driver' ? '#38bdf8' : '#cbd5e1';
@@ -2371,22 +2422,58 @@
     }
 
     // ==========================================
-    // GHIN SCORING & PREDICTIVE WHS SANDBOX
+    // PLAY TAB: ON-COURSE & IN-ROUND PACING
     // ==========================================
-    function runWhsSimulation() {
-      // ==========================================
-    // STROKES GAINED DELTA AUDIT ENGINE
-    // ==========================================
-    function saveStrokesGainedAudit() {
+    const playCourseData = {
+      torrey_north_white: { rating: 71.5, slope: 125 },
+      torrey_north_green: { rating: 73.6, slope: 130 },
+      admiral_north_blue: { rating: 73.0, slope: 127 },
+      admiral_north_white: { rating: 70.8, slope: 122 },
+      coronado_white: { rating: 70.5, slope: 118 }
+    };
+
+    function selectPlayCourse(key) {
+      if (key !== 'custom' && playCourseData[key]) {
+        document.getElementById('playRating').value = playCourseData[key].rating;
+        document.getElementById('playSlope').value = playCourseData[key].slope;
+      }
+      calculatePlayPace();
+    }
+
+    function calculatePlayPace() {
+      const rating = parseFloat(document.getElementById('playRating').value) || 71.5;
+      const slope = parseFloat(document.getElementById('playSlope').value) || 125;
+      const thru = parseInt(document.getElementById('playThruHoles').value) || 18;
+      let rawScore = parseFloat(document.getElementById('playCurrentScore').value) || 76;
+
+      // Extrapolate if user entered score thru 9
+      let projected18Score = rawScore;
+      if (thru === 9) {
+        if (rawScore < 25) projected18Score = (rating + (rawScore * 2)); // Relative +/- score
+        else projected18Score = (rawScore * 2); // Gross 9-hole score
+      }
+
+      const projectedDiff = ((projected18Score - rating) * 113 / slope).toFixed(1);
+      document.getElementById('playLiveDiff').innerText = projectedDiff;
+
+      const eighthDiff = parseFloat(document.getElementById('sim8thDiff').innerText) || 8.9;
+      const adviceEl = document.getElementById('playPaceAdvice');
+      if (parseFloat(projectedDiff) < eighthDiff) {
+        adviceEl.innerHTML = `<span class="text-[#38bdf8] font-bold">Knocks off 8th score (${eighthDiff})</span> & drops your 8.1 Index.`;
+      } else {
+        adviceEl.innerHTML = `Pacing +${(projectedDiff - eighthDiff).toFixed(1)} vs counting score. Target $\\le$ ${Math.floor(rating + (eighthDiff * slope / 113))} to improve.`;
+      }
+    }
+
+    function savePlayRoundAudit() {
       const ott = parseInt(document.getElementById('sgOtt').value) || 0;
       const gir = parseInt(document.getElementById('sgGir').value) || 0;
       const scramble = parseInt(document.getElementById('sgScramble').value) || 0;
       const threePutts = parseInt(document.getElementById('sgThreePutts').value) || 0;
 
       const auditData = { ott, gir, scramble, threePutts, date: new Date().toLocaleDateString() };
-      localStorage.setItem('sb_sg_audit', JSON.stringify(auditData));
+      localStorage.setItem('sb_play_audit', JSON.stringify(auditData));
 
-      // Dynamic feedback loop into Sunday training priorities
       const feedbackEl = document.getElementById('sgFeedbackText');
       if (threePutts >= 2) {
         feedbackEl.innerHTML = `<span class="text-amber-400 font-bold">Priority:</span> Sunday lag & 8-ft string putting drill flagged.`;
@@ -2397,10 +2484,11 @@
       } else {
         feedbackEl.innerHTML = `<span class="text-[#38bdf8] font-bold">Clean round:</span> Standard Sunday mobility and T-spine recovery.`;
       }
+      alert("Round performance saved!");
     }
 
-    function loadStrokesGainedAudit() {
-      const saved = JSON.parse(localStorage.getItem('sb_sg_audit'));
+    function loadPlayRoundAudit() {
+      const saved = JSON.parse(localStorage.getItem('sb_play_audit'));
       if (!saved) return;
       if (document.getElementById('sgOtt')) document.getElementById('sgOtt').value = saved.ott;
       if (document.getElementById('sgGir')) document.getElementById('sgGir').value = saved.gir;
@@ -2418,13 +2506,22 @@
         }
       }
     }
+
+    function renderPlayTab() {
+      calculatePlayPace();
+      loadPlayRoundAudit();
+    }
+
+    // ==========================================
+    // GHIN SCORING & PREDICTIVE WHS SANDBOX
+    // ==========================================
+    function runWhsSimulation() {
       const slope = parseFloat(document.getElementById('simSlope').value) || 125;
       const rating = parseFloat(document.getElementById('simRating').value) || 71.5;
       const gross = parseFloat(document.getElementById('simGrossScore').value) || 76;
 
       const simDiff = ((gross - rating) * 113 / slope).toFixed(1);
 
-      // Clone existing 20 scores and insert new sim round
       const cloneScores = [...ghinScores];
       cloneScores.unshift({ diff: simDiff, used: true });
       const current20 = cloneScores.slice(0, 20);
@@ -2525,7 +2622,7 @@
       renderWedgeMatrix();
       closeWedgeModal();
     }
-   function renderWedgeMatrix() {
+    function renderWedgeMatrix() {
       for (const club of ["50", "54", "58"]) {
         document.getElementById(`wm_${club}_half`).innerText = wedgeMatrix[club].half + " yds";
         document.getElementById(`wm_${club}_three`).innerText = wedgeMatrix[club].three + " yds";
@@ -2788,7 +2885,7 @@
     // ==========================================
     // INITIALIZATION DISPATCH
     // ==========================================
-   function init() {
+    function init() {
       setupRealWeeklyCalendar();
       switchWeek(1);
       switchTrainDay(1);
@@ -2797,7 +2894,8 @@
       renderTrackmanTable();
       renderScoringTab();
       runWhsSimulation();
-      loadStrokesGainedAudit();
+      calculatePlayPace();
+      loadPlayRoundAudit();
 
       const now = Date.now();
       const twelveHours = 12 * 60 * 60 * 1000;
