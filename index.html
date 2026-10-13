@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Scratch Blueprint | Golf & GHIN</title>
   
+  <!-- Standalone Mobile App Configuration -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Scratch Blueprint">
@@ -127,7 +128,7 @@
       </div>
     </div>
 
-    <!-- TAB 2: TRAIN -->
+    <!-- TAB 2: TRAIN (7-DAY TOUR TRAINING HUB) -->
     <div id="tab-train" class="tab-pane hidden space-y-3">
       <div class="flex justify-between items-center">
         <div>
@@ -519,7 +520,7 @@
     </div>
   </div>
 
-  <!-- Bottom Navigation Bar (Gym renamed to Train) -->
+  <!-- Bottom Navigation Bar -->
   <nav id="bottom-nav" class="bg-[#0d1811]/98 border-t border-emerald-950 px-6 pt-2 safe-bottom-nav flex justify-between items-center max-w-lg mx-auto">
     <button type="button" onclick="showTab('schedule')" class="nav-btn flex flex-col items-center text-emerald-400 cursor-pointer py-1 px-3" data-tab="schedule">
       <i class="fa-solid fa-calendar-week text-lg pointer-events-none"></i>
@@ -540,12 +541,10 @@
   </nav>
 
   <script>
-    const WORKER_ENDPOINT = "https://gentle-glade-d97c.evanm2727.workers.dev";
-
-    // 4 RECURRING GOLF PHASES WITH VERIFIED DIRECT YOUTUBE LINKS
+    // 4 RECURRING GOLF MACROCYCLES (12 WEEKS) WITH DIRECT YOUTUBE LINKS
     const exerciseTemplates = {
       1: {
-        title: "Block: Ground Force Base",
+        title: "Block 1: Ground Force Base",
         schedule: [
           { day: "Mon", dayFull: "Monday", type: "Gym Lift 1", badge: "GYM", focus: "Ground Reaction: Trap Bar Deadlifts + Rotational MB Scoop Slams", time: "50 min" },
           { day: "Tue", dayFull: "Tuesday", type: "Studio Sim Combine 1", badge: "SIM", focus: "Driver Peak Ball Speed test + 60-105yd Clock Wedge matrix", time: "60 min" },
@@ -561,7 +560,7 @@
             focus: "Build maximum vertical ground reaction force (vGRF) for 170+ mph ball speed.",
             exercises: [
               {
-                id: "e_trapbar_dl",
+                id: "w1_trapbar",
                 name: "Trap Bar Deadlift (Velocity Focus)",
                 sets: "4 sets x 5 reps",
                 cue: "Violent hip extension, push floor away fast",
@@ -575,7 +574,7 @@
                 ]
               },
               {
-                id: "e_rotary_mb",
+                id: "w1_mb_toss",
                 name: "Rotational MB Scoop Toss (into wall)",
                 sets: "4 sets x 5 / side",
                 cue: "Explode off trail foot, snap lead hip clear",
@@ -589,7 +588,7 @@
                 ]
               },
               {
-                id: "e_split_squat",
+                id: "w1_split_squat",
                 name: "Bulgarian Split Squat (Lead Leg Brake)",
                 sets: "3 sets x 8 / leg",
                 cue: "Control down tempo, drive through mid-foot",
@@ -603,7 +602,7 @@
                 ]
               },
               {
-                id: "e_incline_db",
+                id: "w1_incline_db",
                 name: "Dumbbell Incline Bench Press",
                 sets: "3 sets x 8 reps",
                 cue: "Retract scaps, punch upward without shrugging",
@@ -617,7 +616,7 @@
                 ]
               },
               {
-                id: "e_pallof_press",
+                id: "w1_pallof",
                 name: "Half-Kneeling Pallof Press with Hold",
                 sets: "3 sets x 8 reps (3s hold)",
                 cue: "Anti-rotation: resist torso twist completely",
@@ -637,7 +636,7 @@
             focus: "Train high-speed thoracic rotation alongside the braking muscles that stop the torso.",
             exercises: [
               {
-                id: "e_landmine_punch",
+                id: "w1_landmine",
                 name: "Landmine Rotational Punch",
                 sets: "4 sets x 6 / side",
                 cue: "Drive from back hip through serratus",
@@ -651,7 +650,7 @@
                 ]
               },
               {
-                id: "e_cable_chops",
+                id: "w1_chops",
                 name: "Half-Kneeling Cable Chops (High to Low)",
                 sets: "3 sets x 8 / side",
                 cue: "Lock pelvis still; rotate chest only",
@@ -665,7 +664,7 @@
                 ]
               },
               {
-                id: "e_db_row",
+                id: "w1_db_row",
                 name: "Single-Arm DB Neutral Row",
                 sets: "3 sets x 8 / arm",
                 cue: "Lat engagement to hold lead-arm structure",
@@ -679,7 +678,7 @@
                 ]
               },
               {
-                id: "e_plyo_pushup",
+                id: "w1_plyo_push",
                 name: "Plyometric Push-Ups (Fast Tempo)",
                 sets: "3 sets x 6 reps",
                 cue: "Explosive upward launch off palms",
@@ -693,7 +692,7 @@
                 ]
               },
               {
-                id: "e_single_rdl",
+                id: "w1_single_rdl",
                 name: "Single-Leg Romanian Deadlift (RDL)",
                 sets: "3 sets x 8 / leg",
                 cue: "Lead hamstring stretch, level hips",
@@ -713,7 +712,7 @@
             focus: "Coordinate power from feet to fingertips for ball speed transfer.",
             exercises: [
               {
-                id: "e_jump_shrugs",
+                id: "w1_jump_shrugs",
                 name: "Trap Bar Jump Shrugs (Low Weight)",
                 sets: "4 sets x 4 reps",
                 cue: "Max vertical jump explosion off toes",
@@ -727,7 +726,7 @@
                 ]
               },
               {
-                id: "e_heiden_bounds",
+                id: "w1_heiden",
                 name: "Lateral Bounds with Stick Landing",
                 sets: "4 sets x 5 / side",
                 cue: "Push laterally, stick and freeze lead hip",
@@ -741,7 +740,7 @@
                 ]
               },
               {
-                id: "e_db_snatch",
+                id: "w1_db_snatch",
                 name: "Single-Arm Dumbbell Snatch",
                 sets: "3 sets x 5 / arm",
                 cue: "Triple extension: ankle, knee, hip snap",
@@ -755,7 +754,7 @@
                 ]
               },
               {
-                id: "e_sideplank_row",
+                id: "w1_sideplank_row",
                 name: "Side Plank with Cable Row",
                 sets: "3 sets x 8 / side",
                 cue: "Anti-lateral flexion with pull",
@@ -765,11 +764,11 @@
                 alternates: [
                   { name: "Static Side Plank (45s Hold)", note: "Pure bodyweight floor hold.", videoUrl: "https://www.youtube.com/watch?v=K2VljzCC16g" },
                   { name: "Dumbbell Bird-Dog Row", note: "Opposite arm and leg extended on bench.", videoUrl: "https://www.youtube.com/watch?v=pYcpY20QaE8" },
-                  { name: "Pallof Press Hold", note: "Stand tall against cable tension.", videoUrl: "https://www.youtube.com/watch?v=xIu-Fk6dYmU" }
+                  { name: "Pallof Press Hold", note: "Stand tall against cable tension.", videoUrl: "https://www.youtube.com/watch?v=LA6Uc5yIV1c" }
                 ]
               },
               {
-                id: "e_overhead_carry",
+                id: "w1_overhead_carry",
                 name: "Overhead Farmer's Carry",
                 sets: "3 sets x 35 yards",
                 cue: "Ribcage down, locked shoulder stability",
@@ -787,7 +786,7 @@
         }
       },
       2: {
-        title: "Week 2: Rotational Velocity & Deceleration",
+        title: "Block 1: Rotary Velocity & Deceleration",
         schedule: [
           { day: "Mon", dayFull: "Monday", type: "Gym Lift 1", badge: "GYM", focus: "Speed Front Squats (4x4) + Lateral Bounds with Stick", time: "50 min" },
           { day: "Tue", dayFull: "Tuesday", type: "Studio Sim Combine 1", badge: "SIM", focus: "75-105yd Clock Wedge spin rate consistency & landing angle", time: "60 min" },
@@ -1029,7 +1028,7 @@
         }
       },
       3: {
-        title: "Week 3: Peak Speed Intent & Overspeed",
+        title: "Block 1: Peak Speed Intent & Overspeed",
         schedule: [
           { day: "Mon", dayFull: "Monday", type: "Gym Lift 1", badge: "GYM", focus: "Trap Bar Jump Shrugs (5x3) + Box Depth Jumps", time: "50 min" },
           { day: "Tue", dayFull: "Tuesday", type: "Studio Sim Combine 1", badge: "SIM", focus: "Max Driver Intent: 5 balls at 100% effort & ball speed check", time: "60 min" },
@@ -1271,7 +1270,7 @@
         }
       },
       4: {
-        title: "Week 4: Deload & Scrambling Flow",
+        title: "Block 1: Deload & Scrambling Flow",
         schedule: [
           { day: "Mon", dayFull: "Monday", type: "Gym Lift 1 (Deload)", badge: "GYM", focus: "Tempo Goblet Squats + T-spine rotations", time: "40 min" },
           { day: "Tue", dayFull: "Tuesday", type: "Studio Sim Combine 1", badge: "SIM", focus: "Wedge Distance Touch: 30, 45, 60, 75yd flight control", time: "50 min" },
@@ -1514,7 +1513,7 @@
       }
     };
 
-    // STUDIO SIMULATOR, PLAY & RECOVERY PROTOCOLS (DAYS 2, 4, 6, 7)
+    // NON-GYM PROTOCOLS (DAYS 2, 4, 6, 7)
     const nonGymProtocols = {
       2: {
         title: "Studio Sim Combine 1 (60 Mins)",
@@ -1566,12 +1565,17 @@
       }
     };
 
+    function getProgramForWeek(weekNum) {
+      const cycleIndex = ((weekNum - 1) % 4) + 1;
+      return exerciseTemplates[cycleIndex] || exerciseTemplates[1];
+    }
+
     let currentWeek = 1;
     let activeTrainDay = 1;
     let selectedCalendarDayIdx = 0;
     let calendarWeekOffset = 0;
 
-    // PERSISTENT DATA
+    // PERSISTENT STORAGE
     let customActivities = JSON.parse(localStorage.getItem('sb_custom_activities')) || {};
     let ghinConfig = JSON.parse(localStorage.getItem('sb_ghin_config')) || { email: 'evanm2727@gmail.com', password: '', index: '8.1', previousIndex: '8.1', lastSync: 0 };
     let ghinScores = JSON.parse(localStorage.getItem('sb_ghin_scores')) || [];
@@ -1719,7 +1723,7 @@
     }
 
     // ==========================================
-    // TRAIN HUB: FULL 7-DAY SPLIT & PROTOCOLS
+    // TRAIN HUB: FULL 7-DAY CONTENT ENGINE
     // ==========================================
     function switchTrainDay(dayNum) {
       activeTrainDay = dayNum;
@@ -1831,6 +1835,7 @@
           `;
         }).join('');
       } else {
+        // Non-Gym Days: Studio, Round, Recovery Checklists
         const proto = nonGymProtocols[activeTrainDay] || nonGymProtocols[2];
         document.getElementById('trainSessionTitle').innerText = proto.title;
         document.getElementById('trainSessionDuration').innerText = proto.duration;
@@ -1921,7 +1926,7 @@
         </button>
         ${origEx.alternates.map((alt, aIdx) => `
           <button type="button" onclick="selectAlternate(${aIdx})" class="w-full text-left p-2.5 rounded-xl border border-amber-900/60 bg-[#1b2219] hover:bg-emerald-800/30">
-            <p class="text-xs font-bold text-amber-300">Option ${aIdx + 1}: ${alt.name}</p>
+            <p class="text-xs font-bold text-amber-300">Option ${aIdx + 1}:${alt.name}</p>
             <p class="text-[10px] text-slate-300">${alt.note}</p>
           </button>
         `).join('')}
@@ -2175,7 +2180,7 @@
       `).join('');
     }
 
-    // GHIN SYNC
+    // GHIN SYNC & COURSE DISAMBIGUATION
     async function syncGhinData(interactive = true) {
       const email = document.getElementById('ghinEmail').value.trim();
       const password = document.getElementById('ghinPassword').value.trim();
@@ -2348,3 +2353,4 @@
   </script>
 </body>
 </html>
+    
