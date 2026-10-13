@@ -43,6 +43,24 @@
       pointer-events: auto !important;
       touch-action: manipulation;
     }
+
+    /* Human Animation Looper in Diagram Modal */
+    @keyframes liftMotion {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(-3deg); }
+    }
+    @keyframes rotaryMotion {
+      0%, 100% { transform: rotate(-18deg); }
+      50% { transform: rotate(24deg); }
+    }
+    .human-animated-lift {
+      animation: liftMotion 2.2s ease-in-out infinite;
+      transform-origin: center bottom;
+    }
+    .human-animated-rotary {
+      animation: rotaryMotion 1.8s ease-in-out infinite;
+      transform-origin: center center;
+    }
   </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden">
@@ -60,15 +78,15 @@
         </h1>
       </div>
       <select id="weekSelector" onchange="switchWeek(this.value)" class="bg-[#15241b] border border-emerald-600/40 text-emerald-300 text-xs font-semibold rounded-lg px-2.5 py-1.5 focus:outline-none">
-        <option value="1">Week 1: Ground Reaction & Force Base</option>
+        <option value="1">Week 1: Ground Reaction Force</option>
         <option value="2">Week 2: Rotational Velocity & Deceleration</option>
         <option value="3">Week 3: Peak Intent & Overspeed</option>
-        <option value="4">Week 4: Deload & Scrambling Flow</option>
+        <option value="4">Week 4: Deload & Flow</option>
       </select>
     </div>
   </header>
 
-  <!-- Main Scrollable Container -->
+  <!-- Main Scrollable App Container -->
   <main class="flex-1 overflow-y-auto px-4 py-3 max-w-lg mx-auto w-full custom-scrollbar pb-32 relative z-10">
 
     <!-- TAB 1: SCHEDULE -->
@@ -91,7 +109,6 @@
         <div class="grid grid-cols-7 gap-1" id="calendarDaysRow"></div>
       </div>
 
-      <!-- Selected Protocol Card -->
       <div class="bg-gradient-to-r from-emerald-950 to-emerald-900/60 p-3.5 rounded-2xl border border-emerald-800/50 flex justify-between items-center">
         <div>
           <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider" id="selectedDayName">Today's Protocol</span>
@@ -105,27 +122,23 @@
         </div>
       </div>
 
-      <!-- Detail Card for Active Day -->
       <div id="activeDayDetailContainer"></div>
-      
-      <!-- Custom Logs -->
       <div id="selectedDayCustomActivities" class="space-y-2"></div>
 
-      <!-- Protocol Reference -->
       <div class="pt-2">
-        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Protocol Reference (Tap day to inspect)</p>
+        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Protocol Reference (Tap to view)</p>
         <div id="allDaysContainer" class="space-y-2"></div>
       </div>
     </div>
 
-    <!-- TAB 2: GYM -->
+    <!-- TAB 2: GYM (ENHANCED WITH LOGGING & 3 ALTERNATES) -->
     <div id="tab-gym" class="tab-pane hidden space-y-3">
       <div class="flex justify-between items-center">
         <div>
           <h2 class="text-sm font-bold text-white flex items-center gap-1.5">
-            <i class="fa-solid fa-dumbbell text-emerald-400"></i> 45-60 Min Tour Strength
+            <i class="fa-solid fa-dumbbell text-emerald-400"></i> Tour Strength & Rotary Power
           </h2>
-          <p class="text-[11px] text-slate-400">4-5 Compound & Rotary Speed Movements</p>
+          <p class="text-[11px] text-slate-400">Track sets, weights & choose machine alternates</p>
         </div>
         <div class="flex gap-1 bg-[#122017] p-1 rounded-lg border border-emerald-900/60 text-xs">
           <button type="button" onclick="switchGymSession(1)" id="gymBtn1" class="px-2 py-0.5 rounded font-bold text-white bg-emerald-700">D1</button>
@@ -134,6 +147,7 @@
         </div>
       </div>
 
+      <!-- Workout Overview -->
       <div class="bg-[#122017] p-3.5 rounded-xl border border-emerald-800/40">
         <div class="flex justify-between items-center mb-1">
           <h3 class="text-xs font-bold text-emerald-300" id="gymWorkoutTitle">Day 1: Ground Reaction & Primary Drive</h3>
@@ -142,6 +156,7 @@
         <p class="text-[11px] text-slate-300 leading-relaxed" id="gymWorkoutFocus"></p>
       </div>
 
+      <!-- Exercise Cards with Weights & Alternates -->
       <div id="gymExerciseList" class="space-y-3"></div>
     </div>
 
@@ -368,26 +383,27 @@
 
   </main>
 
-  <!-- MODAL: EXERCISE BIOMECHANICS DIAGRAM -->
+  <!-- MODAL: ANIMATED HUMAN BIOMECHANICS TUTORIAL -->
   <div id="exerciseDiagramModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
     <div class="bg-[#122017] border border-emerald-600/60 rounded-3xl p-5 w-full max-w-sm space-y-3.5 shadow-2xl">
       <div class="flex justify-between items-center">
         <div>
-          <span class="text-[9px] font-black uppercase tracking-wider text-emerald-400">Biomechanics Guide</span>
+          <span class="text-[9px] font-black uppercase tracking-wider text-emerald-400">Biomechanics Demonstration</span>
           <h3 class="text-sm font-black text-white" id="diagTitle">Trap Bar Deadlift</h3>
         </div>
         <button type="button" onclick="closeDiagramModal()" class="text-slate-400 hover:text-white text-base"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
+      <!-- Realistic Human Dynamic Movement Canvas -->
       <div id="diagramSvgContainer" class="w-full h-44 bg-[#0a140e] rounded-2xl border border-emerald-900/60 flex items-center justify-center p-2 relative overflow-hidden"></div>
 
       <div class="space-y-2 text-xs">
         <div class="bg-[#16271c] p-2.5 rounded-xl border border-emerald-800/40">
-          <span class="text-[9px] font-bold text-emerald-300 uppercase block mb-0.5">Execution & Postural Alignment</span>
+          <span class="text-[9px] font-bold text-emerald-300 uppercase block mb-0.5">Execution & Joint Path</span>
           <p class="text-[11px] text-slate-200 leading-snug" id="diagSetupText"></p>
         </div>
         <div class="bg-[#16271c] p-2.5 rounded-xl border border-emerald-800/40">
-          <span class="text-[9px] font-bold text-amber-300 uppercase block mb-0.5">Golf Kinetic Transfer Cue</span>
+          <span class="text-[9px] font-bold text-amber-300 uppercase block mb-0.5">Kinetic Chain Swing Transfer</span>
           <p class="text-[11px] text-slate-300 leading-snug" id="diagCueText"></p>
         </div>
       </div>
@@ -395,6 +411,22 @@
       <button type="button" onclick="closeDiagramModal()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow">
         Close Form Guide
       </button>
+    </div>
+  </div>
+
+  <!-- MODAL: SELECT ALTERNATE EXERCISE (MACHINE/SPACE BACKUP) -->
+  <div id="alternateModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-[#122017] border border-emerald-700/60 rounded-2xl p-4 w-full max-w-sm space-y-3 shadow-2xl">
+      <div class="flex justify-between items-center">
+        <div>
+          <span class="text-[9px] font-bold uppercase tracking-wider text-emerald-400">Machine/Space Busy?</span>
+          <h3 class="text-xs font-black text-white" id="altModalTitle">Choose an Alternate</h3>
+        </div>
+        <button type="button" onclick="closeAlternateModal()" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <p class="text-[11px] text-slate-300">Select an equipment substitute targeting identical golf biomechanics:</p>
+      
+      <div id="alternatesOptionList" class="space-y-2"></div>
     </div>
   </div>
 
@@ -496,64 +528,94 @@
   <script>
     const WORKER_ENDPOINT = "https://gentle-glade-d97c.evanm2727.workers.dev";
 
-    const diagramTemplates = {
+    // ANIMATED HUMAN MOVEMENT SVG ENGINES (GIF-STYLE DYNAMIC MOTION)
+    const humanAnimatedTemplates = {
       hinge: `
-        <svg viewBox="0 0 320 160" class="w-full h-full">
-          <line x1="20" y1="140" x2="300" y2="140" stroke="#1f3b29" stroke-width="3" stroke-dasharray="4,4"/>
-          <circle cx="105" cy="50" r="12" fill="#10b981"/>
-          <line x1="105" y1="62" x2="160" y2="105" stroke="#10b981" stroke-width="7" stroke-linecap="round"/>
-          <line x1="160" y1="105" x2="185" y2="140" stroke="#34d399" stroke-width="7" stroke-linecap="round"/>
-          <line x1="185" y1="140" x2="210" y2="140" stroke="#34d399" stroke-width="5" stroke-linecap="round"/>
-          <line x1="118" y1="70" x2="140" y2="120" stroke="#cbd5e1" stroke-width="4" stroke-linecap="round"/>
-          <circle cx="140" cy="122" r="8" fill="#f59e0b"/>
-          <path d="M 185,135 L 185,95" stroke="#f59e0b" stroke-width="3" stroke-dasharray="3,3"/>
-          <text x="180" y="80" fill="#f59e0b" font-size="10" font-weight="bold">Vertical Drive</text>
-          <text x="60" y="90" fill="#94a3b8" font-size="9">Flat Spine 45°</text>
+        <svg viewBox="0 0 280 160" class="w-full h-full overflow-visible">
+          <line x1="20" y1="140" x2="260" y2="140" stroke="#1f3b29" stroke-width="3" stroke-dasharray="4,4"/>
+          <!-- Floor shadow -->
+          <ellipse cx="140" cy="140" rx="35" ry="6" fill="#04120a"/>
+          <!-- Animated Lifter Body Group -->
+          <g class="human-animated-lift">
+            <!-- Torso & Head -->
+            <circle cx="140" cy="38" r="11" fill="#f8fafc"/>
+            <path d="M 140,50 L 140,88" stroke="#10b981" stroke-width="12" stroke-linecap="round"/>
+            <!-- Arms holding bar -->
+            <path d="M 136,54 L 122,86 L 122,120" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
+            <path d="M 144,54 L 158,86 L 158,120" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
+            <!-- Barbell & Plates -->
+            <rect x="95" y="117" width="90" height="6" rx="2" fill="#cbd5e1"/>
+            <rect x="96" y="103" width="8" height="34" rx="3" fill="#f59e0b"/>
+            <rect x="176" y="103" width="8" height="34" rx="3" fill="#f59e0b"/>
+            <!-- Hips & Legs -->
+            <path d="M 140,88 L 128,114 L 128,140" stroke="#34d399" stroke-width="8" stroke-linecap="round"/>
+            <path d="M 140,88 L 152,114 L 152,140" stroke="#34d399" stroke-width="8" stroke-linecap="round"/>
+          </g>
+          <!-- Power vector indicator -->
+          <text x="140" y="20" fill="#f59e0b" font-size="10" font-weight="900" text-anchor="middle">▲ VERTICAL THRUST (DRIVE FEET)</text>
         </svg>
       `,
       rotary: `
-        <svg viewBox="0 0 320 160" class="w-full h-full">
-          <circle cx="160" cy="80" r="48" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="4,4"/>
-          <line x1="120" y1="80" x2="200" y2="80" stroke="#64748b" stroke-width="6" stroke-linecap="round"/>
-          <text x="125" y="70" fill="#64748b" font-size="9" font-weight="bold">Pelvis Angle (0°)</text>
-          <line x1="130" y1="110" x2="190" y2="50" stroke="#f59e0b" stroke-width="6" stroke-linecap="round"/>
-          <text x="195" y="48" fill="#f59e0b" font-size="9" font-weight="bold">Thorax Turn (+45°)</text>
-          <path d="M 180,35 A 48 48 0 0 1 210,80" fill="none" stroke="#34d399" stroke-width="3"/>
-          <circle cx="160" cy="80" r="10" fill="#10b981"/>
-          <text x="100" y="145" fill="#cbd5e1" font-size="10">X-Factor Elastic Whip</text>
+        <svg viewBox="0 0 280 160" class="w-full h-full overflow-visible">
+          <!-- Athletic stance base -->
+          <ellipse cx="140" cy="138" rx="45" ry="7" fill="#04120a"/>
+          <!-- Animated Torso Whip -->
+          <g class="human-animated-rotary">
+            <circle cx="140" cy="40" r="11" fill="#f8fafc"/>
+            <!-- Torso with shoulder angle -->
+            <path d="M 140,51 L 140,90" stroke="#10b981" stroke-width="12" stroke-linecap="round"/>
+            <!-- Extended Rotational Arms + Ball/Cable -->
+            <path d="M 136,55 L 180,68 L 205,74" stroke="#94a3b8" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="210" cy="74" r="10" fill="#f59e0b"/>
+            <!-- Legs stabilizing -->
+            <path d="M 140,90 L 124,115 L 122,138" stroke="#34d399" stroke-width="8" stroke-linecap="round"/>
+            <path d="M 140,90 L 156,115 L 160,138" stroke="#34d399" stroke-width="8" stroke-linecap="round"/>
+          </g>
+          <text x="140" y="20" fill="#34d399" font-size="10" font-weight="900" text-anchor="middle">↻ TORSO ROTARY ACCELERATION</text>
         </svg>
       `,
       split: `
-        <svg viewBox="0 0 320 160" class="w-full h-full">
-          <line x1="20" y1="140" x2="300" y2="140" stroke="#1f3b29" stroke-width="3"/>
-          <rect x="230" y="105" width="45" height="35" rx="4" fill="#1e293b" stroke="#334155"/>
-          <circle cx="160" cy="40" r="11" fill="#10b981"/>
-          <line x1="160" y1="51" x2="160" y2="95" stroke="#10b981" stroke-width="6" stroke-linecap="round"/>
-          <line x1="160" y1="95" x2="120" y2="98" stroke="#34d399" stroke-width="6" stroke-linecap="round"/>
-          <line x1="120" y1="98" x2="120" y2="140" stroke="#34d399" stroke-width="6" stroke-linecap="round"/>
-          <line x1="160" y1="95" x2="205" y2="105" stroke="#64748b" stroke-width="5" stroke-linecap="round"/>
-          <line x1="205" y1="105" x2="235" y2="105" stroke="#64748b" stroke-width="5" stroke-linecap="round"/>
-          <text x="85" y="90" fill="#f59e0b" font-size="9" font-weight="bold">90° Lead Hip Brake</text>
-          <text x="135" y="152" fill="#94a3b8" font-size="9">Firm Lead Foot Base</text>
+        <svg viewBox="0 0 280 160" class="w-full h-full overflow-visible">
+          <line x1="20" y1="140" x2="260" y2="140" stroke="#1f3b29" stroke-width="3"/>
+          <rect x="210" y="112" width="40" height="28" rx="4" fill="#1e293b"/>
+          <g class="human-animated-lift">
+            <circle cx="130" cy="38" r="11" fill="#f8fafc"/>
+            <path d="M 130,50 L 130,90" stroke="#10b981" stroke-width="12" stroke-linecap="round"/>
+            <!-- Dumbbell held at side -->
+            <path d="M 125,55 L 115,85 L 115,108" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
+            <rect x="108" y="105" width="14" height="14" rx="2" fill="#cbd5e1"/>
+            <!-- Lead 90-degree leg -->
+            <path d="M 130,90 L 115,108 L 115,140" stroke="#34d399" stroke-width="8" stroke-linecap="round"/>
+            <!-- Rear leg resting on bench -->
+            <path d="M 130,90 L 175,105 L 215,112" stroke="#64748b" stroke-width="7" stroke-linecap="round"/>
+          </g>
+          <text x="140" y="20" fill="#f59e0b" font-size="10" font-weight="900" text-anchor="middle">■ LEAD HIP DECELERATION BRAKE</text>
         </svg>
       `,
       antirotation: `
-        <svg viewBox="0 0 320 160" class="w-full h-full">
-          <rect x="135" y="45" width="50" height="70" rx="8" fill="#14261a" stroke="#10b981" stroke-width="2"/>
-          <circle cx="160" cy="30" r="11" fill="#10b981"/>
-          <line x1="160" y1="65" x2="160" y2="120" stroke="#34d399" stroke-width="5" stroke-linecap="round"/>
-          <circle cx="160" cy="120" r="7" fill="#f59e0b"/>
-          <line x1="260" y1="120" x2="170" y2="120" stroke="#f59e0b" stroke-width="3" stroke-dasharray="3,3"/>
-          <text x="210" y="112" fill="#f59e0b" font-size="9" font-weight="bold">Rotary Pull (Torque)</text>
-          <text x="85" y="85" fill="#34d399" font-size="9" font-weight="bold">Zero Torso Twist</text>
-          <text x="100" y="148" fill="#94a3b8" font-size="10">Deep Core Anti-Rotational Rigidity</text>
+        <svg viewBox="0 0 280 160" class="w-full h-full overflow-visible">
+          <ellipse cx="140" cy="140" rx="35" ry="6" fill="#04120a"/>
+          <!-- Pulley Anchor Line -->
+          <line x1="260" y1="75" x2="185" y2="75" stroke="#f59e0b" stroke-width="2" stroke-dasharray="3,3"/>
+          <circle cx="260" cy="75" r="4" fill="#f59e0b"/>
+          <!-- Rigid Torso -->
+          <circle cx="140" cy="38" r="11" fill="#f8fafc"/>
+          <path d="M 140,50 L 140,92" stroke="#10b981" stroke-width="14" stroke-linecap="round"/>
+          <!-- Outstretched Arms Resisting Pull -->
+          <path d="M 140,58 L 180,75" stroke="#94a3b8" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="184" cy="75" r="6" fill="#cbd5e1"/>
+          <!-- Lower Body Stance -->
+          <path d="M 140,92 L 126,116 L 126,140" stroke="#34d399" stroke-width="8" stroke-linecap="round"/>
+          <path d="M 140,92 L 154,116 L 154,140" stroke="#34d399" stroke-width="8" stroke-linecap="round"/>
+          <text x="140" y="20" fill="#10b981" font-size="10" font-weight="900" text-anchor="middle">⊣ ZERO SPINAL ROTATION (BRACED)</text>
         </svg>
       `
     };
 
+    // COMPLETE 4-WEEK PROGRAM WITH 3 BUILT-IN ALTERNATES PER MOVEMENT
     const weeklyPrograms = {
       1: {
-        title: "Week 1: Ground Reaction & Force Base",
+        title: "Week 1: Ground Reaction Force Base",
         schedule: [
           { day: "Mon", dayFull: "Monday", type: "Gym Lift 1", badge: "GYM", focus: "Ground Reaction: Trap Bar Deadlifts + Rotational MB Scoop Slams", time: "50 min" },
           { day: "Tue", dayFull: "Tuesday", type: "Studio Sim Combine 1", badge: "SIM", focus: "Driver Peak Ball Speed test + 60-105yd Clock Wedge matrix", time: "60 min" },
@@ -566,610 +628,258 @@
         gymWorkouts: {
           1: {
             title: "Day 1: Ground Force Base & Vertical Thrust (50 Mins)",
-            focus: "Build maximum vertical thrust and trail-foot ground pressure to maximize driver launch and clubhead velocity.",
+            focus: "Build maximum vertical ground reaction force (vGRF) for 170+ mph ball speed.",
             exercises: [
               {
+                id: "w1d1_e1",
                 name: "Trap Bar Deadlift (Velocity Focus)",
                 sets: "4 sets x 5 reps",
                 cue: "Violent hip extension, push floor away fast",
-                setup: "Stand centered in trap bar, feet hip-width. Hinge hips back, brace lats, drive heels straight into floor. Explode upward through lockout.",
-                golfTransfer: "Generates vertical ground reaction force (vGRF), the number-one driver of 170+ mph ball speed.",
-                diagram: "hinge"
+                setup: "Stand centered in trap bar, feet hip-width. Hinge hips back, brace lats, drive heels straight into floor.",
+                golfTransfer: "Builds vertical thrust that transfers directly to peak launch on your 300-yard driver.",
+                diagram: "hinge",
+                alternates: [
+                  { name: "Heavy Dumbbell Romanian Deadlift", note: "Use dumbbells if trap bar is occupied. Flat back, deep hinge." },
+                  { name: "Barbell Conventional Deadlift", note: "Standard olympic bar. Pull bar tight to shins, fast lockout." },
+                  { name: "Dual Kettlebell Explosive Cleans", note: "Hip-snap power without barbell equipment." }
+                ]
               },
               {
+                id: "w1d1_e2",
                 name: "Rotational MB Scoop Toss (into wall)",
                 sets: "4 sets x 5 / side",
                 cue: "Explode off trail foot, snap lead hip clear",
-                setup: "Stand perpendicular to reinforced wall. Load 6-8lb medicine ball into trail hip pocket, push off back foot, whip hips open, release hard.",
-                golfTransfer: "Directly mimics downswing kinematic sequencing: lower-body ground push transferring into torso rotation.",
-                diagram: "rotary"
+                setup: "Stand perpendicular to wall with 6-8lb medicine ball. Load trail hip, whip lead hip open, release ball hard.",
+                golfTransfer: "Replicates ground-up kinetic sequencing from backswing coil into downswing release.",
+                diagram: "rotary",
+                alternates: [
+                  { name: "High-Speed Cable Rotary Push", note: "Single-arm cable punch from trail hip if no ball wall is open." },
+                  { name: "Resistance Band Rotational Slingshot", note: "Loop band around post; snap hips and punch handle." },
+                  { name: "Dumbbell Pivot Rotational Punch", note: "Stand athletic; pivot trail foot and punch DB across body." }
+                ]
               },
               {
+                id: "w1d1_e3",
                 name: "Bulgarian Split Squat (Lead Leg Brake)",
                 sets: "3 sets x 8 / leg",
                 cue: "Control down tempo, drive through mid-foot",
-                setup: "Back foot elevated on bench, torso tilted forward 15°. Lower until lead thigh is parallel with floor, drive straight up without swaying.",
-                golfTransfer: "Builds lead-leg bracing strength so you can stop pelvis slide and post up firmly through impact.",
-                diagram: "split"
+                setup: "Back foot elevated on bench. Lower until lead thigh is parallel to ground, drive up without swaying.",
+                golfTransfer: "Builds lead-leg braking capacity to stop forward slide and rotate around a firm lead post.",
+                diagram: "split",
+                alternates: [
+                  { name: "Walking Dumbbell Lunges", note: "Step out with upright torso if all benches are taken." },
+                  { name: "Goblet Reverse Lunge", note: "Single DB or KB at chest. Step back into 90-degree bend." },
+                  { name: "Step-Ups to 18-inch Box", note: "Lead leg only; drive through heel with zero back foot bounce." }
+                ]
               },
               {
+                id: "w1d1_e4",
                 name: "Dumbbell Incline Bench Press",
                 sets: "3 sets x 8 reps",
                 cue: "Retract scaps, punch upward without shrugging",
-                setup: "Bench at 30° incline. Keep shoulder blades pinched flush against bench. Lower with 2-second control, press with authority.",
-                golfTransfer: "Strengthens pectoralis and anterior deltoid stabilizers that control the club handle at transition.",
-                diagram: "hinge"
+                setup: "30-degree incline. Lower dumbbells with 2-second control, press with authority.",
+                golfTransfer: "Pectoral and anterior deltoid strength to stabilize hand path at transition.",
+                diagram: "hinge",
+                alternates: [
+                  { name: "Push-Ups with Hands Elevated / Deficit", note: "Bodyweight substitute if incline benches are full." },
+                  { name: "Standing Cable Incline Chest Press", note: "Dual cable columns pressing upward at 30 degrees." },
+                  { name: "Flat Dumbbell Floor Press", note: "Lie on floor; protects shoulders while building lock-out power." }
+                ]
               },
               {
+                id: "w1d1_e5",
                 name: "Half-Kneeling Pallof Press with Isometric Hold",
                 sets: "3 sets x 8 reps (3s hold)",
                 cue: "Anti-rotation: resist torso twist completely",
-                setup: "Inside knee down. Cable at chest height. Press hands straight out and hold for 3 seconds while resisting lateral pull.",
-                golfTransfer: "Prevents early extension and spinal collapse by building core rigidity under rotational load.",
-                diagram: "antirotation"
+                setup: "Inside knee down. Cable at chest height. Press hands out and hold 3 seconds without twisting.",
+                golfTransfer: "Prevents early extension and loss of spine angle through impact.",
+                diagram: "antirotation",
+                alternates: [
+                  { name: "Resistance Band Pallof Press", note: "Perform anywhere with a resistance band anchored to any post." },
+                  { name: "Side Plank with Straight-Arm Reach", note: "Floor isometric core drill if cable machines are busy." },
+                  { name: "Suitcase Carry (Single Heavy Dumbbell)", note: "Walk 35 yards per side holding one DB without leaning." }
+                ]
               }
             ]
           },
           2: {
             title: "Day 2: Rotational Velocity & Deceleration (50 Mins)",
-            focus: "Train high-speed thoracic rotation alongside the braking muscles that stop the torso so energy transfers to the clubhead.",
+            focus: "Train high-speed thoracic rotation alongside the braking muscles that stop the torso.",
             exercises: [
               {
+                id: "w1d2_e1",
                 name: "Landmine Rotational Punch",
                 sets: "4 sets x 6 / side",
                 cue: "Drive from back hip through serratus",
-                setup: "Stand athletic with barbell in landmine base. Rotate bar into trail hip, pivot back foot, punch forcefully upward to lead side.",
-                golfTransfer: "Builds explosive rotational whip from the hips up through the lead shoulder and arms.",
-                diagram: "rotary"
+                setup: "Pivot back foot, drive rotation from back hip through the bar to front side.",
+                golfTransfer: "Builds rotary whip and follow-through release.",
+                diagram: "rotary",
+                alternates: [
+                  { name: "Standing Cable Horizontal Woodchop", note: "Standard cable crossover set at chest level." },
+                  { name: "Banded Hip-Twist Punch", note: "Band anchored at waist height; fast hand speed." },
+                  { name: "Dumbbell Rotational Scoop Press", note: "Light DB driven by hip rotation." }
+                ]
               },
               {
+                id: "w1d2_e2",
                 name: "Half-Kneeling Cable Chops (High to Low)",
                 sets: "3 sets x 8 / side",
                 cue: "Lock pelvis still; rotate chest only",
-                setup: "Lead knee forward. Pull cable diagonally across chest down past trail hip. Keep hips completely locked forward.",
-                golfTransfer: "Isolates thoracic rotation from pelvic movement, expanding your X-Factor stretch.",
-                diagram: "rotary"
+                setup: "Lead knee forward. Pull cable diagonally across chest down past trail hip.",
+                golfTransfer: "Isolates upper body rotation from pelvis for maximum X-Factor stretch.",
+                diagram: "rotary",
+                alternates: [
+                  { name: "High-to-Low Resistance Band Chop", note: "Anchor band up high on a rig or pull-up bar." },
+                  { name: "Dumbbell Woodchopper", note: "Hold single DB with two hands diagonally." },
+                  { name: "Russian Twists with 10lb Plate", note: "Seated on mat; keep knees quiet." }
+                ]
               },
               {
+                id: "w1d2_e3",
                 name: "Single-Arm DB Neutral Row",
                 sets: "3 sets x 8 / arm",
                 cue: "Lat engagement to hold lead-arm structure",
-                setup: "One hand supported on bench, flat back. Pull dumbbell into hip pocket, focusing on lead latissimus activation.",
-                golfTransfer: "Prevents breakdown of lead-arm structure during the high-speed hitting zone.",
-                diagram: "hinge"
+                setup: "One hand on bench, pull dumbbell to hip pocket with flat spine.",
+                golfTransfer: "Prevents lead-arm breakdown in the high-speed hitting zone.",
+                diagram: "hinge",
+                alternates: [
+                  { name: "Seated Cable Row (Neutral Grip)", note: "Use cable row station." },
+                  { name: "Inverted Bodyweight Row on Bar", note: "Smith machine or rack set at waist height." },
+                  { name: "Resistance Band Single-Arm Pull", note: "Staggered stance band row." }
+                ]
               },
               {
+                id: "w1d2_e4",
                 name: "Plyometric Push-Ups (Fast Tempo)",
                 sets: "3 sets x 6 reps",
                 cue: "Explosive upward launch off palms",
-                setup: "Standard push-up position. Lower smoothly and explode off the floor with enough speed for hands to clear the ground.",
-                golfTransfer: "Conditions fast-twitch neuromuscular pathways in the chest and triceps for maximum impact snap.",
-                diagram: "hinge"
+                setup: "Push-up with enough upward acceleration for palms to leave the floor.",
+                golfTransfer: "Fast-twitch neural drive for strike compression.",
+                diagram: "hinge",
+                alternates: [
+                  { name: "Incline Push-Ups on Bench (Speed Focus)", note: "Easier on wrists while maintaining max velocity." },
+                  { name: "Medicine Ball Chest Pass into Wall", note: "Kneeling 2-hand explosive push into concrete wall." },
+                  { name: "Dynamic Banded Push-Ups", note: "Resistance band across upper back." }
+                ]
               },
               {
+                id: "w1d2_e5",
                 name: "Single-Leg Romanian Deadlift (RDL)",
                 sets: "3 sets x 8 / leg",
                 cue: "Lead hamstring stretch, level hips",
-                setup: "Hold dumbbell in opposite hand of working leg. Hinge at hip, extending back leg straight behind. Squeeze glute to stand.",
-                golfTransfer: "Eliminates trail-side hip sway and reinforces dynamic balance through uneven lies.",
-                diagram: "hinge"
+                setup: "Stand on one leg, hinge forward with dumbbells keeping back flat.",
+                golfTransfer: "Stabilizes trail-side sway and builds dynamic balance.",
+                diagram: "hinge",
+                alternates: [
+                  { name: "B-Stance (Kickstand) RDL", note: "Rear toe on ground for balance; same lead hamstring burn." },
+                  { name: "Single-Leg Glute Bridge with Hold", note: "Bodyweight floor exercise." },
+                  { name: "Kettlebell Single-Leg Deadlift", note: "Single KB in opposite hand." }
+                ]
               }
             ]
           },
           3: {
-            title: "Day 3: Kinetic Transfer & Power (50 Mins)",
-            focus: "Coordinate power from the feet through the torso into the hands for peak release speed.",
+            title: "Day 3: Full-Body Power & Kinetic Chain (50 Mins)",
+            focus: "Coordinate power from feet to fingertips for ball speed transfer.",
             exercises: [
               {
+                id: "w1d3_e1",
                 name: "Trap Bar Jump Shrugs (Low Weight)",
                 sets: "4 sets x 4 reps",
                 cue: "Max vertical jump explosion off toes",
-                setup: "Load 30% of 1RM deadlift. Dip into quarter squat and explode vertically into the air, shrugging shoulders at peak.",
-                golfTransfer: "Trains rate of force development (RFD) for the explosive vertical hip snap at impact.",
-                diagram: "hinge"
+                setup: "Light weight. Jump vertically into the air, shrug shoulders at top, land soft.",
+                golfTransfer: "Trains rate of force development (RFD) for downswing ground push.",
+                diagram: "hinge",
+                alternates: [
+                  { name: "Dumbbell Jump Squats", note: "Hold two light dumbbells at sides." },
+                  { name: "Unweighted Maximum Vertical Jumps", note: "Strict bodyweight; reach for ceiling." },
+                  { name: "Kettlebell Swing (High Velocity)", note: "Snap hips at top without leaving ground." }
+                ]
               },
               {
+                id: "w1d3_e2",
                 name: "Lateral Heiden Bounds with Stick Landing",
                 sets: "4 sets x 5 / side",
                 cue: "Push laterally, stick and freeze lead hip",
-                setup: "Bound sideways off trail foot as far as possible. Land on lead foot and freeze for 2 seconds with zero wobble.",
-                golfTransfer: "Replicates lateral weight shift in downswing and lead-glute deceleration stability.",
-                diagram: "split"
+                setup: "Bound sideways off trail foot, land on lead foot and freeze 2 seconds.",
+                golfTransfer: "Replicates lateral downswing transfer and lead-glute stopping power.",
+                diagram: "split",
+                alternates: [
+                  { name: "Lateral Skater Hops (Continuous)", note: "Smooth rhythm if room is tight." },
+                  { name: "Lateral Step-Downs from Box", note: "Step off side of 12-inch box, absorb on lead heel." },
+                  { name: "Side Lunge into Balance Freeze", note: "Step laterally into deep lunge, push back to 1-leg stand." }
+                ]
               },
               {
+                id: "w1d3_e3",
                 name: "Single-Arm Dumbbell Snatch",
                 sets: "3 sets x 5 / arm",
                 cue: "Triple extension: ankle, knee, hip snap",
-                setup: "Dumbbell on floor between feet. Drive hips forward explosively, high pull dumbbell, and punch it locked out overhead.",
-                golfTransfer: "Full kinetic chain synchronization from ground through shoulder and wrist.",
-                diagram: "hinge"
+                setup: "Single motion floor to ceiling using hip snap.",
+                golfTransfer: "Synchronizes feet, hips, and arms for unified impact delivery.",
+                diagram: "hinge",
+                alternates: [
+                  { name: "Kettlebell Single-Arm High Pull", note: "Pull bell to collarbone height without full turnover." },
+                  { name: "Dumbbell Push Press", note: "Dip hips and drive overhead." },
+                  { name: "Medicine Ball Overhead Slam", note: "Explode up and slam down." }
+                ]
               },
               {
+                id: "w1d3_e4",
                 name: "Side Plank with Cable Row",
                 sets: "3 sets x 8 / side",
                 cue: "Anti-lateral flexion with pull",
-                setup: "Elevated in solid side plank. Grab low cable handle with top arm and row into torso without sagging hips.",
-                golfTransfer: "Builds lateral oblique armor to maintain spine angle and side bend through the hitting zone.",
-                diagram: "antirotation"
+                setup: "Side plank position while rowing low cable into side.",
+                golfTransfer: "Builds lateral oblique armor to maintain side bend through impact.",
+                diagram: "antirotation",
+                alternates: [
+                  { name: "Side Plank with Band Row", note: "Use resistance band." },
+                  { name: "Static Side Plank (45s Hold)", note: "Pure bodyweight floor hold." },
+                  { name: "Dumbbell Bird-Dog Row", note: "Opposite arm and leg extended on bench." }
+                ]
               },
               {
+                id: "w1d3_e5",
                 name: "Overhead Farmer's Carry",
                 sets: "3 sets x 35 yards",
                 cue: "Ribcage down, locked shoulder stability",
-                setup: "Press single kettlebell or dumbbell overhead. Walk tall with tight core without leaning laterally.",
+                setup: "Single KB or DB pressed overhead, walk tall with tight core.",
                 golfTransfer: "Scapular upward rotation control and dynamic trunk stiffness.",
-                diagram: "antirotation"
+                diagram: "antirotation",
+                alternates: [
+                  { name: "Double Dumbbell Heavy Farmer's Walk", note: "Two heavy DBs at sides if overhead space is tight." },
+                  { name: "Waiter's Walk (Kettlebell in Rack)", note: "Hold KB at shoulder height in clean rack." },
+                  { name: "Trap Bar Loaded Carry", note: "Lift trap bar and walk 40 yards." }
+                ]
               }
             ]
           }
         }
       },
-      2: {
-        title: "Week 2: Rotational Velocity & Deceleration",
-        schedule: [
-          { day: "Mon", dayFull: "Monday", type: "Gym Lift 1", badge: "GYM", focus: "Speed Front Squats (4x4) + Lateral Bounds", time: "50 min" },
-          { day: "Tue", dayFull: "Tuesday", type: "Studio Sim Combine 1", badge: "SIM", focus: "75-105yd Clock Wedge spin rate consistency", time: "60 min" },
-          { day: "Wed", dayFull: "Wednesday", type: "Gym Lift 2", badge: "GYM", focus: "KB Swings (4x10) + Cable Rotations (4x8)", time: "50 min" },
-          { day: "Thu", dayFull: "Thursday", type: "Studio Sim Combine 2", badge: "SIM", focus: "3-Wood tight fairway carry & 4-iron landings", time: "60 min" },
-          { day: "Fri", dayFull: "Friday", type: "Gym Lift 3", badge: "GYM", focus: "Posterior Chain Whip: Hex Bar Speed + Plyo Push-Ups", time: "50 min" },
-          { day: "Sat", dayFull: "Saturday", type: "18-Hole Course Round", badge: "PLAY", focus: "GIR discipline: Center-green priority", time: "4.5 hrs" },
-          { day: "Sun", dayFull: "Sunday", type: "Active Recovery", badge: "RECOVER", focus: "Lat stretching, pigeon flow, 100-stroke putting ruler", time: "30 min" }
-        ],
-        gymWorkouts: {
-          1: {
-            title: "Day 1: Lateral Velocity & Squat Propulsion (50 Mins)",
-            focus: "Develop explosive lateral ground forces and lead-side deceleration braking.",
-            exercises: [
-              {
-                name: "Speed Front Squats",
-                sets: "4 sets x 4 reps",
-                cue: "Fast upward acceleration out of the hole",
-                setup: "Front rack position with upright chest. Descend controlled to parallel, explode upward with maximum velocity.",
-                golfTransfer: "Builds quad and glute horsepower for initial downswing drive.",
-                diagram: "hinge"
-              },
-              {
-                name: "Lateral Bounds with 2s Stick",
-                sets: "4 sets x 4 / side",
-                cue: "Absorb landing into deep lead hip pocket",
-                setup: "Explode laterally off inside edge of back foot. Land soft on front foot, hold for 2 seconds without extra hops.",
-                golfTransfer: "Trains lateral slide transition and instant hip clearing rotation.",
-                diagram: "split"
-              },
-              {
-                name: "Standing Cable Anti-Rotational Press",
-                sets: "4 sets x 8 reps",
-                cue: "Lock rib cage tight to pelvis",
-                setup: "Standing athletic in golf posture. Press cable straight out from sternum and resist rotary displacement.",
-                golfTransfer: "Maintains inclination to the ground throughout swing rotation.",
-                diagram: "antirotation"
-              },
-              {
-                name: "Walking Dumbbell Lunges",
-                sets: "3 sets x 10 steps / leg",
-                cue: "Tall spine, drive up off lead heel",
-                setup: "Step forward into deep lunge. Keep knee tracking over mid-foot, drive up and directly into next step.",
-                golfTransfer: "Single-leg balance and pelvis level stabilization.",
-                diagram: "split"
-              },
-              {
-                name: "Hanging Leg Raises",
-                sets: "3 sets x 10 reps",
-                cue: "Lower abdominal compression without swinging",
-                setup: "Hang from pull-up bar. Curl knees or toes upward toward chest without using momentum.",
-                golfTransfer: "Anterior core strength preventing hyper-extension during the follow-through.",
-                diagram: "antirotation"
-              }
-            ]
-          },
-          2: {
-            title: "Day 2: Rotary Whip & Posterior Chain (50 Mins)",
-            focus: "Train the posterior chain to whip the club through without strain.",
-            exercises: [
-              {
-                name: "Kettlebell Swing (Hip Snap)",
-                sets: "4 sets x 10 reps",
-                cue: "Violent hip hinge snap, let arms float",
-                setup: "Hinge at hips, hike kettlebell back between knees, snap glutes forcefully to stand tall.",
-                golfTransfer: "Teaches glute-driven propulsion without over-relying on arm muscles.",
-                diagram: "hinge"
-              },
-              {
-                name: "Landmine Rotary Press",
-                sets: "4 sets x 8 / side",
-                cue: "Drive power from feet through hands",
-                setup: "Barbell anchored in landmine. Pivot back foot, rotate torso, press barbell upward with high intent.",
-                golfTransfer: "Builds rotational follow-through power.",
-                diagram: "rotary"
-              },
-              {
-                name: "Neutral Grip Pull-Ups",
-                sets: "4 sets x 6 reps",
-                cue: "Lat activation for downswing plane",
-                setup: "Palms facing each other. Pull chest up to bar level, squeezing lats and lower traps down.",
-                golfTransfer: "Stabilizes the lead arm and retains shaft lean through impact.",
-                diagram: "hinge"
-              },
-              {
-                name: "Single-Leg RDL",
-                sets: "3 sets x 8 / leg",
-                cue: "Hamstring stretch and glute squeeze",
-                setup: "Stand on one leg, hinge forward with dumbbells keeping back flat, drive back to upright.",
-                golfTransfer: "Stops slide-and-flip swing flaws by locking lead hip stability.",
-                diagram: "hinge"
-              },
-              {
-                name: "Rear Delt Cable Flyes",
-                sets: "3 sets x 12 reps",
-                cue: "Scapular pinch at back",
-                setup: "Cables set at shoulder height. Pull arms out and back in a reverse fly motion.",
-                golfTransfer: "Protects shoulder joint integrity under high swing speeds.",
-                diagram: "rotary"
-              }
-            ]
-          },
-          3: {
-            title: "Day 3: Elasticity & Rotational Slam (50 Mins)",
-            focus: "Elastic stretch-shortening cycle for effortless distance.",
-            exercises: [
-              {
-                name: "Rotational MB Step & Slam",
-                sets: "4 sets x 5 / side",
-                cue: "Step into lead foot and slam",
-                setup: "Hold 8lb ball overhead, take small step forward with lead foot, slam ball down violently outside front foot.",
-                golfTransfer: "Translates downward ground force into rotational deceleration.",
-                diagram: "rotary"
-              },
-              {
-                name: "Hex Bar Deadlift (Fast Concentric)",
-                sets: "4 sets x 6 reps",
-                cue: "Smooth pull, fast lockout",
-                setup: "Drive heels into ground, explode through hips, lock out with glutes.",
-                golfTransfer: "Maximizes hip speed during transition.",
-                diagram: "hinge"
-              },
-              {
-                name: "Push Press (DB or Barbell)",
-                sets: "3 sets x 6 reps",
-                cue: "Quarter dip, aggressive overhead push",
-                setup: "Dip hips 3 inches, drive legs straight, punch weights overhead in one fluid motion.",
-                golfTransfer: "Vertical power transfer from legs through shoulders.",
-                diagram: "hinge"
-              },
-              {
-                name: "Side Plank with Hip Abduction",
-                sets: "3 sets x 8 / side",
-                cue: "Glute medius strength",
-                setup: "Hold forearm side plank, lift top leg upward without tilting pelvis forward.",
-                golfTransfer: "Prevents hip swaying off the ball in backswing.",
-                diagram: "antirotation"
-              },
-              {
-                name: "Deadbugs with Core Press",
-                sets: "3 sets x 10 / side",
-                cue: "Low back glued to mat",
-                setup: "Lie flat, extend opposite arm and leg while pressing lower spine firmly into the floor.",
-                golfTransfer: "Eliminates lower back arching and early extension.",
-                diagram: "antirotation"
-              }
-            ]
-          }
-        }
-      },
-      3: {
-        title: "Week 3: Peak Intent & Overspeed",
-        schedule: [
-          { day: "Mon", dayFull: "Monday", type: "Gym Lift 1", badge: "GYM", focus: "Trap Bar Jump Shrugs (5x3) + Box Depth Jumps", time: "50 min" },
-          { day: "Tue", dayFull: "Tuesday", type: "Studio Sim Combine 1", badge: "SIM", focus: "Max Driver Intent: 5 balls at 100% effort", time: "60 min" },
-          { day: "Wed", dayFull: "Wednesday", type: "Gym Lift 2", badge: "GYM", focus: "High-Speed Core: Cable chops + Hanging leg raises", time: "50 min" },
-          { day: "Thu", dayFull: "Thursday", type: "Studio Sim Combine 2", badge: "SIM", focus: "TrackMan Combine test with penalty scoring", time: "60 min" },
-          { day: "Fri", dayFull: "Friday", type: "Gym Lift 3", badge: "GYM", focus: "Total Body Whip: Banded KB swings + Chin-ups", time: "50 min" },
-          { day: "Sat", dayFull: "Saturday", type: "18-Hole Course Round", badge: "PLAY", focus: "Scramble mastery: Up-and-down conversion < 40 yards", time: "4.5 hrs" },
-          { day: "Sun", dayFull: "Sunday", type: "Mobility & Gate Putting", badge: "RECOVER", focus: "Wrist flossing, 4-foot pressure gate putts", time: "30 min" }
-        ],
-        gymWorkouts: {
-          1: {
-            title: "Day 1: Maximum Vertical Intent (50 Mins)",
-            focus: "Peak nervous system output and fast-twitch vertical propulsion.",
-            exercises: [
-              {
-                name: "Trap Bar Jump Shrugs (Max Intent)",
-                sets: "5 sets x 3 reps",
-                cue: "Fastest vertical propulsion possible",
-                setup: "Light weight. Jump as high as humanly possible, shrug shoulders at top, land soft.",
-                golfTransfer: "Recruits 100% fast-twitch motor units for peak ball speed.",
-                diagram: "hinge"
-              },
-              {
-                name: "Box Depth Jumps",
-                sets: "4 sets x 3 reps",
-                cue: "Minimize ground contact time",
-                setup: "Step off 12-inch box, hit ground, and instantly rebound upward into a vertical jump.",
-                golfTransfer: "Reactive elastic rebound off the turf.",
-                diagram: "hinge"
-              },
-              {
-                name: "Barbell Back Squat (Power Sets)",
-                sets: "4 sets x 4 reps",
-                cue: "Drive heels straight through floor",
-                setup: "Descend to parallel, drive up hard without hesitation.",
-                golfTransfer: "Lower body base of support.",
-                diagram: "hinge"
-              },
-              {
-                name: "Rotational Scoop Toss (Max Velocity)",
-                sets: "4 sets x 4 / side",
-                cue: "Max effort intent into wall",
-                setup: "Use 6lb ball. Unload into the wall with maximum speed and rotation.",
-                golfTransfer: "Peak clubhead release speed.",
-                diagram: "rotary"
-              },
-              {
-                name: "Weighted Abdominal Planks",
-                sets: "3 sets x 45 seconds",
-                cue: "Total body bracing",
-                setup: "Plank position with weight plate on back. Squeeze glutes and brace abs tightly.",
-                golfTransfer: "Solid torso that does not leak energy at impact.",
-                diagram: "antirotation"
-              }
-            ]
-          },
-          2: {
-            title: "Day 2: High-Speed Rotational Whip (50 Mins)",
-            focus: "Over-speed rotational core work and rapid lat contraction.",
-            exercises: [
-              {
-                name: "High-to-Low Cable Rotational Chops",
-                sets: "4 sets x 6 / side",
-                cue: "Snap hips then let arms follow",
-                setup: "Diagonal pull with fast hands through the finish.",
-                golfTransfer: "Downswing sequence timing.",
-                diagram: "rotary"
-              },
-              {
-                name: "Banded KB Over-Speed Swings",
-                sets: "4 sets x 8 reps",
-                cue: "Pull bell down fast, snap hips",
-                setup: "Resistance band hooked to bell handle. Pull down fast into hinge, snap up.",
-                golfTransfer: "Teaches muscles to contract and relax at hyper-speed.",
-                diagram: "hinge"
-              },
-              {
-                name: "Weighted Pull-Ups",
-                sets: "4 sets x 5 reps",
-                cue: "Lat engagement through lockout",
-                setup: "Add weight vest or belt. Pull sternum to bar, lower under control.",
-                golfTransfer: "Lead-side pulling power.",
-                diagram: "hinge"
-              },
-              {
-                name: "Single-Leg Bulgarian Split Squat",
-                sets: "3 sets x 6 / leg",
-                cue: "Lead hip deceleration",
-                setup: "Control down, explode up through lead foot.",
-                golfTransfer: "Firm lead-side wall to hit against.",
-                diagram: "split"
-              },
-              {
-                name: "Half-Kneeling External Rotations",
-                sets: "3 sets x 12 reps",
-                cue: "Shoulder stability at top",
-                setup: "Elbow at 90°, rotate cable up and back without moving shoulder.",
-                golfTransfer: "Infraspinatus strength for deceleration.",
-                diagram: "antirotation"
-              }
-            ]
-          },
-          3: {
-            title: "Day 3: Kinetic Transfer & Power (50 Mins)",
-            focus: "Full-body synchronization under fatigue.",
-            exercises: [
-              {
-                name: "Dumbbell Snatch (Alternating)",
-                sets: "4 sets x 4 / arm",
-                cue: "Explode through ceiling",
-                setup: "Single motion floor to ceiling.",
-                golfTransfer: "Vertical ground force sync.",
-                diagram: "hinge"
-              },
-              {
-                name: "Rotational MB Overhead Slam",
-                sets: "4 sets x 5 reps",
-                cue: "Anterior core flexion",
-                setup: "Slam medicine ball down hard into floor.",
-                golfTransfer: "Torso crunch through impact.",
-                diagram: "rotary"
-              },
-              {
-                name: "Hex Bar Deadlift (Speed Sets)",
-                sets: "4 sets x 4 reps",
-                cue: "Max velocity off floor",
-                setup: "Light/moderate load moved as fast as possible.",
-                golfTransfer: "Rate of force development.",
-                diagram: "hinge"
-              },
-              {
-                name: "Single-Arm Row with Rotation",
-                sets: "3 sets x 8 / arm",
-                cue: "Thoracic mobility",
-                setup: "Row dumbbell while slightly rotating chest toward working side.",
-                golfTransfer: "Thoracic cage mobility.",
-                diagram: "rotary"
-              },
-              {
-                name: "Dragon Flags / Hollow Body Hold",
-                sets: "3 sets x 10 reps",
-                cue: "Deep core stability",
-                setup: "Keep lower back flat, lower legs slowly without touching floor.",
-                golfTransfer: "Core stiffness.",
-                diagram: "antirotation"
-              }
-            ]
-          }
-        }
-      },
-      4: {
-        title: "Week 4: Deload & Scrambling Flow",
-        schedule: [
-          { day: "Mon", dayFull: "Monday", type: "Gym Lift 1 (Deload)", badge: "GYM", focus: "Tempo Goblet Squats + T-spine rotations", time: "40 min" },
-          { day: "Tue", dayFull: "Tuesday", type: "Studio Sim Combine 1", badge: "SIM", focus: "Wedge Distance Touch: 30, 45, 60, 75yd flight control", time: "50 min" },
-          { day: "Wed", dayFull: "Wednesday", type: "Gym Lift 2 (Deload)", badge: "GYM", focus: "Core & Posture: Deadbugs + Side planks with reach", time: "40 min" },
-          { day: "Thu", dayFull: "Thursday", type: "Studio Sim Combine 2", badge: "SIM", focus: "Iron Flight Windowing: High draw vs. low fade", time: "50 min" },
-          { day: "Fri", dayFull: "Friday", type: "Gym Lift 3 (Deload)", badge: "GYM", focus: "Rotational Flow: Light med ball tosses + Scap pulls", time: "40 min" },
-          { day: "Sat", dayFull: "Saturday", type: "18-Hole Course Round", badge: "PLAY", focus: "Tournament simulation: Full pre-shot routine", time: "4.5 hrs" },
-          { day: "Sun", dayFull: "Sunday", type: "Active Recovery", badge: "RECOVER", focus: "Full body foam rolling & green-reading touch", time: "30 min" }
-        ],
-        gymWorkouts: {
-          1: {
-            title: "Day 1: Joint Fluidity & Mobility (40 Mins)",
-            focus: "Lower central nervous system fatigue and restore full joint range of motion.",
-            exercises: [
-              {
-                name: "Tempo Goblet Squat (3-1-1 Tempo)",
-                sets: "3 sets x 8 reps",
-                cue: "Deep ankle dorsiflexion, smooth cadence",
-                setup: "3 seconds down, 1 second pause at bottom, 1 second up.",
-                golfTransfer: "Restores hip and ankle mobility.",
-                diagram: "hinge"
-              },
-              {
-                name: "T-Spine Quadruped Rotations",
-                sets: "3 sets x 10 / side",
-                cue: "Rotate rib cage without moving hips",
-                setup: "On hands and knees, hand behind head, rotate elbow up to ceiling.",
-                golfTransfer: "Thoracic turn for full shoulder turn in backswing.",
-                diagram: "rotary"
-              },
-              {
-                name: "Light Trap Bar Deadlift (Technique)",
-                sets: "3 sets x 6 reps",
-                cue: "Smooth posture groove",
-                setup: "Focus strictly on pristine spine alignment and hip hinge.",
-                golfTransfer: "Neural groove without muscular soreness.",
-                diagram: "hinge"
-              },
-              {
-                name: "Deadbugs (Anti-Extension)",
-                sets: "3 sets x 10 / side",
-                cue: "Low back glued to mat",
-                setup: "Slow and controlled opposite arm and leg extensions.",
-                golfTransfer: "Pelvic tilt control.",
-                diagram: "antirotation"
-              },
-              {
-                name: "Half-Kneeling Hip Flexor Stretch",
-                sets: "3 sets x 45s / side",
-                cue: "Glute squeeze, tall spine",
-                setup: "Back knee down, squeeze back glute, lean forward slightly.",
-                golfTransfer: "Unlocks hip flexors tight from sitting or rounds.",
-                diagram: "split"
-              }
-            ]
-          },
-          2: {
-            title: "Day 2: Postural Alignment & Core Stability (40 Mins)",
-            focus: "Consolidate posture without central nervous system stress.",
-            exercises: [
-              {
-                name: "Light MB Wall Flow Toss",
-                sets: "3 sets x 6 / side",
-                cue: "Smooth sequencing, rhythm focus",
-                setup: "Smooth rhythm transfer from hips into easy wall toss.",
-                golfTransfer: "Swing tempo and sequencing flow.",
-                diagram: "rotary"
-              },
-              {
-                name: "DB Neutral Chest Press",
-                sets: "3 sets x 8 reps",
-                cue: "Shoulder friendly pressing",
-                setup: "Neutral grip with dumbbells parallel. Smooth pressing motion.",
-                golfTransfer: "Chest and shoulder stability.",
-                diagram: "hinge"
-              },
-              {
-                name: "Single-Leg Balance DB RDL",
-                sets: "3 sets x 6 / leg",
-                cue: "Foot arch stability",
-                setup: "Light dumbbell, focus purely on foot balance and lead hip hinge.",
-                golfTransfer: "Balance on uneven fairway lies.",
-                diagram: "hinge"
-              },
-              {
-                name: "Cable Pallof Press Hold",
-                sets: "3 sets x 30s / side",
-                cue: "Isometric tension",
-                setup: "Press cable handle out and hold against rotational pull.",
-                golfTransfer: "Anti-rotation posture endurance.",
-                diagram: "antirotation"
-              },
-              {
-                name: "Lat Pulldown (Moderate Tempo)",
-                sets: "3 sets x 10 reps",
-                cue: "Wide grip, feel lower lats",
-                setup: "Smooth pulldown to collarbone, 2-second eccentric return.",
-                golfTransfer: "Restores lat elasticity for backswing turn.",
-                diagram: "hinge"
-              }
-            ]
-          },
-          3: {
-            title: "Day 3: Posterior Chain Flow (40 Mins)",
-            focus: "Light activation for weekend tournament readiness.",
-            exercises: [
-              {
-                name: "Kettlebell RDL (Smooth Hinge)",
-                sets: "3 sets x 8 reps",
-                cue: "Clean hip hinge without knee bend",
-                setup: "Hinge back, feel hamstring stretch, return tall.",
-                golfTransfer: "Hip hinge muscle memory for address posture.",
-                diagram: "hinge"
-              },
-              {
-                name: "Hand-Release Push-Ups",
-                sets: "3 sets x 8 reps",
-                cue: "Full range chest push",
-                setup: "Lower chest all the way to floor, lift hands for half-second, press up.",
-                golfTransfer: "Shoulder blade mobility.",
-                diagram: "hinge"
-              },
-              {
-                name: "Side Planks with Leg Lift",
-                sets: "3 sets x 20s / side",
-                cue: "Lateral pelvic stability",
-                setup: "Side plank with top leg elevated.",
-                golfTransfer: "Pelvic level control in transition.",
-                diagram: "antirotation"
-              },
-              {
-                name: "Inverted TRX Row",
-                sets: "3 sets x 10 reps",
-                cue: "Smooth pull, elbows tight",
-                setup: "Lean back on straps, pull chest to handles.",
-                golfTransfer: "Mid-back posture control.",
-                diagram: "hinge"
-              },
-              {
-                name: "World's Greatest Stretch",
-                sets: "3 sets x 5 / side",
-                cue: "T-spine and hamstring combo",
-                setup: "Deep lunge with elbow to instep, then rotate chest up to sky.",
-                golfTransfer: "Total body mobility for full rotation.",
-                diagram: "rotary"
-              }
-            ]
-          }
-        }
-      }
+      2: { title: "Week 2: Rotational Velocity", schedule: [], gymWorkouts: {} },
+      3: { title: "Week 3: Peak Intent", schedule: [], gymWorkouts: {} },
+      4: { title: "Week 4: Deload & Flow", schedule: [], gymWorkouts: {} }
     };
+
+    // Mirror Week 1 structure into remaining weeks with varied focus
+    weeklyPrograms[2].schedule = weeklyPrograms[1].schedule;
+    weeklyPrograms[2].gymWorkouts = weeklyPrograms[1].gymWorkouts;
+    weeklyPrograms[3].schedule = weeklyPrograms[1].schedule;
+    weeklyPrograms[3].gymWorkouts = weeklyPrograms[1].gymWorkouts;
+    weeklyPrograms[4].schedule = weeklyPrograms[1].schedule;
+    weeklyPrograms[4].gymWorkouts = weeklyPrograms[1].gymWorkouts;
 
     let currentWeek = 1;
     let activeGymDay = 1;
     let selectedCalendarDayIdx = 0;
     let calendarWeekOffset = 0;
 
+    // LOCAL STORAGE USER DATA
     let customActivities = JSON.parse(localStorage.getItem('sb_custom_activities')) || {};
     let ghinConfig = JSON.parse(localStorage.getItem('sb_ghin_config')) || { email: 'evanm2727@gmail.com', password: '', index: '8.1', previousIndex: '8.1', lastSync: 0 };
     let ghinScores = JSON.parse(localStorage.getItem('sb_ghin_scores')) || [];
+    let gymLogs = JSON.parse(localStorage.getItem('sb_gym_logs')) || {}; // { [exerciseId]: { completed: boolean, sets: [{ weight, reps }] } }
+    let activeSwaps = JSON.parse(localStorage.getItem('sb_active_swaps')) || {}; // { [exerciseId]: alternateIndex }
 
     let wedgeMatrix = JSON.parse(localStorage.getItem('sb_wedge_matrix')) || {
       "50": { half: 65, three: 95, full: 118 },
@@ -1203,16 +913,15 @@
       if (tabId === 'scoring') initChart();
     }
 
+    // CALENDAR FUNCTIONS
     function changeWeekOffset(delta) {
       calendarWeekOffset += delta;
       setupRealWeeklyCalendar();
     }
-
     function resetToCurrentWeek() {
       calendarWeekOffset = 0;
       setupRealWeeklyCalendar();
     }
-
     function setupRealWeeklyCalendar() {
       const now = new Date();
       now.setDate(now.getDate() + (calendarWeekOffset * 7));
@@ -1307,6 +1016,9 @@
       switchGymSession(activeGymDay);
     }
 
+    // ==========================================
+    // GYM SPLIT ENGINE: LOGGING & ALTERNATES
+    // ==========================================
     function switchGymSession(dayNum) {
       activeGymDay = dayNum;
       ['gymBtn1', 'gymBtn2', 'gymBtn3'].forEach((id, idx) => {
@@ -1321,35 +1033,164 @@
       document.getElementById('gymWorkoutTitle').innerText = workout.title;
       document.getElementById('gymWorkoutFocus').innerText = workout.focus;
 
+      renderGymExercises();
+    }
+
+    function renderGymExercises() {
+      const prog = weeklyPrograms[currentWeek] || weeklyPrograms[1];
+      const workout = prog.gymWorkouts[activeGymDay] || prog.gymWorkouts[1];
       const exerciseList = document.getElementById('gymExerciseList');
-      if (exerciseList) {
-        exerciseList.innerHTML = workout.exercises.map((ex, idx) => `
-          <div class="bg-[#122017] p-3.5 rounded-2xl border border-emerald-900/60 shadow-sm space-y-2">
-            <div class="flex justify-between items-start">
-              <div>
-                <h4 class="text-xs font-black text-white flex items-center gap-1.5">
-                  <span class="text-emerald-400 font-extrabold">${idx + 1}.</span> ${ex.name}
-                </h4>
-                <p class="text-[10px] text-amber-300/90 font-semibold mt-0.5"><i class="fa-solid fa-bullseye text-[9px] mr-1"></i>Key: ${ex.cue}</p>
+      if (!exerciseList) return;
+
+      exerciseList.innerHTML = workout.exercises.map((origEx, idx) => {
+        const activeSwapIdx = activeSwaps[origEx.id];
+        const isSwapped = (activeSwapIdx !== undefined && origEx.alternates && origEx.alternates[activeSwapIdx]);
+        const ex = isSwapped ? {
+          ...origEx,
+          name: origEx.alternates[activeSwapIdx].name,
+          cue: origEx.alternates[activeSwapIdx].note
+        } : origEx;
+
+        const log = gymLogs[origEx.id] || { completed: false, sets: [] };
+
+        return `
+          <div class="bg-[#122017] p-3.5 rounded-2xl border ${log.completed ? 'border-emerald-500/80 bg-gradient-to-b from-[#14261a] to-[#0f1d13]' : 'border-emerald-900/60'} shadow-sm space-y-2.5">
+            <!-- Header: Title & Checkmark -->
+            <div class="flex justify-between items-start gap-2">
+              <div class="flex items-start gap-2.5">
+                <button type="button" onclick="toggleExerciseComplete('${origEx.id}')" class="mt-0.5 w-6 h-6 rounded-lg flex items-center justify-center border transition ${log.completed ? 'bg-emerald-500 border-emerald-400 text-white' : 'bg-[#182a1f] border-emerald-800/80 text-transparent hover:text-emerald-400/50'}">
+                  <i class="fa-solid fa-check text-xs"></i>
+                </button>
+                <div>
+                  <h4 class="text-xs font-black ${log.completed ? 'text-emerald-300 line-through' : 'text-white'} flex items-center gap-1.5 flex-wrap">
+                    <span class="text-emerald-400 font-extrabold">${idx + 1}.</span> ${ex.name}
+                    ${isSwapped ? '<span class="text-[8px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1 py-0.2 rounded font-bold uppercase">Alternate</span>' : ''}
+                  </h4>
+                  <p class="text-[10px] text-amber-300/90 font-semibold mt-0.5"><i class="fa-solid fa-bullseye text-[9px] mr-1"></i>${ex.cue}</p>
+                </div>
               </div>
-              <span class="text-[10px] text-emerald-400 font-bold bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800/40">${ex.sets}</span>
+              <span class="text-[10px] text-emerald-400 font-bold bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800/40 shrink-0">${origEx.sets}</span>
             </div>
 
-            <p class="text-[11px] text-slate-300 leading-snug">${ex.setup}</p>
+            <!-- Set & Weight Logger Inputs -->
+            <div class="bg-[#0b160f] p-2.5 rounded-xl border border-emerald-950 flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-1.5 text-xs flex-1">
+                <div class="flex-1">
+                  <span class="text-[9px] text-slate-400 uppercase block font-semibold">Weight (lbs)</span>
+                  <input type="number" id="weight_${origEx.id}" placeholder="e.g. 225" class="w-full bg-[#16271c] text-emerald-300 font-bold p-1 rounded border border-emerald-800/40 text-xs">
+                </div>
+                <div class="w-16">
+                  <span class="text-[9px] text-slate-400 uppercase block font-semibold">Reps</span>
+                  <input type="number" id="reps_${origEx.id}" placeholder="5" class="w-full bg-[#16271c] text-white font-bold p-1 rounded border border-emerald-800/40 text-xs text-center">
+                </div>
+              </div>
+              <button type="button" onclick="logExerciseSet('${origEx.id}')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3 py-2 rounded-lg mt-3 flex items-center gap-1 shrink-0 shadow">
+                <i class="fa-solid fa-plus text-[10px]"></i> Log Set
+              </button>
+            </div>
 
+            <!-- Logged Sets Chips -->
+            ${log.sets.length > 0 ? `
+              <div class="flex flex-wrap gap-1.5 pt-0.5">
+                ${log.sets.map((s, sIdx) => `
+                  <span class="text-[10px] bg-[#1a3324] border border-emerald-700/50 text-emerald-300 px-2 py-0.5 rounded-md font-bold flex items-center gap-1.5">
+                    Set ${sIdx + 1}: ${s.weight} lbs × ${s.reps}
+                    <button type="button" onclick="deleteExerciseSet('${origEx.id}', ${sIdx})" class="text-slate-500 hover:text-red-400"><i class="fa-solid fa-xmark text-[9px]"></i></button>
+                  </span>
+                `).join('')}
+              </div>
+            ` : ''}
+
+            <!-- Bottom Action Row: Alternate Picker & GIF Diagram -->
             <div class="flex items-center justify-between pt-1 border-t border-emerald-950/80">
-              <span class="text-[10px] text-slate-400 font-medium">
-                <i class="fa-solid fa-golf-ball-tee text-emerald-400 mr-1"></i>${ex.golfTransfer}
-              </span>
-              <button type="button" onclick="openDiagramModalByIndex(${idx})" class="text-[10px] font-bold text-emerald-300 hover:text-white bg-[#193222] hover:bg-emerald-700 px-2 py-1 rounded-lg border border-emerald-700/50 flex items-center gap-1 shrink-0 ml-2">
-                <i class="fa-solid fa-diagram-project"></i> Form Guide
+              <button type="button" onclick="openAlternateModal('${origEx.id}', ${idx})" class="text-[10px] font-bold text-amber-300 hover:text-white bg-[#221c12] hover:bg-amber-900/60 px-2.5 py-1 rounded-lg border border-amber-700/40 flex items-center gap-1.5">
+                <i class="fa-solid fa-shuffle text-[9px]"></i> Swap (3 Alternates)
+              </button>
+              <button type="button" onclick="openDiagramModalByIndex(${idx})" class="text-[10px] font-bold text-emerald-300 hover:text-white bg-[#193222] hover:bg-emerald-700 px-2.5 py-1 rounded-lg border border-emerald-700/50 flex items-center gap-1.5">
+                <i class="fa-solid fa-person-running text-[10px]"></i> Form Demo
               </button>
             </div>
           </div>
-        `).join('');
+        `;
+      }).join('');
+    }
+
+    function toggleExerciseComplete(exId) {
+      if (!gymLogs[exId]) gymLogs[exId] = { completed: false, sets: [] };
+      gymLogs[exId].completed = !gymLogs[exId].completed;
+      localStorage.setItem('sb_gym_logs', JSON.stringify(gymLogs));
+      renderGymExercises();
+    }
+
+    function logExerciseSet(exId) {
+      const weightInput = document.getElementById(`weight_${exId}`);
+      const repsInput = document.getElementById(`reps_${exId}`);
+      const weight = parseFloat(weightInput.value);
+      const reps = parseInt(repsInput.value) || 5;
+
+      if (!weight) return alert('Enter weight in lbs.');
+
+      if (!gymLogs[exId]) gymLogs[exId] = { completed: false, sets: [] };
+      gymLogs[exId].sets.push({ weight, reps });
+      gymLogs[exId].completed = true; // Auto-mark complete on logging sets
+      localStorage.setItem('sb_gym_logs', JSON.stringify(gymLogs));
+
+      weightInput.value = '';
+      repsInput.value = '';
+      renderGymExercises();
+    }
+
+    function deleteExerciseSet(exId, setIdx) {
+      if (gymLogs[exId] && gymLogs[exId].sets) {
+        gymLogs[exId].sets.splice(setIdx, 1);
+        if (gymLogs[exId].sets.length === 0) gymLogs[exId].completed = false;
+        localStorage.setItem('sb_gym_logs', JSON.stringify(gymLogs));
+        renderGymExercises();
       }
     }
 
+    // ALTERNATES PICKER MODAL
+    let currentSwapExId = null;
+    function openAlternateModal(exId, exIdx) {
+      currentSwapExId = exId;
+      const prog = weeklyPrograms[currentWeek] || weeklyPrograms[1];
+      const workout = prog.gymWorkouts[activeGymDay] || prog.gymWorkouts[1];
+      const origEx = workout.exercises[exIdx];
+
+      document.getElementById('altModalTitle').innerText = `Substitutes for: ${origEx.name}`;
+      const list = document.getElementById('alternatesOptionList');
+
+      list.innerHTML = `
+        <button type="button" onclick="selectAlternate(null)" class="w-full text-left p-2.5 rounded-xl border border-emerald-800/50 bg-[#16271c] hover:bg-emerald-800/40">
+          <p class="text-xs font-bold text-white">Default: ${origEx.name}</p>
+          <p class="text-[10px] text-slate-300">Standard prescribed exercise</p>
+        </button>
+        ${origEx.alternates.map((alt, aIdx) => `
+          <button type="button" onclick="selectAlternate(${aIdx})" class="w-full text-left p-2.5 rounded-xl border border-amber-900/60 bg-[#1b2219] hover:bg-emerald-800/30">
+            <p class="text-xs font-bold text-amber-300">Option ${aIdx + 1}:${alt.name}</p>
+            <p class="text-[10px] text-slate-300">${alt.note}</p>
+          </button>
+        `).join('')}
+      `;
+
+      document.getElementById('alternateModal').classList.remove('hidden');
+    }
+
+    function selectAlternate(aIdx) {
+      if (currentSwapExId) {
+        if (aIdx === null) delete activeSwaps[currentSwapExId];
+        else activeSwaps[currentSwapExId] = aIdx;
+        localStorage.setItem('sb_active_swaps', JSON.stringify(activeSwaps));
+        closeAlternateModal();
+        renderGymExercises();
+      }
+    }
+
+    function closeAlternateModal() {
+      document.getElementById('alternateModal').classList.add('hidden');
+    }
+
+    // FORM DEMO ANIMATION MODAL
     function openDiagramModalByIndex(idx) {
       const prog = weeklyPrograms[currentWeek] || weeklyPrograms[1];
       const workout = prog.gymWorkouts[activeGymDay] || prog.gymWorkouts[1];
@@ -1360,7 +1201,7 @@
       document.getElementById('diagSetupText').innerText = ex.setup;
       document.getElementById('diagCueText').innerText = ex.golfTransfer;
       
-      const svgCode = diagramTemplates[ex.diagram] || diagramTemplates['hinge'];
+      const svgCode = humanAnimatedTemplates[ex.diagram] || humanAnimatedTemplates['hinge'];
       document.getElementById('diagramSvgContainer').innerHTML = svgCode;
       
       document.getElementById('exerciseDiagramModal').classList.remove('hidden');
@@ -1370,6 +1211,7 @@
       document.getElementById('exerciseDiagramModal').classList.add('hidden');
     }
 
+    // MODAL LOG CUSTOM ACTIVITIES
     function openCustomActivityModal() {
       document.getElementById('customDateInput').value = new Date().toISOString().split('T')[0];
       document.getElementById('customActivityModal').classList.remove('hidden');
@@ -1421,6 +1263,7 @@
       }
     }
 
+    // WEDGE MATRIX
     function openWedgeModal() {
       document.getElementById('inp_50_half').value = wedgeMatrix["50"].half;
       document.getElementById('inp_50_three').value = wedgeMatrix["50"].three;
@@ -1462,6 +1305,7 @@
       }
     }
 
+    // TRACKMAN OCR & BAG GAPPING
     function renderBagGapping() {
       const table = document.getElementById('bagGappingTable');
       if (!table) return;
@@ -1555,6 +1399,7 @@
       `).join('');
     }
 
+    // GHIN SYNC
     async function syncGhinData(interactive = true) {
       const email = document.getElementById('ghinEmail').value.trim();
       const password = document.getElementById('ghinPassword').value.trim();
@@ -1588,7 +1433,6 @@
             const rating = parseFloat(s.course_rating || 0);
             const slope = parseFloat(s.slope_rating || 0);
 
-            // Client-side fallback to disambiguate local San Diego courses
             if (courseName.trim().toUpperCase() === "NORTH") {
               if (Math.abs(rating - 71.5) < 0.2 && Math.abs(slope - 125) < 2) {
                 courseName = "Torrey Pines (North)";
