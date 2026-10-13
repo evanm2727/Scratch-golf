@@ -127,7 +127,7 @@
       </div>
     </div>
 
-    <!-- TAB 2: TRAIN (MINDBODY INSET PILL TRACK & TRACKMAN DATA CARDS) -->
+    <!-- TAB 2: TRAIN (7-DAY PROTOCOLS) -->
     <div id="tab-train" class="tab-pane hidden space-y-3">
       <div class="flex justify-between items-center px-1">
         <div>
@@ -413,6 +413,7 @@
         </div>
       </div>
 
+      <!-- Dual Action Launcher: Direct Link + Clean Search Fallback -->
       <div class="flex gap-2">
         <a id="diagDirectVideoLink" href="#" target="_blank" class="flex-1 bg-red-700 hover:bg-red-600 text-white font-bold text-xs py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow text-center">
           <i class="fa-brands fa-youtube"></i> Watch HD Demo
@@ -1646,8 +1647,782 @@
       }
     };
 
+    function getProgramForWeek(weekNum) {
+      const cycleIndex = ((weekNum - 1) % 4) + 1;
+      return exerciseTemplates[cycleIndex] || exerciseTemplates[1];
+    }
+
+    let currentWeek = 1;
+    let activeTrainDay = 1;
+    let selectedCalendarDayIdx = 0;
+    let calendarWeekOffset = 0;
+
+    // PERSISTENT STORAGE
+    let customActivities = JSON.parse(localStorage.getItem('sb_custom_activities')) || {};
+    let ghinConfig = JSON.parse(localStorage.getItem('sb_ghin_config')) || { email: 'evanm2727@gmail.com', password: '', index: '8.1', previousIndex: '8.1', lastSync: 0 };
+    let ghinScores = JSON.parse(localStorage.getItem('sb_ghin_scores')) || [];
+    let gymLogs = JSON.parse(localStorage.getItem('sb_gym_logs')) || {};
+    let drillLogs = JSON.parse(localStorage.getItem('sb_drill_logs')) || {};
+    let activeSwaps = JSON.parse(localStorage.getItem('sb_active_swaps')) || {};
+
+    let wedgeMatrix = JSON.parse(localStorage.getItem('sb_wedge_matrix')) || {
+      "50": { half: 65, three: 95, full: 118 },
+      "54": { half: 55, three: 85, full: 108 },
+      "58": { half: 45, three: 72, full: 95 }
+    };
+
+    let trackmanShots = JSON.parse(localStorage.getItem('sb_trackman_shots')) || [
+      { club: 'Driver', speed: 172.4, carry: 298, smash: 1.49 },
+      { club: '3-Wood', speed: 158.0, carry: 262, smash: 1.46 },
+      { club: '2-Iron', speed: 151.2, carry: 246, smash: 1.44 },
+      { club: '4-Iron', speed: 142.1, carry: 224, smash: 1.43 },
+      { club: '6-Iron', speed: 130.5, carry: 197, smash: 1.41 },
+      { club: '8-Iron', speed: 119.0, carry: 168, smash: 1.39 },
+      { club: 'PW', speed: 108.5, carry: 142, smash: 1.37 }
+    ];
+
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('text-emerald-400');
+        btn.classList.add('text-slate-500');
+      });
+      const target = document.getElementById('tab-' + tabId);
+      if (target) target.classList.remove('hidden');
+      const activeBtn = document.querySelector(`.nav-btn[data-tab="${tabId}"]`);
+      if (activeBtn) {
+        activeBtn.classList.remove('text-slate-500');
+        activeBtn.classList.add('text-emerald-400');
+      }
+      if (tabId === 'scoring') initChart();
+    }
+
+    function changeWeekOffset(delta) {
+      calendarWeekOffset += delta;
+      setupRealWeeklyCalendar();
+    }
+    function resetToCurrentWeek() {
+      calendarWeekOffset = 0;
+      setupRealWeeklyCalendar();
+    }
+    function setupRealWeeklyCalendar() {
+      const now = new Date();
+      now.setDate(now.getDate() + (calendarWeekOffset * 7));
+      const jsDay = now.getDay();
+      const mondayOffset = (jsDay === 0) ? -6 : 1 - jsDay;
+      const mondayDate = new Date(now);
+      mondayDate.setDate(now.getDate() + mondayOffset);
+
+      const daysShort = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      const calendarRow = document.getElementById('calendarDaysRow');
+      if (!calendarRow) return;
+      calendarRow.innerHTML = '';
+
+      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      document.getElementById('currentCalendarMonth').innerText = `${monthNames[mondayDate.getMonth()]} ${mondayDate.getFullYear()}`;
+
+      const realToday = new Date();
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(mondayDate);
+        d.setDate(mondayDate.getDate() + i);
+        const dayNumber = d.getDate();
+        const isToday = (calendarWeekOffset === 0 && d.toDateString() === realToday.toDateString());
+
+        const pill = document.createElement('button');
+        pill.type = 'button';
+        pill.className = `cal-pill flex flex-col items-center py-2 px-1 rounded-xl text-center border cursor-pointer transition ${
+          isToday ? 'bg-emerald-600 text-white border-emerald-400 shadow-md ring-1 ring-emerald-300' : 'bg-[#141b16] text-slate-300 border-white/[0.04] hover:bg-[#1a231d]'
+        }`;
+        pill.onclick = () => selectCalendarDay(i, d);
+        pill.innerHTML = `
+          <span class="text-[9px] font-bold uppercase tracking-wider">${daysShort[i]}</span>
+          <span class="text-xs font-black mt-0.5">${dayNumber}</span>
+          ${isToday ? '<span class="text-[7px] font-black uppercase text-emerald-100 mt-0.5 tracking-tight">TODAY</span>' : ''}
+        `;
+        calendarRow.appendChild(pill);
+      }
+      selectCalendarDay(selectedCalendarDayIdx, mondayDate);
+    }
+
+    function selectCalendarDay(dayIdx, dateObj) {
+      selectedCalendarDayIdx = dayIdx;
+      document.querySelectorAll('.cal-pill').forEach((btn, idx) => {
+        if (idx === dayIdx) btn.classList.add('ring-2', 'ring-emerald-400');
+        else btn.classList.remove('ring-2', 'ring-emerald-400');
+      });
+
+      const prog = getProgramForWeek(currentWeek);
+      const dayData = prog.schedule[dayIdx] || prog.schedule[0];
+
+      document.getElementById('selectedDayName').innerText = dayData.dayFull;
+      document.getElementById('selectedDayType').innerText = dayData.type;
+      document.getElementById('selectedDayBadge').innerText = dayData.badge;
+
+      const detailContainer = document.getElementById('activeDayDetailContainer');
+      if (detailContainer) {
+        detailContainer.innerHTML = `
+          <div class="bg-[#0f1411] p-3.5 rounded-2xl border border-white/[0.06] shadow-lg">
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <p class="text-xs font-bold text-emerald-300">${dayData.type} &bull; ${dayData.time}</p>
+                <p class="text-[11px] text-slate-300 mt-0.5 leading-relaxed">${dayData.focus}</p>
+              </div>
+              <button type="button" onclick="goToDayInTrainTab(${dayIdx + 1})" class="bg-[#141b16] hover:bg-emerald-600 text-emerald-300 hover:text-white text-[11px] font-bold px-2.5 py-1 rounded-lg border border-white/[0.06]">
+                Open &rarr;
+              </button>
+            </div>
+          </div>
+        `;
+      }
+      renderDayCustomActivities();
+    }
+
+    function goToDayInTrainTab(dayNum) {
+      switchTrainDay(dayNum);
+      showTab('train');
+    }
+
+    function switchWeek(weekNum) {
+      currentWeek = parseInt(weekNum);
+      const prog = getProgramForWeek(currentWeek);
+      const allDays = document.getElementById('allDaysContainer');
+      if (allDays) {
+        allDays.innerHTML = prog.schedule.map((item, idx) => `
+          <div onclick="selectCalendarDay(${idx})" class="bg-[#0f1411] p-3 rounded-xl border border-white/[0.04] flex justify-between items-center cursor-pointer hover:border-emerald-600 transition">
+            <div>
+              <div class="flex items-center gap-2 mb-0.5">
+                <span class="text-xs font-bold text-white">${item.dayFull}</span>
+                <span class="text-[9px] font-extrabold px-1.5 py-0.2 rounded bg-white/[0.06] text-emerald-300">${item.badge}</span>
+              </div>
+              <p class="text-[11px] text-slate-400">${item.type} &bull; ${item.time}</p>
+            </div>
+            <span class="text-slate-500 text-xs"><i class="fa-solid fa-chevron-right"></i></span>
+          </div>
+        `).join('');
+      }
+      selectCalendarDay(selectedCalendarDayIdx);
+      switchTrainDay(activeTrainDay);
+    }
+
     // ==========================================
-    // INITIALIZATION & TAB DISPATCH
+    // TRAIN HUB: FULL 7-DAY CONTENT ENGINE
+    // ==========================================
+    function switchTrainDay(dayNum) {
+      activeTrainDay = dayNum;
+      for (let i = 1; i <= 7; i++) {
+        const btn = document.getElementById(`trainDayBtn${i}`);
+        if (!btn) continue;
+        if (i === dayNum) {
+          btn.className = "flex-1 py-1.5 px-3 rounded-xl font-bold text-white bg-emerald-500/20 border border-emerald-500/30 whitespace-nowrap text-center transition";
+        } else {
+          btn.className = "flex-1 py-1.5 px-3 rounded-xl font-medium text-slate-400 hover:text-white whitespace-nowrap text-center transition";
+        }
+      }
+
+      renderTrainContent();
+    }
+
+    function getGymStorageKey(origExId) {
+      return `w${currentWeek}_d${activeTrainDay}_${origExId}`;
+    }
+
+    function getDrillStorageKey(drillId) {
+      return `w${currentWeek}_d${activeTrainDay}_drill_${drillId}`;
+    }
+
+    function renderTrainContent() {
+      const container = document.getElementById('trainContentList');
+      if (!container) return;
+
+      const isGymDay = (activeTrainDay === 1 || activeTrainDay === 3 || activeTrainDay === 5);
+
+      if (isGymDay) {
+        const prog = getProgramForWeek(currentWeek);
+        const workout = prog.gymWorkouts[activeTrainDay] || prog.gymWorkouts[1];
+        document.getElementById('trainSessionTitle').innerText = workout.title;
+        document.getElementById('trainSessionDuration').innerText = "50 Mins";
+        document.getElementById('trainSessionFocus').innerText = workout.focus;
+
+        container.innerHTML = workout.exercises.map((origEx, idx) => {
+          const storageKey = getGymStorageKey(origEx.id);
+          const activeSwapIdx = activeSwaps[storageKey];
+          const isSwapped = (activeSwapIdx !== undefined && origEx.alternates && origEx.alternates[activeSwapIdx]);
+          
+          const ex = isSwapped ? {
+            ...origEx,
+            name: origEx.alternates[activeSwapIdx].name,
+            cue: origEx.alternates[activeSwapIdx].note,
+            videoUrl: origEx.alternates[activeSwapIdx].videoUrl || origEx.videoUrl
+          } : origEx;
+
+          const log = gymLogs[storageKey] || { completed: false, sets: [] };
+
+          return `
+            <div class="bg-[#0f1411] p-3.5 rounded-2xl border ${log.completed ? 'border-emerald-500/60 bg-gradient-to-b from-[#111713] to-[#0c120e]' : 'border-white/[0.06]'} shadow-lg space-y-2.5">
+              <div class="flex justify-between items-start gap-2">
+                <div class="flex items-start gap-2.5">
+                  <button type="button" onclick="toggleExerciseComplete('${origEx.id}')" class="mt-0.5 w-6 h-6 rounded-full flex items-center justify-center border transition ${log.completed ? 'bg-emerald-400 border-emerald-300 text-slate-950 font-black shadow-[0_0_8px_rgba(52,211,153,0.5)]' : 'border-white/20 text-transparent hover:border-emerald-400'}">
+                    <i class="fa-solid fa-check text-xs"></i>
+                  </button>
+                  <div>
+                    <h4 class="text-xs font-black ${log.completed ? 'text-emerald-300 line-through' : 'text-white'} flex items-center gap-1.5 flex-wrap">
+                      <span class="text-emerald-400 font-extrabold">${idx + 1}.</span> ${ex.name}
+                      ${isSwapped ? '<span class="text-[8px] bg-amber-500/10 text-amber-300 border border-amber-500/20 px-1 py-0.2 rounded font-bold uppercase">Alternate</span>' : ''}
+                    </h4>
+                    <p class="text-[10px] text-amber-300/90 font-semibold mt-0.5"><i class="fa-solid fa-bullseye text-[9px] mr-1"></i>${ex.cue}</p>
+                  </div>
+                </div>
+                <span class="text-[9px] text-emerald-400 font-bold bg-[#141b16] px-2 py-0.5 rounded-lg border border-white/[0.04] shrink-0">${origEx.sets}</span>
+              </div>
+
+              <!-- Weight & Rep Inputs (TrackMan Data Tile Style) -->
+              <div class="bg-[#080c09] p-2.5 rounded-xl border border-white/[0.04] flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2 text-xs flex-1">
+                  <div class="flex-1">
+                    <span class="text-[8px] text-slate-500 uppercase tracking-widest block font-black mb-0.5">Weight (lbs)</span>
+                    <input type="number" id="weight_${origEx.id}" placeholder="e.g. 225" class="w-full bg-[#111713] text-emerald-300 font-mono font-bold p-1 rounded-lg border border-white/[0.06] text-xs">
+                  </div>
+                  <div class="w-16">
+                    <span class="text-[8px] text-slate-500 uppercase tracking-widest block font-black mb-0.5">Reps</span>
+                    <input type="number" id="reps_${origEx.id}" placeholder="5" class="w-full bg-[#111713] text-white font-mono font-bold p-1 rounded-lg border border-white/[0.06] text-xs text-center">
+                  </div>
+                </div>
+                <button type="button" onclick="logExerciseSet('${origEx.id}')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3 py-2 rounded-xl mt-3 flex items-center gap-1 shrink-0 shadow">
+                  <i class="fa-solid fa-plus text-[10px]"></i> Log Set
+                </button>
+              </div>
+
+              <!-- Sets Chips -->
+              ${log.sets.length > 0 ? `
+                <div class="flex flex-wrap gap-1.5 pt-0.5">
+                  ${log.sets.map((s, sIdx) => `
+                    <span class="text-[10px] bg-[#141b16] border border-white/[0.06] text-emerald-300 px-2 py-0.5 rounded-lg font-mono font-bold flex items-center gap-1.5">
+                      Set ${sIdx + 1}: ${s.weight} lbs × ${s.reps}
+                      <button type="button" onclick="deleteExerciseSet('${origEx.id}', ${sIdx})" class="text-slate-500 hover:text-red-400"><i class="fa-solid fa-xmark text-[9px]"></i></button>
+                    </span>
+                  `).join('')}
+                </div>
+              ` : ''}
+
+              <!-- Alternates & Tutorial Button -->
+              <div class="flex items-center justify-between pt-1 border-t border-white/[0.04]">
+                <button type="button" onclick="openAlternateModal('${origEx.id}', ${idx})" class="text-[10px] font-bold text-amber-300 hover:text-white bg-[#17140f] hover:bg-[#201c15] px-2.5 py-1 rounded-lg border border-amber-500/20 flex items-center gap-1.5">
+                  <i class="fa-solid fa-shuffle text-[9px]"></i> Swap (3 Alternates)
+                </button>
+                <button type="button" onclick="openDiagramModalByIndex(${idx})" class="text-[10px] font-bold text-emerald-300 hover:text-white bg-[#141b16] hover:bg-[#1a231d] px-2.5 py-1 rounded-lg border border-white/[0.06] flex items-center gap-1.5">
+                  <i class="fa-solid fa-circle-play text-[10px]"></i> Correct Form
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } else {
+        // Non-Gym Days: Periodized Sim / Round / Recovery Checklists
+        const cycleIndex = ((currentWeek - 1) % 4) + 1;
+        let proto = null;
+
+        if (activeTrainDay === 2 || activeTrainDay === 4) {
+          proto = weeklySimDrills[cycleIndex][activeTrainDay];
+        } else {
+          proto = playAndRecoveryProtocols[activeTrainDay];
+        }
+
+        document.getElementById('trainSessionTitle').innerText = proto.title;
+        document.getElementById('trainSessionDuration').innerText = proto.duration;
+        document.getElementById('trainSessionFocus').innerText = proto.focus;
+
+        container.innerHTML = proto.drills.map((drill, idx) => {
+          const drillKey = getDrillStorageKey(drill.id);
+          const isDone = drillLogs[drillKey] || false;
+
+          return `
+            <div class="bg-[#0f1411] p-3.5 rounded-2xl border ${isDone ? 'border-emerald-500/60 bg-gradient-to-b from-[#111713] to-[#0c120e]' : 'border-white/[0.06]'} shadow-lg space-y-2">
+              <div class="flex items-start gap-2.5">
+                <button type="button" onclick="toggleDrillComplete('${drill.id}')" class="mt-0.5 w-6 h-6 rounded-full flex items-center justify-center border transition ${isDone ? 'bg-emerald-400 border-emerald-300 text-slate-950 font-black shadow-[0_0_8px_rgba(52,211,153,0.5)]' : 'border-white/20 text-transparent hover:border-emerald-400'}">
+                  <i class="fa-solid fa-check text-xs"></i>
+                </button>
+                <div class="flex-1">
+                  <h4 class="text-xs font-black ${isDone ? 'text-emerald-300 line-through' : 'text-white'} flex items-center gap-1.5">
+                    <span class="text-emerald-400 font-extrabold">${idx + 1}.</span> ${drill.title}
+                  </h4>
+                  <p class="text-[11px] text-slate-300 leading-snug mt-1">${drill.cue}</p>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    function toggleDrillComplete(drillId) {
+      const drillKey = getDrillStorageKey(drillId);
+      drillLogs[drillKey] = !drillLogs[drillKey];
+      localStorage.setItem('sb_drill_logs', JSON.stringify(drillLogs));
+      renderTrainContent();
+    }
+
+    function toggleExerciseComplete(origExId) {
+      const storageKey = getGymStorageKey(origExId);
+      if (!gymLogs[storageKey]) gymLogs[storageKey] = { completed: false, sets: [] };
+      gymLogs[storageKey].completed = !gymLogs[storageKey].completed;
+      localStorage.setItem('sb_gym_logs', JSON.stringify(gymLogs));
+      renderTrainContent();
+    }
+
+    function logExerciseSet(origExId) {
+      const storageKey = getGymStorageKey(origExId);
+      const weightInput = document.getElementById(`weight_${origExId}`);
+      const repsInput = document.getElementById(`reps_${origExId}`);
+      const weight = parseFloat(weightInput.value);
+      const reps = parseInt(repsInput.value) || 5;
+
+      if (!weight) return alert('Enter weight in lbs.');
+
+      if (!gymLogs[storageKey]) gymLogs[storageKey] = { completed: false, sets: [] };
+      gymLogs[storageKey].sets.push({ weight, reps });
+      gymLogs[storageKey].completed = true;
+      localStorage.setItem('sb_gym_logs', JSON.stringify(gymLogs));
+
+      weightInput.value = '';
+      repsInput.value = '';
+      renderTrainContent();
+    }
+
+    function deleteExerciseSet(origExId, setIdx) {
+      const storageKey = getGymStorageKey(origExId);
+      if (gymLogs[storageKey] && gymLogs[storageKey].sets) {
+        gymLogs[storageKey].sets.splice(setIdx, 1);
+        if (gymLogs[storageKey].sets.length === 0) gymLogs[storageKey].completed = false;
+        localStorage.setItem('sb_gym_logs', JSON.stringify(gymLogs));
+        renderTrainContent();
+      }
+    }
+
+    // ALTERNATES MODAL
+    let currentSwapStorageKey = null;
+    function openAlternateModal(origExId, exIdx) {
+      currentSwapStorageKey = getGymStorageKey(origExId);
+      const prog = getProgramForWeek(currentWeek);
+      const workout = prog.gymWorkouts[activeTrainDay] || prog.gymWorkouts[1];
+      const origEx = workout.exercises[exIdx];
+
+      document.getElementById('altModalTitle').innerText = `Substitutes for: ${origEx.name}`;
+      const list = document.getElementById('alternatesOptionList');
+
+      list.innerHTML = `
+        <button type="button" onclick="selectAlternate(null)" class="w-full text-left p-2.5 rounded-xl border border-white/[0.06] bg-[#141b16] hover:bg-[#1a231d]">
+          <p class="text-xs font-bold text-white">Default: ${origEx.name}</p>
+          <p class="text-[10px] text-slate-300 mt-0.5">Standard prescribed exercise</p>
+        </button>
+        ${origEx.alternates.map((alt, aIdx) => `
+          <button type="button" onclick="selectAlternate(${aIdx})" class="w-full text-left p-2.5 rounded-xl border border-amber-500/20 bg-[#17140f] hover:bg-[#201c15]">
+            <p class="text-xs font-bold text-amber-300">Option ${aIdx + 1}: ${alt.name}</p>
+            <p class="text-[10px] text-slate-300 mt-0.5">${alt.note}</p>
+          </button>
+        `).join('')}
+      `;
+
+      document.getElementById('alternateModal').classList.remove('hidden');
+    }
+
+    function selectAlternate(aIdx) {
+      if (currentSwapStorageKey) {
+        if (aIdx === null) delete activeSwaps[currentSwapStorageKey];
+        else activeSwaps[currentSwapStorageKey] = aIdx;
+        localStorage.setItem('sb_active_swaps', JSON.stringify(activeSwaps));
+        closeAlternateModal();
+        renderTrainContent();
+      }
+    }
+    function closeAlternateModal() {
+      document.getElementById('alternateModal').classList.add('hidden');
+    }
+
+    // CORRECT FORM COACHING MODAL WITH DUAL LINK FALLBACK
+    function openDiagramModalByIndex(idx) {
+      const prog = getProgramForWeek(currentWeek);
+      const workout = prog.gymWorkouts[activeTrainDay] || prog.gymWorkouts[1];
+      const origEx = workout.exercises[idx];
+      if (!origEx) return;
+
+      const storageKey = getGymStorageKey(origEx.id);
+      const activeSwapIdx = activeSwaps[storageKey];
+      const isSwapped = (activeSwapIdx !== undefined && origEx.alternates && origEx.alternates[activeSwapIdx]);
+      
+      const ex = isSwapped ? origEx.alternates[activeSwapIdx] : origEx;
+      
+      const verifiedVideoMap = {
+        "Trap Bar Deadlift (Velocity Focus)": "https://www.youtube.com/watch?v=dfYIApfWS5o",
+        "Barbell Conventional Deadlift": "https://www.youtube.com/watch?v=op9kVnSso6Q",
+        "Bulgarian Split Squat (Lead Leg Brake)": "https://www.youtube.com/watch?v=EiBXgDJ_g-Q",
+        "Half-Kneeling Pallof Press with Hold": "https://www.youtube.com/watch?v=LA6Uc5yIV1c",
+        "Speed Front Squat (Fast Ascent)": "https://www.youtube.com/watch?v=v-mQm_droLE",
+        "Neutral Grip Pull-Ups": "https://www.youtube.com/watch?v=eGo4IYlbE5g"
+      };
+
+      const searchQuery = encodeURIComponent(`${ex.name} proper form tutorial golf`);
+      const searchUrl = `https://www.youtube.com/results?search_query=${searchQuery}`;
+      const targetVideoUrl = verifiedVideoMap[ex.name] || ex.videoUrl || searchUrl;
+
+      document.getElementById('diagTitle').innerText = ex.name;
+      document.getElementById('diagBoxTitle').innerText = ex.name;
+      document.getElementById('diagSetupText').innerText = origEx.setup || "Execute with controlled cadence, neutral spine, and full intent.";
+      document.getElementById('diagCueText').innerText = origEx.golfTransfer || "Transfers ground force directly through the kinetic chain into clubhead release.";
+
+      const directBtn = document.getElementById('diagDirectVideoLink');
+      const searchBtn = document.getElementById('diagSearchVideoLink');
+      
+      directBtn.href = targetVideoUrl;
+      searchBtn.href = searchUrl;
+
+      document.getElementById('exerciseDiagramModal').classList.remove('hidden');
+    }
+
+    function closeDiagramModal() {
+      document.getElementById('exerciseDiagramModal').classList.add('hidden');
+    }
+
+    // CUSTOM LOGGING
+    function openCustomActivityModal() {
+      document.getElementById('customDateInput').value = new Date().toISOString().split('T')[0];
+      document.getElementById('customActivityModal').classList.remove('hidden');
+    }
+    function closeCustomActivityModal() { document.getElementById('customActivityModal').classList.add('hidden'); }
+    function saveCustomActivity() {
+      const date = document.getElementById('customDateInput').value;
+      const title = document.getElementById('customTitle').value.trim();
+      const type = document.getElementById('customType').value;
+      const duration = document.getElementById('customDuration').value.trim() || 'Custom';
+      const notes = document.getElementById('customNotes').value.trim();
+
+      if (!title) return alert('Enter an activity title');
+      if (!customActivities[selectedCalendarDayIdx]) customActivities[selectedCalendarDayIdx] = [];
+      customActivities[selectedCalendarDayIdx].push({ date, title, type, duration, notes });
+      localStorage.setItem('sb_custom_activities', JSON.stringify(customActivities));
+      closeCustomActivityModal();
+      renderDayCustomActivities();
+    }
+
+    function renderDayCustomActivities() {
+      const container = document.getElementById('selectedDayCustomActivities');
+      if (!container) return;
+      const list = customActivities[selectedCalendarDayIdx] || [];
+      if (list.length === 0) { container.innerHTML = ''; return; }
+      container.innerHTML = `
+        <p class="text-[9px] font-black text-emerald-400 uppercase tracking-widest mt-2 mb-1">Logged Custom Sessions</p>
+        ${list.map((item, idx) => `
+          <div class="bg-[#0b0e0c] p-2.5 rounded-xl border border-white/[0.04] flex justify-between items-start">
+            <div>
+              <div class="flex items-center gap-1.5 mb-0.5">
+                <span class="text-xs font-bold text-white">${item.title}</span>
+                <span class="text-[8px] bg-white/[0.06] text-emerald-300 px-1.5 py-0.2 rounded font-bold">${item.type}</span>
+                <span class="text-[9px] text-slate-400">&bull; ${item.duration}</span>
+              </div>
+              ${item.notes ? `<p class="text-[11px] text-slate-300">${item.notes}</p>` : ''}
+            </div>
+            <button onclick="deleteCustomActivity(${idx})" class="text-slate-500 hover:text-red-400 text-xs px-1"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        `).join('')}
+      `;
+    }
+
+    function deleteCustomActivity(idx) {
+      if (customActivities[selectedCalendarDayIdx]) {
+        customActivities[selectedCalendarDayIdx].splice(idx, 1);
+        localStorage.setItem('sb_custom_activities', JSON.stringify(customActivities));
+        renderDayCustomActivities();
+      }
+    }
+
+    // WEDGE MATRIX
+    function openWedgeModal() {
+      document.getElementById('inp_50_half').value = wedgeMatrix["50"].half;
+      document.getElementById('inp_50_three').value = wedgeMatrix["50"].three;
+      document.getElementById('inp_50_full').value = wedgeMatrix["50"].full;
+      document.getElementById('inp_54_half').value = wedgeMatrix["54"].half;
+      document.getElementById('inp_54_three').value = wedgeMatrix["54"].three;
+      document.getElementById('inp_54_full').value = wedgeMatrix["54"].full;
+      document.getElementById('inp_58_half').value = wedgeMatrix["58"].half;
+      document.getElementById('inp_58_three').value = wedgeMatrix["58"].three;
+      document.getElementById('inp_58_full').value = wedgeMatrix["58"].full;
+      document.getElementById('wedgeModal').classList.remove('hidden');
+    }
+    function closeWedgeModal() { document.getElementById('wedgeModal').classList.add('hidden'); }
+    function saveWedgeMatrix() {
+      wedgeMatrix["50"] = {
+        half: parseInt(document.getElementById('inp_50_half').value) || 0,
+        three: parseInt(document.getElementById('inp_50_three').value) || 0,
+        full: parseInt(document.getElementById('inp_50_full').value) || 0
+      };
+      wedgeMatrix["54"] = {
+        half: parseInt(document.getElementById('inp_54_half').value) || 0,
+        three: parseInt(document.getElementById('inp_54_three').value) || 0,
+        full: parseInt(document.getElementById('inp_54_full').value) || 0
+      };
+      wedgeMatrix["58"] = {
+        half: parseInt(document.getElementById('inp_58_half').value) || 0,
+        three: parseInt(document.getElementById('inp_58_three').value) || 0,
+        full: parseInt(document.getElementById('inp_58_full').value) || 0
+      };
+      localStorage.setItem('sb_wedge_matrix', JSON.stringify(wedgeMatrix));
+      renderWedgeMatrix();
+      closeWedgeModal();
+    }
+    function renderWedgeMatrix() {
+      for (const club of ["50", "54", "58"]) {
+        document.getElementById(`wm_${club}_half`).innerText = wedgeMatrix[club].half + " yds";
+        document.getElementById(`wm_${club}_three`).innerText = wedgeMatrix[club].three + " yds";
+        document.getElementById(`wm_${club}_full`).innerText = wedgeMatrix[club].full + " yds";
+      }
+    }
+
+    // TRACKMAN OCR & BAG GAPPING
+    function renderBagGapping() {
+      const table = document.getElementById('bagGappingTable');
+      if (!table) return;
+
+      const grouped = {};
+      trackmanShots.forEach(s => {
+        if (!grouped[s.club]) grouped[s.club] = { carries: [], speeds: [], smashes: [] };
+        grouped[s.club].carries.push(parseFloat(s.carry));
+        grouped[s.club].speeds.push(parseFloat(s.speed));
+        if (s.smash) grouped[s.club].smashes.push(parseFloat(s.smash));
+      });
+
+      table.innerHTML = Object.keys(grouped).map(club => {
+        const d = grouped[club];
+        const avgCarry = Math.round(d.carries.reduce((a, b) => a + b, 0) / d.carries.length);
+        const avgSpeed = (d.speeds.reduce((a, b) => a + b, 0) / d.speeds.length).toFixed(1);
+        const avgSmash = d.smashes.length > 0 ? (d.smashes.reduce((a, b) => a + b, 0) / d.smashes.length).toFixed(2) : '--';
+        return `
+          <tr class="border-b border-white/[0.04]">
+            <td class="py-1.5 px-2 font-bold text-white">${club}</td>
+            <td class="py-1.5 px-2 text-emerald-300 font-mono font-semibold">${avgCarry} yds</td>
+            <td class="py-1.5 px-2 text-slate-300 font-mono">${avgSpeed} mph</td>
+            <td class="py-1.5 px-2 text-slate-400 font-mono">${avgSmash}</td>
+            <td class="py-1.5 px-2 text-slate-500 font-mono">${d.carries.length}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function processTrackmanImage(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const statusBox = document.getElementById('ocrStatus');
+      const resultForm = document.getElementById('ocrResultForm');
+      statusBox.classList.remove('hidden');
+      resultForm.classList.add('hidden');
+
+      try {
+        const worker = await Tesseract.createWorker('eng');
+        const ret = await worker.recognize(file);
+        await worker.terminate();
+        const raw = ret.data.text;
+        statusBox.classList.add('hidden');
+
+        let speed = null, carry = null, smash = null;
+        const speeds = raw.match(/\b(1[0-9]{2}(?:\.[0-9])?)\b/g);
+        if (speeds) speed = parseFloat(speeds[0]);
+        const carries = raw.match(/\b([1-3][0-9]{2})\b/g);
+        if (carries) {
+          const validCarry = carries.find(c => parseFloat(c) !== speed);
+          if (validCarry) carry = parseInt(validCarry);
+        }
+        const smashes = raw.match(/\b(1\.[3-5][0-9])\b/g);
+        if (smashes) smash = parseFloat(smashes[0]);
+
+        document.getElementById('parsedSpeed').value = speed || '';
+        document.getElementById('parsedCarry').value = carry || '';
+        document.getElementById('parsedSmash').value = smash || 1.48;
+        resultForm.classList.remove('hidden');
+      } catch (err) {
+        statusBox.classList.add('hidden');
+        alert("Enter numbers manually");
+      }
+    }
+
+    function confirmParsedShot() {
+      const club = document.getElementById('parsedClub').value;
+      const speed = parseFloat(document.getElementById('parsedSpeed').value);
+      const carry = parseInt(document.getElementById('parsedCarry').value);
+      const smash = parseFloat(document.getElementById('parsedSmash').value) || 1.48;
+      if (!speed || !carry) return alert("Verify speed and carry");
+
+      trackmanShots.unshift({ club, speed: speed.toFixed(1), carry, smash: smash.toFixed(2) });
+      localStorage.setItem('sb_trackman_shots', JSON.stringify(trackmanShots));
+      renderTrackmanTable();
+      renderBagGapping();
+      document.getElementById('ocrResultForm').classList.add('hidden');
+      alert("Shot recorded");
+    }
+
+    function renderTrackmanTable() {
+      const tbody = document.getElementById('trackmanShotsTable');
+      if (!tbody) return;
+      tbody.innerHTML = trackmanShots.slice(0, 8).map(s => `
+        <tr class="border-b border-white/[0.04]">
+          <td class="py-1.5 px-2 font-bold text-white">${s.club}</td>
+          <td class="py-1.5 px-2 text-slate-300 font-mono">${s.carry} yds</td>
+          <td class="py-1.5 px-2 text-emerald-300 font-mono">${s.speed} mph</td>
+          <td class="py-1.5 px-2 text-slate-400 font-mono">${s.smash || '--'}</td>
+        </tr>
+      `).join('');
+    }
+
+    // GHIN SYNC & COURSE DISAMBIGUATION
+    async function syncGhinData(interactive = true) {
+      const email = document.getElementById('ghinEmail').value.trim();
+      const password = document.getElementById('ghinPassword').value.trim();
+      const btn = document.getElementById('ghinSyncBtn');
+
+      if (!email || !password) {
+        if (interactive) alert("Enter GHIN credentials below.");
+        return;
+      }
+
+      if (interactive) {
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i>`;
+      }
+
+      try {
+        const res = await fetch(WORKER_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+
+        ghinConfig.lastSync = Date.now();
+        localStorage.setItem('sb_ghin_config', JSON.stringify(ghinConfig));
+
+        if (Array.isArray(data.scores) && data.scores.length > 0) {
+          ghinScores = data.scores.map(s => {
+            let courseName = s.course_name || '18-Hole Round';
+            const rating = parseFloat(s.course_rating || 0);
+            const slope = parseFloat(s.slope_rating || 0);
+
+            if (courseName.trim().toUpperCase() === "NORTH") {
+              if (Math.abs(rating - 71.5) < 0.2 && Math.abs(slope - 125) < 2) {
+                courseName = "Torrey Pines (North)";
+              } else if (Math.abs(rating - 73.0) < 0.2 && Math.abs(slope - 127) < 2) {
+                courseName = "Admiral Baker (North)";
+              }
+            }
+
+            return {
+              course: courseName,
+              score: s.score || '--',
+              diff: parseFloat(s.differential || 0).toFixed(1),
+              isUsed: Boolean(s.used),
+              rating: s.course_rating || '--',
+              slope: s.slope_rating || '--',
+              date: s.played_at ? new Date(s.played_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: '2-digit' }) : 'Recent'
+            };
+          });
+          localStorage.setItem('sb_ghin_scores', JSON.stringify(ghinScores));
+        }
+
+        renderScoringTab();
+        if (interactive) alert(`GHIN Synced!\nLive Index: ${data.handicapIndex || '8.1'}\n${ghinScores.length} rounds loaded.`);
+      } catch (err) {
+        if (interactive) alert("Sync error: " + err.message);
+      } finally {
+        if (interactive) {
+          btn.disabled = false;
+          btn.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i> Sync`;
+        }
+      }
+    }
+
+    function renderScoringTab() {
+      const listContainer = document.getElementById('ghinScoresList');
+      if (!listContainer) return;
+      document.getElementById('scoresCountLabel').innerText = `${ghinScores.length} Rounds Synced`;
+
+      const countingScores = ghinScores.filter(s => s.isUsed).map(s => parseFloat(s.diff)).sort((a, b) => a - b);
+      if (countingScores.length > 0) {
+        const eighthDiff = countingScores[countingScores.length - 1].toFixed(1);
+        document.getElementById('sim8thDiff').innerText = eighthDiff;
+        document.getElementById('impactSimSummary').innerHTML = `Your 8th counting differential is <strong class="text-amber-300 font-mono">${eighthDiff}</strong>.`;
+        document.getElementById('simTargetAdvice').innerHTML = `Shoot a differential below <strong class="text-emerald-400 font-mono">${eighthDiff}</strong> in your next round to knock off this score and lower your 8.1 Index.`;
+      }
+
+      if (ghinScores.length === 0) {
+        listContainer.innerHTML = `<p class="text-xs text-slate-500 py-3 text-center">No rounds synced yet. Tap 'Sync' above.</p>`;
+      } else {
+        listContainer.innerHTML = ghinScores.map(s => `
+          <div class="bg-[#0b0e0c] p-3 rounded-xl border ${s.isUsed ? 'border-amber-500/30 bg-gradient-to-r from-[#141b16] to-[#0b0e0c]' : 'border-white/[0.04]'} flex justify-between items-center shadow-sm">
+            <div>
+              <div class="flex items-center gap-1.5 mb-0.5">
+                <span class="font-bold text-white text-xs">${s.course}</span>
+                ${s.isUsed ? '<span class="text-[8px] bg-amber-400 text-slate-950 font-black px-1.5 py-0.2 rounded uppercase">Counting</span>' : ''}
+              </div>
+              <p class="text-[10px] text-slate-400">${s.date} &bull; ${s.rating}/${s.slope}</p>
+            </div>
+            <div class="text-right">
+              <span class="text-xs font-black bg-[#141b16] text-emerald-300 border border-white/[0.06] px-2 py-1 rounded-lg inline-block mb-0.5 font-mono">${s.score}</span>
+              <p class="text-[10px] font-mono ${s.isUsed ? 'text-amber-400 font-bold' : 'text-slate-400'}">Diff: ${s.diff}</p>
+            </div>
+          </div>
+        `).join('');
+      }
+      initChart();
+    }
+
+    let chartInstance = null;
+    function initChart() {
+      const canvas = document.getElementById('scoringChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      if (chartInstance) chartInstance.destroy();
+
+      const reversed = [...ghinScores].reverse();
+      const labels = reversed.length > 0 ? reversed.map(r => r.date) : ['R1', 'R2', 'R3', 'R4', 'R5'];
+      const dataPoints = reversed.length > 0 ? reversed.map(r => parseFloat(r.diff)) : [8.4, 8.2, 8.1, 7.8, 8.1];
+      const pointColors = reversed.length > 0 ? reversed.map(r => r.isUsed ? '#f59e0b' : '#10b981') : ['#10b981', '#10b981', '#10b981', '#10b981', '#10b981'];
+
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Differential',
+              data: dataPoints,
+              borderColor: '#10b981',
+              backgroundColor: 'rgba(16, 185, 129, 0.1)',
+              pointBackgroundColor: pointColors,
+              pointRadius: reversed.length > 0 ? reversed.map(r => r.isUsed ? 5 : 3) : 3,
+              tension: 0.35,
+              fill: true
+            },
+            {
+              label: 'Scratch (0.0)',
+              data: labels.map(() => 0.0),
+              borderColor: '#f59e0b',
+              borderDash: [4, 4],
+              pointRadius: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          events: [],
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: '#64748b', font: { size: 9 } }, grid: { display: false } },
+            y: { ticks: { color: '#64748b', font: { size: 9 } }, grid: { color: '#141b16' } }
+          }
+        }
+      });
+    }
+
+    // ==========================================
+    // INITIALIZATION DISPATCH
     // ==========================================
     function init() {
       setupRealWeeklyCalendar();
