@@ -179,34 +179,7 @@
     <!-- TAB 3: TRACKMAN & WEDGE MATRIX + 2D DISPERSION + COASTAL DENSITY -->
     <div id="tab-trackman" class="tab-pane hidden space-y-3">
       
-      <!-- Coastal Density & "Plays Like" Environmental Calculator -->
-      <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl">
-        <div class="flex justify-between items-center mb-2">
-          <div>
-            <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8]">Coastal Density Altitude</span>
-            <h2 class="text-xs font-black text-white flex items-center gap-1.5 mt-0.5">
-              <i class="fa-solid fa-cloud-sun text-[#38bdf8]"></i> "Plays Like" Carry Estimator
-            </h2>
-          </div>
-          <button type="button" onclick="toggleMarineLayer()" id="marineLayerToggleBtn" class="text-[10px] bg-[#111921] text-slate-300 font-bold px-2.5 py-1 rounded-xl border border-white/[0.06] flex items-center gap-1 transition">
-            <span class="w-2 h-2 rounded-full bg-slate-500" id="marineLayerDot"></span> Torrey Marine Layer
-          </button>
-        </div>
-        <div class="grid grid-cols-3 gap-1.5 text-center text-xs">
-          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
-            <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">Temp (°F)</span>
-            <input type="number" id="envTemp" value="68" onchange="calculateEnvironmentalShift()" class="w-full bg-transparent text-center font-bold font-mono text-white text-xs mt-0.5">
-          </div>
-          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
-            <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">Elev (ft)</span>
-            <input type="number" id="envElev" value="350" onchange="calculateEnvironmentalShift()" class="w-full bg-transparent text-center font-bold font-mono text-white text-xs mt-0.5">
-          </div>
-          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
-            <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">Carry Delta</span>
-            <span class="font-black text-[#38bdf8] font-mono mt-0.5 block" id="envCarryDelta">100.0%</span>
-          </div>
-        </div>
-      </div>
+     
 
       <!-- 2D Visual Corridor & Dispersion Heatmap -->
       <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl">
@@ -1737,7 +1710,6 @@
     let selectedCalendarDayIdx = 0;
     let calendarWeekOffset = 0;
     let currentReadiness = 'norm';
-    let marineLayerActive = false;
     let restTimerInterval = null;
     let restSecondsLeft = 90;
 
@@ -2239,35 +2211,6 @@
     // ==========================================
     // TRACKMAN TAB: 2D CORRIDOR & COASTAL DENSITY
     // ==========================================
-    function toggleMarineLayer() {
-      marineLayerActive = !marineLayerActive;
-      const btn = document.getElementById('marineLayerToggleBtn');
-      const dot = document.getElementById('marineLayerDot');
-      if (marineLayerActive) {
-        btn.className = "text-[10px] bg-[#38bdf8]/20 text-[#38bdf8] font-bold px-2.5 py-1 rounded-xl border border-[#38bdf8]/40 flex items-center gap-1 transition";
-        dot.className = "w-2 h-2 rounded-full bg-[#38bdf8]";
-        document.getElementById('envTemp').value = 61;
-      } else {
-        btn.className = "text-[10px] bg-[#111921] text-slate-300 font-bold px-2.5 py-1 rounded-xl border border-white/[0.06] flex items-center gap-1 transition";
-        dot.className = "w-2 h-2 rounded-full bg-slate-500";
-        document.getElementById('envTemp').value = 68;
-      }
-      calculateEnvironmentalShift();
-    }
-
-    function calculateEnvironmentalShift() {
-      const temp = parseFloat(document.getElementById('envTemp').value) || 68;
-      const elev = parseFloat(document.getElementById('envElev').value) || 350;
-      
-      let factor = 1.0;
-      factor += ((temp - 70) * 0.001); // 1% per 10 degrees F
-      factor += (elev / 1000) * 0.015; // 1.5% per 1000ft
-      if (marineLayerActive) factor -= 0.035; // 3.5% dense coastal marine layer deduction
-
-      document.getElementById('envCarryDelta').innerText = (factor * 100).toFixed(1) + '%';
-      renderWedgeMatrix(factor);
-    }
-
     function renderDispersionCanvas() {
       const canvas = document.getElementById('dispersionCanvas');
       if (!canvas) return;
@@ -2433,11 +2376,11 @@
       renderWedgeMatrix();
       closeWedgeModal();
     }
-    function renderWedgeMatrix(factor = 1.0) {
+   function renderWedgeMatrix() {
       for (const club of ["50", "54", "58"]) {
-        document.getElementById(`wm_${club}_half`).innerText = Math.round(wedgeMatrix[club].half * factor) + " yds";
-        document.getElementById(`wm_${club}_three`).innerText = Math.round(wedgeMatrix[club].three * factor) + " yds";
-        document.getElementById(`wm_${club}_full`).innerText = Math.round(wedgeMatrix[club].full * factor) + " yds";
+        document.getElementById(`wm_${club}_half`).innerText = wedgeMatrix[club].half + " yds";
+        document.getElementById(`wm_${club}_three`).innerText = wedgeMatrix[club].three + " yds";
+        document.getElementById(`wm_${club}_full`).innerText = wedgeMatrix[club].full + " yds";
       }
     }
 
@@ -2696,7 +2639,7 @@
     // ==========================================
     // INITIALIZATION DISPATCH
     // ==========================================
-    function init() {
+   function init() {
       setupRealWeeklyCalendar();
       switchWeek(1);
       switchTrainDay(1);
@@ -2704,7 +2647,6 @@
       renderBagGapping();
       renderTrackmanTable();
       renderScoringTab();
-      calculateEnvironmentalShift();
       runWhsSimulation();
 
       const now = Date.now();
