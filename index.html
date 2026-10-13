@@ -8,9 +8,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Scratch Blueprint">
-  <meta name="theme-color" content="#060907">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%20width=%22192%22%20height=%22192%22><rect width=%22192%22 height=%22192%22 fill=%22%2300e599%22 rx=%2240%22/><text x=%2250%25%22 y=%2255%25%22 font-size=%2290%22 text-anchor=%22middle%22 dominant-baseline=%22central%22 fill=%22%23041f14%22 font-family=%22sans-serif%22 font-weight=%22900%22>SB</text></svg>">
-  <link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22Scratch%20Blueprint%22%2C%22short_name%22%3A%22Scratch%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23060907%22%2C%22theme_color%22%3A%22%23060907%22%7D">
+  <meta name="theme-color" content="#070b0e">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%20width=%22192%22%20height=%22192%22><rect width=%22192%22 height=%22192%22 fill=%22%2338bdf8%22 rx=%2240%22/><text x=%2250%25%22 y=%2255%25%22 font-size=%2290%22 text-anchor=%22middle%22 dominant-baseline=%22central%22 fill=%22%23070b0e%22 font-family=%22sans-serif%22 font-weight=%22900%22>SB</text></svg>">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -20,7 +19,7 @@
   <style>
     html, body {
       height: 100%;
-      background-color: #060907;
+      background-color: #070b0e;
       color: #f1f5f9;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
       -webkit-tap-highlight-color: transparent;
@@ -39,27 +38,23 @@
       z-index: 99999 !important;
       pointer-events: auto !important;
     }
-    #bottom-nav button {
-      pointer-events: auto !important;
-      touch-action: manipulation;
-    }
   </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden">
 
-  <!-- Header (TrackMan Radar Theme) -->
-  <header class="safe-top px-4 pb-2.5 border-b border-white/[0.06] bg-[#090d0a]/95 backdrop-blur-xl shrink-0 z-40">
+  <!-- Header -->
+  <header class="safe-top px-4 pb-2.5 border-b border-white/[0.06] bg-[#090e13]/95 backdrop-blur-xl shrink-0 z-40">
     <div class="flex justify-between items-center max-w-lg mx-auto">
       <div>
         <div class="flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-[#00e599] shadow-[0_0_8px_#00e599]"></span>
-          <p class="text-[9px] font-black tracking-widest uppercase text-[#00e599]" id="headerHandicapLabel">USGA Index: 8.1 &rarr; 0.0 Target</p>
+          <span class="w-2 h-2 rounded-full bg-[#38bdf8] shadow-[0_0_8px_#38bdf8]"></span>
+          <p class="text-[9px] font-black tracking-widest uppercase text-[#38bdf8]" id="headerHandicapLabel">USGA Index: 8.1 &rarr; 0.0 Target</p>
         </div>
         <h1 class="text-base font-black tracking-tight text-white flex items-center gap-2 mt-0.5">
           SCRATCH BLUEPRINT
         </h1>
       </div>
-      <select id="weekSelector" onchange="switchWeek(this.value)" class="bg-[#0f1511] border border-white/[0.08] text-[#00e599] text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none shadow-sm cursor-pointer">
+      <select id="weekSelector" onchange="switchWeek(this.value)" class="bg-[#0f171e] border border-white/[0.08] text-[#38bdf8] text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none shadow-sm cursor-pointer">
         <optgroup label="Block 1: Foundation">
           <option value="1">Week 1: Ground Force Base</option>
           <option value="2">Week 2: Rotary Velocity</option>
@@ -82,39 +77,39 @@
     </div>
   </header>
 
-  <!-- Main Scrollable App Container -->
+  <!-- Main Scrollable Viewport -->
   <main class="flex-1 overflow-y-auto px-4 py-3 max-w-lg mx-auto w-full custom-scrollbar pb-32 relative z-10">
 
     <!-- TAB 1: SCHEDULE -->
     <div id="tab-schedule" class="tab-pane space-y-3">
-      <div class="bg-[#0d120f] p-3 rounded-2xl border border-white/[0.07] shadow-xl">
+      <div class="bg-[#0c1217] p-3 rounded-2xl border border-white/[0.07] shadow-xl">
         <div class="flex justify-between items-center mb-2 px-1">
           <div class="flex items-center gap-1.5">
-            <button type="button" onclick="changeWeekOffset(-1)" class="w-6 h-6 flex items-center justify-center rounded-lg bg-[#141b16] border border-white/[0.06] text-slate-300 text-xs hover:bg-[#1b251e] transition">
+            <button type="button" onclick="changeWeekOffset(-1)" class="w-6 h-6 flex items-center justify-center rounded-lg bg-[#111921] border border-white/[0.06] text-slate-300 text-xs hover:bg-[#18232e] transition">
               <i class="fa-solid fa-chevron-left text-[10px]"></i>
             </button>
             <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200" id="currentCalendarMonth">Week Schedule</h2>
-            <button type="button" onclick="changeWeekOffset(1)" class="w-6 h-6 flex items-center justify-center rounded-lg bg-[#141b16] border border-white/[0.06] text-slate-300 text-xs hover:bg-[#1b251e] transition">
+            <button type="button" onclick="changeWeekOffset(1)" class="w-6 h-6 flex items-center justify-center rounded-lg bg-[#111921] border border-white/[0.06] text-slate-300 text-xs hover:bg-[#18232e] transition">
               <i class="fa-solid fa-chevron-right text-[10px]"></i>
             </button>
           </div>
-          <button type="button" onclick="resetToCurrentWeek()" class="text-[10px] bg-[#141b16] border border-white/[0.06] text-[#00e599] px-2.5 py-1 rounded-lg font-bold hover:bg-[#1b251e] transition">
+          <button type="button" onclick="resetToCurrentWeek()" class="text-[10px] bg-[#111921] border border-white/[0.06] text-[#38bdf8] px-2.5 py-1 rounded-lg font-bold hover:bg-[#18232e] transition">
             Current
           </button>
         </div>
         <div class="grid grid-cols-7 gap-1" id="calendarDaysRow"></div>
       </div>
 
-      <div class="bg-gradient-to-r from-[#0e1611] to-[#121c16] p-3.5 rounded-2xl border border-white/[0.07] flex justify-between items-center shadow-xl">
+      <div class="bg-gradient-to-r from-[#0c131a] to-[#111d27] p-3.5 rounded-2xl border border-white/[0.07] flex justify-between items-center shadow-xl">
         <div>
-          <span class="text-[9px] font-black text-[#00e599] uppercase tracking-widest" id="selectedDayName">Today's Protocol</span>
+          <span class="text-[9px] font-black text-[#38bdf8] uppercase tracking-widest" id="selectedDayName">Today's Protocol</span>
           <h3 class="text-sm font-black text-white mt-0.5" id="selectedDayType">Gym Lift 1</h3>
         </div>
         <div class="flex items-center gap-1.5">
-          <button type="button" onclick="openCustomActivityModal()" class="text-[10px] bg-[#141b16] hover:bg-[#1b251e] text-[#00e599] font-bold px-2.5 py-1.5 rounded-xl border border-white/[0.06] flex items-center gap-1 transition">
+          <button type="button" onclick="openCustomActivityModal()" class="text-[10px] bg-[#14202b] hover:bg-[#1b2b3a] text-[#38bdf8] font-bold px-2.5 py-1.5 rounded-xl border border-white/[0.06] flex items-center gap-1 transition">
             <i class="fa-solid fa-plus text-[9px]"></i> Log
           </button>
-          <span class="text-[9px] bg-[#00e599] text-slate-950 font-black px-2 py-1 rounded-lg tracking-wider" id="selectedDayBadge">GYM</span>
+          <span class="text-[9px] bg-[#38bdf8] text-slate-950 font-black px-2 py-1 rounded-lg tracking-wider" id="selectedDayBadge">GYM</span>
         </div>
       </div>
 
@@ -127,20 +122,24 @@
       </div>
     </div>
 
-    <!-- TAB 2: TRAIN (MINDBODY INSET PILL TRACK + TRACKMAN DATA TILES) -->
+    <!-- TAB 2: TRAIN (7-DAY PROTOCOLS + CNS AUTOREGULATION + REST CHIME) -->
     <div id="tab-train" class="tab-pane hidden space-y-3">
-      <div class="flex justify-between items-center px-1">
+      <!-- CNS Autoregulation Check -->
+      <div class="bg-[#0c1217] p-3 rounded-2xl border border-white/[0.06] flex items-center justify-between shadow-lg">
         <div>
-          <h2 class="text-sm font-black text-white flex items-center gap-1.5">
-            <i class="fa-solid fa-bolt text-[#00e599]"></i> Tour Training Hub
-          </h2>
-          <p class="text-[11px] text-slate-400">Gym splits, Studio combines, course rounds & recovery</p>
+          <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8] block">CNS Readiness Status</span>
+          <p class="text-[11px] text-slate-300" id="readinessStatusText">Volume set for normal target loads.</p>
+        </div>
+        <div class="flex gap-1 bg-[#070b0e] p-1 rounded-xl border border-white/[0.05]">
+          <button type="button" onclick="setReadiness('high')" id="readinessHigh" class="px-2 py-1 rounded-lg text-[10px] font-bold text-slate-400 hover:text-white">High</button>
+          <button type="button" onclick="setReadiness('norm')" id="readinessNorm" class="px-2 py-1 rounded-lg text-[10px] font-black text-slate-950 bg-[#38bdf8]">Norm</button>
+          <button type="button" onclick="setReadiness('low')" id="readinessLow" class="px-2 py-1 rounded-lg text-[10px] font-bold text-slate-400 hover:text-white">Low</button>
         </div>
       </div>
 
       <!-- Mindbody Inset Day Segment Control -->
-      <div class="bg-[#090d0a] p-1 rounded-2xl border border-white/[0.05] flex gap-1 overflow-x-auto custom-scrollbar shadow-inner text-xs">
-        <button type="button" onclick="switchTrainDay(1)" id="trainDayBtn1" class="flex-1 py-1.5 px-3 rounded-xl font-bold text-white bg-[#00e599]/20 border border-[#00e599]/30 whitespace-nowrap text-center transition">Mon (Gym)</button>
+      <div class="bg-[#070b0e] p-1 rounded-2xl border border-white/[0.05] flex gap-1 overflow-x-auto custom-scrollbar shadow-inner text-xs">
+        <button type="button" onclick="switchTrainDay(1)" id="trainDayBtn1" class="flex-1 py-1.5 px-3 rounded-xl font-bold text-white bg-[#38bdf8]/20 border border-[#38bdf8]/30 whitespace-nowrap text-center transition">Mon (Gym)</button>
         <button type="button" onclick="switchTrainDay(2)" id="trainDayBtn2" class="flex-1 py-1.5 px-3 rounded-xl font-medium text-slate-400 hover:text-white whitespace-nowrap text-center transition">Tue (Sim)</button>
         <button type="button" onclick="switchTrainDay(3)" id="trainDayBtn3" class="flex-1 py-1.5 px-3 rounded-xl font-medium text-slate-400 hover:text-white whitespace-nowrap text-center transition">Wed (Gym)</button>
         <button type="button" onclick="switchTrainDay(4)" id="trainDayBtn4" class="flex-1 py-1.5 px-3 rounded-xl font-medium text-slate-400 hover:text-white whitespace-nowrap text-center transition">Thu (Sim)</button>
@@ -149,68 +148,129 @@
         <button type="button" onclick="switchTrainDay(7)" id="trainDayBtn7" class="flex-1 py-1.5 px-3 rounded-xl font-medium text-slate-400 hover:text-white whitespace-nowrap text-center transition">Sun (Rest)</button>
       </div>
 
-      <!-- Training Overview Card -->
-      <div class="bg-[#0d120f] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl">
+      <!-- Training Header Card -->
+      <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl">
         <div class="flex justify-between items-center mb-1">
           <h3 class="text-xs font-black text-white" id="trainSessionTitle">Monday: Force Base Split</h3>
-          <span class="text-[9px] bg-[#00e599]/10 text-[#00e599] px-2 py-0.5 rounded-md font-bold border border-[#00e599]/20" id="trainSessionDuration">50 Mins</span>
+          <span class="text-[9px] bg-[#38bdf8]/10 text-[#38bdf8] px-2 py-0.5 rounded-md font-bold border border-[#38bdf8]/20" id="trainSessionDuration">50 Mins</span>
         </div>
         <p class="text-[11px] text-slate-300 leading-relaxed mt-0.5" id="trainSessionFocus"></p>
       </div>
 
-      <!-- Training Exercises / Drills Container -->
+      <!-- Rest Interval Timer Bar -->
+      <div id="restTimerWidget" class="hidden bg-[#0a1015] p-3 rounded-2xl border border-[#38bdf8]/40 shadow-xl flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full border-2 border-[#38bdf8] flex items-center justify-center font-mono font-bold text-xs text-[#38bdf8]" id="restTimerCountdown">90</div>
+          <div>
+            <span class="text-[9px] font-black uppercase text-slate-400 block tracking-widest">Rest Interval</span>
+            <span class="text-xs font-bold text-white">Neural recovery active</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button type="button" onclick="addRestTime(30)" class="px-2 py-1 rounded-lg bg-[#14202b] text-[#38bdf8] text-[10px] font-bold border border-white/[0.05]">+30s</button>
+          <button type="button" onclick="cancelRestTimer()" class="px-2 py-1 rounded-lg bg-[#18232e] text-slate-400 text-[10px] font-bold">Skip</button>
+        </div>
+      </div>
+
+      <!-- Dynamic Exercise / Drill Checklist Container -->
       <div id="trainContentList" class="space-y-3"></div>
     </div>
 
-    <!-- TAB 3: TRACKMAN & WEDGE MATRIX -->
+    <!-- TAB 3: TRACKMAN & WEDGE MATRIX + 2D DISPERSION + COASTAL DENSITY -->
     <div id="tab-trackman" class="tab-pane hidden space-y-3">
-      <div class="bg-[#0d120f] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl">
+      
+      <!-- Coastal Density & "Plays Like" Environmental Calculator -->
+      <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl">
+        <div class="flex justify-between items-center mb-2">
+          <div>
+            <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8]">Coastal Density Altitude</span>
+            <h2 class="text-xs font-black text-white flex items-center gap-1.5 mt-0.5">
+              <i class="fa-solid fa-cloud-sun text-[#38bdf8]"></i> "Plays Like" Carry Estimator
+            </h2>
+          </div>
+          <button type="button" onclick="toggleMarineLayer()" id="marineLayerToggleBtn" class="text-[10px] bg-[#111921] text-slate-300 font-bold px-2.5 py-1 rounded-xl border border-white/[0.06] flex items-center gap-1 transition">
+            <span class="w-2 h-2 rounded-full bg-slate-500" id="marineLayerDot"></span> Torrey Marine Layer
+          </button>
+        </div>
+        <div class="grid grid-cols-3 gap-1.5 text-center text-xs">
+          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
+            <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">Temp (°F)</span>
+            <input type="number" id="envTemp" value="68" onchange="calculateEnvironmentalShift()" class="w-full bg-transparent text-center font-bold font-mono text-white text-xs mt-0.5">
+          </div>
+          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
+            <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">Elev (ft)</span>
+            <input type="number" id="envElev" value="350" onchange="calculateEnvironmentalShift()" class="w-full bg-transparent text-center font-bold font-mono text-white text-xs mt-0.5">
+          </div>
+          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
+            <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">Carry Delta</span>
+            <span class="font-black text-[#38bdf8] font-mono mt-0.5 block" id="envCarryDelta">100.0%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2D Visual Corridor & Dispersion Heatmap -->
+      <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl">
+        <div class="flex justify-between items-center mb-2 px-1">
+          <div>
+            <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8]">Shot Scatter Radar</span>
+            <h2 class="text-xs font-black text-white">2D Corridor Dispersion</h2>
+          </div>
+          <span class="text-[10px] font-mono font-bold text-slate-400" id="corridorHitRate">78% In Corridor</span>
+        </div>
+        <div class="relative w-full h-48 bg-[#060907] rounded-xl border border-white/[0.05] overflow-hidden flex items-center justify-center">
+          <canvas id="dispersionCanvas" class="w-full h-full"></canvas>
+        </div>
+      </div>
+
+      <!-- Wedge Matrix -->
+      <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl">
         <div class="flex justify-between items-center mb-2.5">
           <div>
-            <h2 class="text-xs font-black uppercase tracking-wider text-[#00e599] flex items-center gap-1.5">
+            <h2 class="text-xs font-black uppercase tracking-wider text-[#38bdf8] flex items-center gap-1.5">
               <i class="fa-solid fa-bullseye"></i> Wedge Clock Matrix
             </h2>
             <p class="text-[10px] text-slate-400">Calibrated carry yardages inside 120y</p>
           </div>
-          <button type="button" onclick="openWedgeModal()" class="text-[10px] bg-[#141b16] hover:bg-[#1b251e] text-[#00e599] font-bold px-2.5 py-1 rounded-lg border border-white/[0.06] transition">
+          <button type="button" onclick="openWedgeModal()" class="text-[10px] bg-[#111921] hover:bg-[#18232e] text-[#38bdf8] font-bold px-2.5 py-1 rounded-lg border border-white/[0.06] transition">
             <i class="fa-solid fa-pen text-[9px] mr-1"></i> Edit
           </button>
         </div>
         
         <div class="grid grid-cols-4 gap-1.5 text-center text-xs">
-          <div class="bg-[#090d0a] p-2 rounded-xl border border-white/[0.04]">
+          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
             <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">Club</span>
-            <span class="font-bold text-[#00e599] mt-1 block">50°</span>
-            <span class="font-bold text-[#00e599] mt-2 block">54°</span>
-            <span class="font-bold text-[#00e599] mt-2 block">58°</span>
+            <span class="font-bold text-[#38bdf8] mt-1 block">50°</span>
+            <span class="font-bold text-[#38bdf8] mt-2 block">54°</span>
+            <span class="font-bold text-[#38bdf8] mt-2 block">58°</span>
           </div>
-          <div class="bg-[#090d0a] p-2 rounded-xl border border-white/[0.04]">
+          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
             <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">1/2 Hip</span>
             <span class="font-bold text-white mt-1 block font-mono" id="wm_50_half">65 yds</span>
             <span class="font-bold text-white mt-2 block font-mono" id="wm_54_half">55 yds</span>
             <span class="font-bold text-white mt-2 block font-mono" id="wm_58_half">45 yds</span>
           </div>
-          <div class="bg-[#090d0a] p-2 rounded-xl border border-white/[0.04]">
+          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
             <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">3/4 Chest</span>
             <span class="font-bold text-white mt-1 block font-mono" id="wm_50_three">95 yds</span>
             <span class="font-bold text-white mt-2 block font-mono" id="wm_54_three">85 yds</span>
             <span class="font-bold text-white mt-2 block font-mono" id="wm_58_three">72 yds</span>
           </div>
-          <div class="bg-[#090d0a] p-2 rounded-xl border border-white/[0.04]">
+          <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04]">
             <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest block">Full Swing</span>
-            <span class="font-bold text-[#00e599] mt-1 block font-mono" id="wm_50_full">118 yds</span>
-            <span class="font-bold text-[#00e599] mt-2 block font-mono" id="wm_54_full">108 yds</span>
-            <span class="font-bold text-[#00e599] mt-2 block font-mono" id="wm_58_full">95 yds</span>
+            <span class="font-bold text-[#38bdf8] mt-1 block font-mono" id="wm_50_full">118 yds</span>
+            <span class="font-bold text-[#38bdf8] mt-2 block font-mono" id="wm_54_full">108 yds</span>
+            <span class="font-bold text-[#38bdf8] mt-2 block font-mono" id="wm_58_full">95 yds</span>
           </div>
         </div>
       </div>
 
-      <div class="bg-[#0d120f] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl">
+      <!-- TrackMan Camera OCR Reader -->
+      <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl">
         <div class="flex justify-between items-center mb-1">
           <h2 class="text-xs font-black text-white flex items-center gap-2">
-            <i class="fa-solid fa-camera text-[#00e599]"></i> TrackMan Monitor Reader
+            <i class="fa-solid fa-camera text-[#38bdf8]"></i> TrackMan Monitor Reader
           </h2>
-          <span class="text-[9px] bg-[#00e599]/10 text-[#00e599] px-2 py-0.5 rounded border border-[#00e599]/20 font-bold">OCR</span>
+          <span class="text-[9px] bg-[#38bdf8]/10 text-[#38bdf8] px-2 py-0.5 rounded border border-[#38bdf8]/20 font-bold">OCR</span>
         </div>
         <p class="text-[10px] text-slate-400 mb-2.5">Capture studio monitor readout tile or photo.</p>
 
@@ -218,24 +278,24 @@
         <input type="file" id="galleryInput" accept="image/*" class="hidden" onchange="processTrackmanImage(event)">
 
         <div class="grid grid-cols-2 gap-2">
-          <button type="button" onclick="document.getElementById('cameraInput').click()" class="bg-[#00e599] hover:bg-[#00c985] text-slate-950 font-black text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 shadow">
+          <button type="button" onclick="document.getElementById('cameraInput').click()" class="bg-[#38bdf8] hover:bg-[#0ea5e9] text-slate-950 font-black text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 shadow transition">
             <i class="fa-solid fa-camera"></i> Camera
           </button>
-          <button type="button" onclick="document.getElementById('galleryInput').click()" class="bg-[#141b16] hover:bg-[#1b251e] text-[#00e599] font-bold text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 border border-white/[0.06] transition">
+          <button type="button" onclick="document.getElementById('galleryInput').click()" class="bg-[#111921] hover:bg-[#18232e] text-[#38bdf8] font-bold text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 border border-white/[0.06] transition">
             <i class="fa-solid fa-images"></i> Photos
           </button>
         </div>
 
-        <div id="ocrStatus" class="hidden mt-3 p-3 rounded-xl bg-[#090d0a] border border-white/[0.06] text-center">
-          <div class="inline-block animate-spin text-[#00e599] text-base mb-1"><i class="fa-solid fa-circle-notch"></i></div>
+        <div id="ocrStatus" class="hidden mt-3 p-3 rounded-xl bg-[#070b0e] border border-white/[0.06] text-center">
+          <div class="inline-block animate-spin text-[#38bdf8] text-base mb-1"><i class="fa-solid fa-circle-notch"></i></div>
           <p class="text-xs text-slate-300 font-medium">Scanning monitor metrics...</p>
         </div>
 
         <div id="ocrResultForm" class="hidden mt-3 pt-3 border-t border-white/[0.06]">
-          <div class="grid grid-cols-4 gap-2 mb-2 text-xs">
+          <div class="grid grid-cols-5 gap-1.5 mb-2 text-xs">
             <div>
-              <label class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Club</label>
-              <select id="parsedClub" class="w-full bg-[#141b16] rounded-lg p-1.5 border border-white/[0.06] text-white text-xs">
+              <label class="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Club</label>
+              <select id="parsedClub" class="w-full bg-[#111921] rounded-lg p-1.5 border border-white/[0.06] text-white text-xs">
                 <option value="Driver">Driver</option>
                 <option value="3-Wood">3-Wood</option>
                 <option value="2-Iron">2-Iron</option>
@@ -249,32 +309,37 @@
               </select>
             </div>
             <div>
-              <label class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Ball Spd</label>
-              <input type="number" step="0.1" id="parsedSpeed" class="w-full bg-[#141b16] rounded-lg p-1.5 border border-white/[0.06] text-[#00e599] font-mono font-bold text-xs">
+              <label class="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Ball Spd</label>
+              <input type="number" step="0.1" id="parsedSpeed" class="w-full bg-[#111921] rounded-lg p-1.5 border border-white/[0.06] text-[#38bdf8] font-mono font-bold text-xs">
             </div>
             <div>
-              <label class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Carry</label>
-              <input type="number" id="parsedCarry" class="w-full bg-[#141b16] rounded-lg p-1.5 border border-white/[0.06] text-slate-200 text-xs">
+              <label class="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Carry</label>
+              <input type="number" id="parsedCarry" class="w-full bg-[#111921] rounded-lg p-1.5 border border-white/[0.06] text-slate-200 text-xs">
             </div>
             <div>
-              <label class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Smash</label>
-              <input type="number" step="0.01" id="parsedSmash" class="w-full bg-[#141b16] rounded-lg p-1.5 border border-white/[0.06] text-slate-200 text-xs">
+              <label class="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Smash</label>
+              <input type="number" step="0.01" id="parsedSmash" class="w-full bg-[#111921] rounded-lg p-1.5 border border-white/[0.06] text-slate-200 text-xs">
+            </div>
+            <div>
+              <label class="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Offline</label>
+              <input type="number" id="parsedOffline" placeholder="0" class="w-full bg-[#111921] rounded-lg p-1.5 border border-white/[0.06] text-amber-300 text-xs">
             </div>
           </div>
-          <button type="button" onclick="confirmParsedShot()" class="w-full bg-[#00e599] hover:bg-[#00c985] text-slate-950 font-black text-xs py-2 rounded-xl shadow">
+          <button type="button" onclick="confirmParsedShot()" class="w-full bg-[#38bdf8] hover:bg-[#0ea5e9] text-slate-950 font-black text-xs py-2 rounded-xl shadow transition">
             Confirm & Save Shot
           </button>
         </div>
       </div>
 
-      <div class="bg-[#0d120f] p-3 rounded-2xl border border-white/[0.07] shadow-xl">
+      <!-- Bag Gapping Benchmarks -->
+      <div class="bg-[#0c1217] p-3 rounded-2xl border border-white/[0.07] shadow-xl">
         <h3 class="text-xs font-black text-slate-300 uppercase tracking-wider mb-2 flex items-center justify-between">
           <span>Bag Gapping Benchmarks</span>
-          <span class="text-[9px] text-[#00e599] font-semibold">Real-Time Averages</span>
+          <span class="text-[9px] text-[#38bdf8] font-semibold">Real-Time Averages</span>
         </h3>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs text-slate-300">
-            <thead class="text-[8px] text-[#00e599] uppercase tracking-widest bg-[#090d0a] border-b border-white/[0.06]">
+            <thead class="text-[8px] text-[#38bdf8] uppercase tracking-widest bg-[#070b0e] border-b border-white/[0.06]">
               <tr>
                 <th class="py-1.5 px-2">Club</th>
                 <th class="py-1.5 px-2">Avg Carry</th>
@@ -287,38 +352,22 @@
           </table>
         </div>
       </div>
-
-      <div class="bg-[#0d120f] p-3 rounded-2xl border border-white/[0.07] shadow-xl">
-        <h3 class="text-xs font-black text-slate-300 uppercase tracking-wider mb-2">Logged Shots History</h3>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs text-slate-300">
-            <thead class="text-[8px] text-[#00e599] uppercase tracking-widest bg-[#090d0a] border-b border-white/[0.06]">
-              <tr>
-                <th class="py-1.5 px-2">Club</th>
-                <th class="py-1.5 px-2">Carry</th>
-                <th class="py-1.5 px-2">Ball Spd</th>
-                <th class="py-1.5 px-2">Smash</th>
-              </tr>
-            </thead>
-            <tbody id="trackmanShotsTable"></tbody>
-          </table>
-        </div>
-      </div>
     </div>
 
-    <!-- TAB 4: SCORING & GHIN -->
+    <!-- TAB 4: SCORING, GHIN & WHS SANDBOX SCENARIO -->
     <div id="tab-scoring" class="tab-pane hidden space-y-3">
-      <div class="bg-gradient-to-br from-[#101712] to-[#090d0a] p-4 rounded-2xl border border-white/[0.08] shadow-xl">
+      <!-- Live Index Hero Tile -->
+      <div class="bg-gradient-to-br from-[#0c141d] to-[#070b0e] p-4 rounded-2xl border border-white/[0.08] shadow-xl">
         <div class="flex justify-between items-start mb-3">
           <div>
-            <span class="text-[9px] font-black uppercase tracking-widest text-[#00e599]">Official USGA Index</span>
+            <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8]">Official USGA Index</span>
             <div class="flex items-baseline gap-2 mt-0.5">
               <span class="text-4xl font-black text-white tracking-tight font-mono" id="heroHandicap">8.1</span>
               <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-white/[0.06] text-slate-300 border border-white/[0.04]" id="handicapTrendBadge">Live</span>
             </div>
             <p class="text-[11px] text-slate-400 mt-1" id="golferNameLabel">Evan McCollough &bull; GHIN 13093434</p>
           </div>
-          <button type="button" onclick="syncGhinData(true)" id="ghinSyncBtn" class="bg-[#00e599] hover:bg-[#00c985] text-slate-950 font-black text-xs px-3 py-2 rounded-xl flex items-center gap-1.5 shadow transition">
+          <button type="button" onclick="syncGhinData(true)" id="ghinSyncBtn" class="bg-[#38bdf8] hover:bg-[#0ea5e9] text-slate-950 font-black text-xs px-3 py-2 rounded-xl flex items-center gap-1.5 shadow transition">
             <i class="fa-solid fa-arrows-rotate text-[10px]"></i> Sync
           </button>
         </div>
@@ -328,13 +377,41 @@
             <span>Road to Scratch</span>
             <span id="scratchProgressText">8.1 pts to Scratch (0.0)</span>
           </div>
-          <div class="w-full bg-[#060907] h-2 rounded-full overflow-hidden border border-white/[0.04]">
-            <div id="scratchProgressBar" class="bg-[#00e599] h-full transition-all duration-500" style="width: 19%"></div>
+          <div class="w-full bg-[#070b0e] h-2 rounded-full overflow-hidden border border-white/[0.04]">
+            <div id="scratchProgressBar" class="bg-[#38bdf8] h-full transition-all duration-500" style="width: 19%"></div>
           </div>
         </div>
       </div>
 
-      <div class="bg-[#0d120f] p-3.5 rounded-2xl border border-amber-500/30 shadow-xl">
+      <!-- WHS Scenario Sandbox & Simulator -->
+      <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-[#38bdf8]/30 shadow-xl space-y-2">
+        <div class="flex justify-between items-center">
+          <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8]">WHS Scenario Sandbox</span>
+          <span class="text-[8px] bg-[#38bdf8]/10 text-[#38bdf8] font-bold px-1.5 py-0.5 rounded border border-[#38bdf8]/20">Predictive</span>
+        </div>
+        <p class="text-[11px] text-slate-300">Simulate your next round to preview your updated index immediately:</p>
+        <div class="grid grid-cols-3 gap-2 text-xs">
+          <div>
+            <label class="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Course Slope</label>
+            <input type="number" id="simSlope" value="125" onchange="runWhsSimulation()" class="w-full bg-[#070b0e] rounded-lg p-1.5 border border-white/[0.06] text-white font-mono text-xs">
+          </div>
+          <div>
+            <label class="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Rating</label>
+            <input type="number" step="0.1" id="simRating" value="71.5" onchange="runWhsSimulation()" class="w-full bg-[#070b0e] rounded-lg p-1.5 border border-white/[0.06] text-white font-mono text-xs">
+          </div>
+          <div>
+            <label class="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Score</label>
+            <input type="number" id="simGrossScore" value="76" onchange="runWhsSimulation()" class="w-full bg-[#070b0e] rounded-lg p-1.5 border border-white/[0.06] text-[#38bdf8] font-mono font-bold text-xs">
+          </div>
+        </div>
+        <div class="bg-[#070b0e] p-2 rounded-xl border border-white/[0.04] flex items-center justify-between text-xs">
+          <span class="text-slate-400">Projected Index Delta:</span>
+          <span class="font-mono font-black text-white" id="simProjectedResult">--</span>
+        </div>
+      </div>
+
+      <!-- Handicap Movement Target (8th counting differential) -->
+      <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-amber-500/30 shadow-xl">
         <div class="flex justify-between items-center mb-1">
           <span class="text-[9px] font-black uppercase tracking-widest text-amber-400">Handicap Movement Target</span>
           <span class="text-[8px] bg-amber-500/10 text-amber-300 font-bold px-1.5 py-0.5 rounded border border-amber-500/20">WHS Rules</span>
@@ -347,24 +424,26 @@
         </p>
       </div>
 
-      <details class="bg-[#0d120f] rounded-xl border border-white/[0.06] p-2 text-xs">
+      <!-- GHIN Credentials Dropdown -->
+      <details class="bg-[#0c1217] rounded-xl border border-white/[0.06] p-2 text-xs">
         <summary class="text-slate-400 cursor-pointer font-semibold flex justify-between items-center px-1">
-          <span><i class="fa-solid fa-key text-[#00e599] mr-1.5"></i> GHIN Login Credentials</span>
-          <span class="text-[10px] text-[#00e599]">Edit</span>
+          <span><i class="fa-solid fa-key text-[#38bdf8] mr-1.5"></i> GHIN Login Credentials</span>
+          <span class="text-[10px] text-[#38bdf8]">Edit</span>
         </summary>
         <div class="pt-3 space-y-2">
           <div>
             <label class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">GHIN Email</label>
-            <input type="text" id="ghinEmail" value="evanm2727@gmail.com" class="w-full bg-[#141b16] text-xs p-2 rounded-lg border border-white/[0.06] text-white">
+            <input type="text" id="ghinEmail" value="evanm2727@gmail.com" class="w-full bg-[#111921] text-xs p-2 rounded-lg border border-white/[0.06] text-white">
           </div>
           <div>
             <label class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Password</label>
-            <input type="password" id="ghinPassword" placeholder="Enter GHIN password" class="w-full bg-[#141b16] text-xs p-2 rounded-lg border border-white/[0.06] text-white">
+            <input type="password" id="ghinPassword" placeholder="Enter GHIN password" class="w-full bg-[#111921] text-xs p-2 rounded-lg border border-white/[0.06] text-white">
           </div>
         </div>
       </details>
 
-      <div class="bg-[#0d120f] p-3 rounded-2xl border border-white/[0.07] shadow-xl">
+      <!-- Differential Progression Chart -->
+      <div class="bg-[#0c1217] p-3 rounded-2xl border border-white/[0.07] shadow-xl">
         <div class="flex justify-between items-center mb-2 px-1">
           <h3 class="text-xs font-black text-slate-300 uppercase tracking-wider">Differential Progression</h3>
           <span class="text-[9px] text-amber-400 font-bold">&bull; Gold = Counting</span>
@@ -374,9 +453,12 @@
         </div>
       </div>
 
-      <div class="bg-[#0d120f] p-3 rounded-2xl border border-white/[0.07] shadow-xl">
-        <h3 class="text-xs font-black text-slate-300 uppercase tracking-wider mb-2">Official 20-Round Ledger</h3>
-        <span class="text-[10px] text-slate-400 block mb-2" id="scoresCountLabel">0 Rounds Synced</span>
+      <!-- 20-Round Ledger with WHS Expiration Timeline -->
+      <div class="bg-[#0c1217] p-3 rounded-2xl border border-white/[0.07] shadow-xl">
+        <div class="flex justify-between items-center mb-2 px-1">
+          <h3 class="text-xs font-black text-slate-300 uppercase tracking-wider">Official 20-Round Ledger</h3>
+          <span class="text-[10px] text-slate-400" id="scoresCountLabel">0 Rounds Synced</span>
+        </div>
         <div id="ghinScoresList" class="space-y-2"></div>
       </div>
     </div>
@@ -385,16 +467,16 @@
 
   <!-- MODAL: DUAL-ACTION HD COACHING & DIRECT YOUTUBE SEARCH FALLBACK -->
   <div id="exerciseDiagramModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
-    <div class="bg-[#0d120f] border border-white/[0.08] rounded-3xl p-5 w-full max-w-sm space-y-3.5 shadow-2xl">
+    <div class="bg-[#0c1217] border border-white/[0.08] rounded-3xl p-5 w-full max-w-sm space-y-3.5 shadow-2xl">
       <div class="flex justify-between items-center">
         <div>
-          <span class="text-[9px] font-black uppercase tracking-widest text-[#00e599]">Form Tutorial</span>
+          <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8]">Form Tutorial</span>
           <h3 class="text-sm font-black text-white" id="diagTitle">Exercise</h3>
         </div>
         <button type="button" onclick="closeDiagramModal()" class="text-slate-400 hover:text-white text-base"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
-      <div class="w-full h-36 bg-[#060907] rounded-2xl border border-white/[0.06] flex flex-col items-center justify-center p-3 text-center relative overflow-hidden">
+      <div class="w-full h-36 bg-[#070b0e] rounded-2xl border border-white/[0.06] flex flex-col items-center justify-center p-3 text-center relative overflow-hidden">
         <div class="w-12 h-12 rounded-full bg-red-600/20 border border-red-500/40 flex items-center justify-center text-red-400 text-xl mb-2">
           <i class="fa-solid fa-play ml-0.5"></i>
         </div>
@@ -403,11 +485,11 @@
       </div>
 
       <div class="space-y-2 text-xs">
-        <div class="bg-[#141b16] p-2.5 rounded-xl border border-white/[0.06]">
-          <span class="text-[9px] font-bold text-[#00e599] uppercase block mb-0.5">Execution & Joint Path</span>
+        <div class="bg-[#111921] p-2.5 rounded-xl border border-white/[0.06]">
+          <span class="text-[9px] font-bold text-[#38bdf8] uppercase block mb-0.5">Execution & Joint Path</span>
           <p class="text-[11px] text-slate-200 leading-snug" id="diagSetupText"></p>
         </div>
-        <div class="bg-[#141b16] p-2.5 rounded-xl border border-white/[0.06]">
+        <div class="bg-[#111921] p-2.5 rounded-xl border border-white/[0.06]">
           <span class="text-[9px] font-bold text-amber-300 uppercase block mb-0.5">Kinetic Chain Swing Transfer</span>
           <p class="text-[11px] text-slate-300 leading-snug" id="diagCueText"></p>
         </div>
@@ -417,11 +499,11 @@
         <a id="diagDirectVideoLink" href="#" target="_blank" class="flex-1 bg-red-700 hover:bg-red-600 text-white font-bold text-xs py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow text-center">
           <i class="fa-brands fa-youtube"></i> Watch HD Demo
         </a>
-        <a id="diagSearchVideoLink" href="#" target="_blank" class="flex-1 bg-[#141b16] hover:bg-[#1b251e] text-[#00e599] border border-white/[0.06] font-bold text-xs py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow text-center">
+        <a id="diagSearchVideoLink" href="#" target="_blank" class="flex-1 bg-[#111921] hover:bg-[#18232e] text-[#38bdf8] border border-white/[0.06] font-bold text-xs py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow text-center">
           <i class="fa-solid fa-magnifying-glass text-[10px]"></i> Search YouTube
         </a>
       </div>
-      <button type="button" onclick="closeDiagramModal()" class="w-full bg-[#141b16] hover:bg-[#1b251e] text-slate-300 font-bold text-xs py-2 rounded-xl border border-white/[0.06] transition mt-1">
+      <button type="button" onclick="closeDiagramModal()" class="w-full bg-[#111921] hover:bg-[#18232e] text-slate-300 font-bold text-xs py-2 rounded-xl border border-white/[0.06] transition mt-1">
         Close
       </button>
     </div>
@@ -429,41 +511,40 @@
 
   <!-- MODAL: SELECT ALTERNATE EXERCISE -->
   <div id="alternateModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-[#0d120f] border border-white/[0.08] rounded-2xl p-4 w-full max-w-sm space-y-3 shadow-2xl">
+    <div class="bg-[#0c1217] border border-white/[0.08] rounded-2xl p-4 w-full max-w-sm space-y-3 shadow-2xl">
       <div class="flex justify-between items-center">
         <div>
-          <span class="text-[9px] font-bold uppercase tracking-wider text-[#00e599]">Machine/Space Busy?</span>
+          <span class="text-[9px] font-bold uppercase tracking-wider text-[#38bdf8]">Machine/Space Busy?</span>
           <h3 class="text-xs font-black text-white" id="altModalTitle">Choose an Alternate</h3>
         </div>
         <button type="button" onclick="closeAlternateModal()" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <p class="text-[11px] text-slate-300">Select an equipment substitute targeting identical golf biomechanics:</p>
-      
       <div id="alternatesOptionList" class="space-y-2"></div>
     </div>
   </div>
 
   <!-- MODAL: CUSTOM ACTIVITY WITH DATE PICKER -->
   <div id="customActivityModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-[#0d120f] border border-white/[0.08] rounded-2xl p-4 w-full max-w-sm space-y-3 shadow-2xl">
+    <div class="bg-[#0c1217] border border-white/[0.08] rounded-2xl p-4 w-full max-w-sm space-y-3 shadow-2xl">
       <div class="flex justify-between items-center">
         <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
-          <i class="fa-solid fa-pen-to-square text-[#00e599]"></i> Log Custom Session
+          <i class="fa-solid fa-pen-to-square text-[#38bdf8]"></i> Log Custom Session
         </h3>
         <button type="button" onclick="closeCustomActivityModal()" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div>
         <label class="text-[9px] text-slate-400 uppercase font-bold block mb-1">Date</label>
-        <input type="date" id="customDateInput" class="w-full bg-[#141b16] text-xs p-2 rounded-lg border border-white/[0.06] text-white">
+        <input type="date" id="customDateInput" class="w-full bg-[#111921] text-xs p-2 rounded-lg border border-white/[0.06] text-white">
       </div>
       <div>
         <label class="text-[9px] text-slate-400 uppercase font-bold block mb-1">Activity Title</label>
-        <input type="text" id="customTitle" placeholder="e.g. 9-Hole Twilight, Speed Session" class="w-full bg-[#141b16] text-xs p-2 rounded-lg border border-white/[0.06] text-white">
+        <input type="text" id="customTitle" placeholder="e.g. 9-Hole Twilight, Speed Session" class="w-full bg-[#111921] text-xs p-2 rounded-lg border border-white/[0.06] text-white">
       </div>
       <div class="grid grid-cols-2 gap-2">
         <div>
           <label class="text-[9px] text-slate-400 uppercase font-bold block mb-1">Category</label>
-          <select id="customType" class="w-full bg-[#141b16] text-xs p-2 rounded-lg border border-white/[0.06] text-white">
+          <select id="customType" class="w-full bg-[#111921] text-xs p-2 rounded-lg border border-white/[0.06] text-white">
             <option value="Golf">Golf</option>
             <option value="Gym">Gym</option>
             <option value="Sim">Simulator</option>
@@ -472,14 +553,14 @@
         </div>
         <div>
           <label class="text-[9px] text-slate-400 uppercase font-bold block mb-1">Duration</label>
-          <input type="text" id="customDuration" placeholder="45 min" class="w-full bg-[#141b16] text-xs p-2 rounded-lg border border-white/[0.06] text-white">
+          <input type="text" id="customDuration" placeholder="45 min" class="w-full bg-[#111921] text-xs p-2 rounded-lg border border-white/[0.06] text-white">
         </div>
       </div>
       <div>
         <label class="text-[9px] text-slate-400 uppercase font-bold block mb-1">Notes / Feels</label>
-        <textarea id="customNotes" rows="2" placeholder="Strike feel, focus cues..." class="w-full bg-[#141b16] text-xs p-2 rounded-lg border border-white/[0.06] text-white"></textarea>
+        <textarea id="customNotes" rows="2" placeholder="Strike feel, focus cues..." class="w-full bg-[#111921] text-xs p-2 rounded-lg border border-white/[0.06] text-white"></textarea>
       </div>
-      <button type="button" onclick="saveCustomActivity()" class="w-full bg-[#00e599] hover:bg-[#00c985] text-slate-950 font-black text-xs py-2.5 rounded-xl transition shadow">
+      <button type="button" onclick="saveCustomActivity()" class="w-full bg-[#38bdf8] hover:bg-[#0ea5e9] text-slate-950 font-black text-xs py-2.5 rounded-xl transition shadow">
         Save Activity
       </button>
     </div>
@@ -487,52 +568,52 @@
 
   <!-- MODAL: EDIT WEDGE MATRIX -->
   <div id="wedgeModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-[#0d120f] border border-white/[0.08] rounded-2xl p-4 w-full max-w-sm space-y-3 shadow-2xl">
+    <div class="bg-[#0c1217] border border-white/[0.08] rounded-2xl p-4 w-full max-w-sm space-y-3 shadow-2xl">
       <div class="flex justify-between items-center">
         <h3 class="text-xs font-black text-white uppercase tracking-wider">Configure Wedge Matrix</h3>
         <button type="button" onclick="closeWedgeModal()" class="text-slate-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="space-y-2 text-xs">
-        <p class="text-[9px] font-black text-[#00e599] uppercase">50° Gap Wedge</p>
+        <p class="text-[9px] font-black text-[#38bdf8] uppercase">50° Gap Wedge</p>
         <div class="grid grid-cols-3 gap-1.5">
-          <input type="number" id="inp_50_half" placeholder="1/2" class="bg-[#141b16] p-1.5 rounded-lg border border-white/[0.06] text-center text-white">
-          <input type="number" id="inp_50_three" placeholder="3/4" class="bg-[#141b16] p-1.5 rounded-lg border border-white/[0.06] text-center text-white">
-          <input type="number" id="inp_50_full" placeholder="Full" class="bg-[#141b16] p-1.5 rounded-lg border border-white/[0.06] text-center text-white">
+          <input type="number" id="inp_50_half" placeholder="1/2" class="bg-[#111921] p-1.5 rounded-lg border border-white/[0.06] text-center text-white font-mono">
+          <input type="number" id="inp_50_three" placeholder="3/4" class="bg-[#111921] p-1.5 rounded-lg border border-white/[0.06] text-center text-white font-mono">
+          <input type="number" id="inp_50_full" placeholder="Full" class="bg-[#111921] p-1.5 rounded-lg border border-white/[0.06] text-center text-white font-mono">
         </div>
-        <p class="text-[9px] font-black text-[#00e599] uppercase pt-1">54° Sand Wedge</p>
+        <p class="text-[9px] font-black text-[#38bdf8] uppercase pt-1">54° Sand Wedge</p>
         <div class="grid grid-cols-3 gap-1.5">
-          <input type="number" id="inp_54_half" placeholder="1/2" class="bg-[#141b16] p-1.5 rounded-lg border border-white/[0.06] text-center text-white">
-          <input type="number" id="inp_54_three" placeholder="3/4" class="bg-[#141b16] p-1.5 rounded-lg border border-white/[0.06] text-center text-white">
-          <input type="number" id="inp_54_full" placeholder="Full" class="bg-[#141b16] p-1.5 rounded-lg border border-white/[0.06] text-center text-white">
+          <input type="number" id="inp_54_half" placeholder="1/2" class="bg-[#111921] p-1.5 rounded-lg border border-white/[0.06] text-center text-white font-mono">
+          <input type="number" id="inp_54_three" placeholder="3/4" class="bg-[#111921] p-1.5 rounded-lg border border-white/[0.06] text-center text-white font-mono">
+          <input type="number" id="inp_54_full" placeholder="Full" class="bg-[#111921] p-1.5 rounded-lg border border-white/[0.06] text-center text-white font-mono">
         </div>
-        <p class="text-[9px] font-black text-[#00e599] uppercase pt-1">58° Lob Wedge</p>
+        <p class="text-[9px] font-black text-[#38bdf8] uppercase pt-1">58° Lob Wedge</p>
         <div class="grid grid-cols-3 gap-1.5">
-          <input type="number" id="inp_58_half" placeholder="1/2" class="bg-[#141b16] p-1.5 rounded-lg border border-white/[0.06] text-center text-white">
-          <input type="number" id="inp_58_three" placeholder="3/4" class="bg-[#141b16] p-1.5 rounded-lg border border-white/[0.06] text-center text-white">
-          <input type="number" id="inp_58_full" placeholder="Full" class="bg-[#141b16] p-1.5 rounded-lg border border-white/[0.06] text-center text-white">
+          <input type="number" id="inp_58_half" placeholder="1/2" class="bg-[#111921] p-1.5 rounded-lg border border-white/[0.06] text-center text-white font-mono">
+          <input type="number" id="inp_58_three" placeholder="3/4" class="bg-[#111921] p-1.5 rounded-lg border border-white/[0.06] text-center text-white font-mono">
+          <input type="number" id="inp_58_full" placeholder="Full" class="bg-[#111921] p-1.5 rounded-lg border border-white/[0.06] text-center text-white font-mono">
         </div>
       </div>
-      <button type="button" onclick="saveWedgeMatrix()" class="w-full bg-[#00e599] hover:bg-[#00c985] text-slate-950 font-black text-xs py-2.5 rounded-xl shadow mt-2">
+      <button type="button" onclick="saveWedgeMatrix()" class="w-full bg-[#38bdf8] hover:bg-[#0ea5e9] text-slate-950 font-black text-xs py-2.5 rounded-xl shadow mt-2 transition">
         Save Matrix
       </button>
     </div>
   </div>
 
-  <!-- Bottom Navigation Bar (Gym renamed to Train) -->
-  <nav id="bottom-nav" class="bg-[#090d0a]/98 border-t border-white/[0.06] px-6 pt-2 safe-bottom-nav flex justify-between items-center max-w-lg mx-auto backdrop-blur-xl">
-    <button type="button" onclick="showTab('schedule')" class="nav-btn flex flex-col items-center text-[#00e599] cursor-pointer py-1 px-3" data-tab="schedule">
+  <!-- Bottom Navigation Bar (Powder Blue TrackMan Theme) -->
+  <nav id="bottom-nav" class="bg-[#070b0e]/98 border-t border-white/[0.06] px-6 pt-2 safe-bottom-nav flex justify-between items-center max-w-lg mx-auto backdrop-blur-xl">
+    <button type="button" onclick="showTab('schedule')" class="nav-btn flex flex-col items-center text-[#38bdf8] cursor-pointer py-1 px-3" data-tab="schedule">
       <i class="fa-solid fa-calendar-week text-base pointer-events-none"></i>
       <span class="text-[9px] font-semibold mt-1 pointer-events-none">Calendar</span>
     </button>
-    <button type="button" onclick="showTab('train')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-[#00e599] cursor-pointer py-1 px-3" data-tab="train">
+    <button type="button" onclick="showTab('train')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-[#38bdf8] cursor-pointer py-1 px-3" data-tab="train">
       <i class="fa-solid fa-bolt text-base pointer-events-none"></i>
       <span class="text-[9px] font-semibold mt-1 pointer-events-none">Train</span>
     </button>
-    <button type="button" onclick="showTab('trackman')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-[#00e599] cursor-pointer py-1 px-3" data-tab="trackman">
+    <button type="button" onclick="showTab('trackman')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-[#38bdf8] cursor-pointer py-1 px-3" data-tab="trackman">
       <i class="fa-solid fa-bullseye text-base pointer-events-none"></i>
       <span class="text-[9px] font-semibold mt-1 pointer-events-none">TrackMan</span>
     </button>
-    <button type="button" onclick="showTab('scoring')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-[#00e599] cursor-pointer py-1 px-3" data-tab="scoring">
+    <button type="button" onclick="showTab('scoring')" class="nav-btn flex flex-col items-center text-slate-500 hover:text-[#38bdf8] cursor-pointer py-1 px-3" data-tab="scoring">
       <i class="fa-solid fa-chart-line text-base pointer-events-none"></i>
       <span class="text-[9px] font-semibold mt-1 pointer-events-none">GHIN</span>
     </button>
@@ -1513,7 +1594,7 @@
       }
     };
 
-    // PERIODIZED SIMULATOR DRILLS ACCORDING TO WEEKLY GYM BIOMECHANICS
+    // PERIODIZED SIMULATOR DRILLS
     const weeklySimDrills = {
       1: {
         2: {
@@ -1655,6 +1736,10 @@
     let activeTrainDay = 1;
     let selectedCalendarDayIdx = 0;
     let calendarWeekOffset = 0;
+    let currentReadiness = 'norm';
+    let marineLayerActive = false;
+    let restTimerInterval = null;
+    let restSecondsLeft = 90;
 
     // PERSISTENT STORAGE
     let customActivities = JSON.parse(localStorage.getItem('sb_custom_activities')) || {};
@@ -1671,19 +1756,20 @@
     };
 
     let trackmanShots = JSON.parse(localStorage.getItem('sb_trackman_shots')) || [
-      { club: 'Driver', speed: 172.4, carry: 298, smash: 1.49 },
-      { club: '3-Wood', speed: 158.0, carry: 262, smash: 1.46 },
-      { club: '2-Iron', speed: 151.2, carry: 246, smash: 1.44 },
-      { club: '4-Iron', speed: 142.1, carry: 224, smash: 1.43 },
-      { club: '6-Iron', speed: 130.5, carry: 197, smash: 1.41 },
-      { club: '8-Iron', speed: 119.0, carry: 168, smash: 1.39 },
-      { club: 'PW', speed: 108.5, carry: 142, smash: 1.37 }
+      { club: 'Driver', speed: 172.4, carry: 298, smash: 1.49, offline: -4 },
+      { club: 'Driver', speed: 173.1, carry: 302, smash: 1.50, offline: 3 },
+      { club: '3-Wood', speed: 158.0, carry: 262, smash: 1.46, offline: -2 },
+      { club: '2-Iron', speed: 151.2, carry: 246, smash: 1.44, offline: 1 },
+      { club: '4-Iron', speed: 142.1, carry: 224, smash: 1.43, offline: -3 },
+      { club: '6-Iron', speed: 130.5, carry: 197, smash: 1.41, offline: 2 },
+      { club: '8-Iron', speed: 119.0, carry: 168, smash: 1.39, offline: -1 },
+      { club: 'PW', speed: 108.5, carry: 142, smash: 1.37, offline: 0 }
     ];
 
     function showTab(tabId) {
       document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
       document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.classList.remove('text-[#00e599]');
+        btn.classList.remove('text-[#38bdf8]');
         btn.classList.add('text-slate-500');
       });
       const target = document.getElementById('tab-' + tabId);
@@ -1691,9 +1777,10 @@
       const activeBtn = document.querySelector(`.nav-btn[data-tab="${tabId}"]`);
       if (activeBtn) {
         activeBtn.classList.remove('text-slate-500');
-        activeBtn.classList.add('text-[#00e599]');
+        activeBtn.classList.add('text-[#38bdf8]');
       }
       if (tabId === 'scoring') initChart();
+      if (tabId === 'trackman') renderDispersionCanvas();
     }
 
     function changeWeekOffset(delta) {
@@ -1730,7 +1817,7 @@
         const pill = document.createElement('button');
         pill.type = 'button';
         pill.className = `cal-pill flex flex-col items-center py-2 px-1 rounded-xl text-center border cursor-pointer transition ${
-          isToday ? 'bg-[#00e599] text-slate-950 font-black border-[#00e599] shadow-[0_0_10px_rgba(0,229,153,0.4)]' : 'bg-[#141b16] text-slate-300 border-white/[0.04] hover:bg-[#1b251e]'
+          isToday ? 'bg-[#38bdf8] text-slate-950 font-black border-[#38bdf8] shadow-[0_0_10px_rgba(56,189,248,0.4)]' : 'bg-[#111921] text-slate-300 border-white/[0.04] hover:bg-[#18232e]'
         }`;
         pill.onclick = () => selectCalendarDay(i, d);
         pill.innerHTML = `
@@ -1746,8 +1833,8 @@
     function selectCalendarDay(dayIdx, dateObj) {
       selectedCalendarDayIdx = dayIdx;
       document.querySelectorAll('.cal-pill').forEach((btn, idx) => {
-        if (idx === dayIdx) btn.classList.add('ring-2', 'ring-[#00e599]');
-        else btn.classList.remove('ring-2', 'ring-[#00e599]');
+        if (idx === dayIdx) btn.classList.add('ring-2', 'ring-[#38bdf8]');
+        else btn.classList.remove('ring-2', 'ring-[#38bdf8]');
       });
 
       const prog = getProgramForWeek(currentWeek);
@@ -1760,13 +1847,13 @@
       const detailContainer = document.getElementById('activeDayDetailContainer');
       if (detailContainer) {
         detailContainer.innerHTML = `
-          <div class="bg-[#0d120f] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl">
+          <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl">
             <div class="flex justify-between items-start mb-2">
               <div>
-                <p class="text-xs font-bold text-[#00e599]">${dayData.type} &bull; ${dayData.time}</p>
+                <p class="text-xs font-bold text-[#38bdf8]">${dayData.type} &bull; ${dayData.time}</p>
                 <p class="text-[11px] text-slate-300 mt-0.5 leading-relaxed">${dayData.focus}</p>
               </div>
-              <button type="button" onclick="goToDayInTrainTab(${dayIdx + 1})" class="bg-[#141b16] hover:bg-[#00e599] hover:text-slate-950 text-[#00e599] text-[11px] font-bold px-2.5 py-1 rounded-lg border border-white/[0.06] transition">
+              <button type="button" onclick="goToDayInTrainTab(${dayIdx + 1})" class="bg-[#111921] hover:bg-[#38bdf8] hover:text-slate-950 text-[#38bdf8] text-[11px] font-bold px-2.5 py-1 rounded-lg border border-white/[0.06] transition">
                 Open &rarr;
               </button>
             </div>
@@ -1787,11 +1874,11 @@
       const allDays = document.getElementById('allDaysContainer');
       if (allDays) {
         allDays.innerHTML = prog.schedule.map((item, idx) => `
-          <div onclick="selectCalendarDay(${idx})" class="bg-[#0d120f] p-3 rounded-xl border border-white/[0.04] flex justify-between items-center cursor-pointer hover:border-[#00e599] transition">
+          <div onclick="selectCalendarDay(${idx})" class="bg-[#0c1217] p-3 rounded-xl border border-white/[0.04] flex justify-between items-center cursor-pointer hover:border-[#38bdf8] transition">
             <div>
               <div class="flex items-center gap-2 mb-0.5">
                 <span class="text-xs font-bold text-white">${item.dayFull}</span>
-                <span class="text-[9px] font-extrabold px-1.5 py-0.2 rounded bg-white/[0.06] text-[#00e599]">${item.badge}</span>
+                <span class="text-[9px] font-extrabold px-1.5 py-0.2 rounded bg-white/[0.06] text-[#38bdf8]">${item.badge}</span>
               </div>
               <p class="text-[11px] text-slate-400">${item.type} &bull; ${item.time}</p>
             </div>
@@ -1804,7 +1891,76 @@
     }
 
     // ==========================================
-    // TRAIN HUB: FULL 7-DAY CONTENT ENGINE
+    // TRAIN HUB: CNS READINESS & REST TIMER
+    // ==========================================
+    function setReadiness(level) {
+      currentReadiness = level;
+      const statusText = document.getElementById('readinessStatusText');
+      ['readinessHigh', 'readinessNorm', 'readinessLow'].forEach(id => {
+        const el = document.getElementById(id);
+        el.className = 'px-2 py-1 rounded-lg text-[10px] font-bold text-slate-400 hover:text-white';
+      });
+
+      if (level === 'high') {
+        document.getElementById('readinessHigh').className = 'px-2 py-1 rounded-lg text-[10px] font-black text-slate-950 bg-[#38bdf8]';
+        statusText.innerText = 'High capacity: Add 1 over-speed intent rep.';
+      } else if (level === 'low') {
+        document.getElementById('readinessLow').className = 'px-2 py-1 rounded-lg text-[10px] font-black text-slate-950 bg-amber-400';
+        statusText.innerText = 'Fatigue detected: Auto-reducing volume by 1 set.';
+      } else {
+        document.getElementById('readinessNorm').className = 'px-2 py-1 rounded-lg text-[10px] font-black text-slate-950 bg-[#38bdf8]';
+        statusText.innerText = 'Volume set for normal target loads.';
+      }
+      renderTrainContent();
+    }
+
+    function playAudioChime() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, ctx.currentTime);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.4);
+      } catch (e) {}
+    }
+
+    function startRestTimer(seconds = 90) {
+      clearInterval(restTimerInterval);
+      restSecondsLeft = seconds;
+      const widget = document.getElementById('restTimerWidget');
+      const countEl = document.getElementById('restTimerCountdown');
+      widget.classList.remove('hidden');
+      countEl.innerText = restSecondsLeft;
+
+      restTimerInterval = setInterval(() => {
+        restSecondsLeft--;
+        countEl.innerText = restSecondsLeft;
+        if (restSecondsLeft <= 0) {
+          clearInterval(restTimerInterval);
+          playAudioChime();
+          widget.classList.add('hidden');
+        }
+      }, 1000);
+    }
+
+    function addRestTime(sec) {
+      restSecondsLeft += sec;
+      document.getElementById('restTimerCountdown').innerText = restSecondsLeft;
+    }
+
+    function cancelRestTimer() {
+      clearInterval(restTimerInterval);
+      document.getElementById('restTimerWidget').classList.add('hidden');
+    }
+
+    // ==========================================
+    // TRAIN HUB: 7-DAY SPLIT ENGINE
     // ==========================================
     function switchTrainDay(dayNum) {
       activeTrainDay = dayNum;
@@ -1812,12 +1968,11 @@
         const btn = document.getElementById(`trainDayBtn${i}`);
         if (!btn) continue;
         if (i === dayNum) {
-          btn.className = "flex-1 py-1.5 px-3 rounded-xl font-bold text-white bg-[#00e599]/20 border border-[#00e599]/30 whitespace-nowrap text-center transition";
+          btn.className = "flex-1 py-1.5 px-3 rounded-xl font-bold text-white bg-[#38bdf8]/20 border border-[#38bdf8]/30 whitespace-nowrap text-center transition";
         } else {
           btn.className = "flex-1 py-1.5 px-3 rounded-xl font-medium text-slate-400 hover:text-white whitespace-nowrap text-center transition";
         }
       }
-
       renderTrainContent();
     }
 
@@ -1855,38 +2010,40 @@
           } : origEx;
 
           const log = gymLogs[storageKey] || { completed: false, sets: [] };
+          let targetSetsLabel = origEx.sets;
+          if (currentReadiness === 'low') targetSetsLabel = targetSetsLabel.replace(/(\d+)\s*sets/, (m, p) => `${Math.max(2, parseInt(p)-1)} sets (Deloaded)`);
 
           return `
-            <div class="bg-[#0d120f] p-3.5 rounded-2xl border ${log.completed ? 'border-[#00e599]/60 bg-gradient-to-b from-[#101712] to-[#090d0a]' : 'border-white/[0.07]'} shadow-xl space-y-2.5">
+            <div class="bg-[#0c1217] p-3.5 rounded-2xl border ${log.completed ? 'border-[#38bdf8]/60 bg-gradient-to-b from-[#101923] to-[#070b0e]' : 'border-white/[0.07]'} shadow-xl space-y-2.5">
               <div class="flex justify-between items-start gap-2">
                 <div class="flex items-start gap-2.5">
-                  <button type="button" onclick="toggleExerciseComplete('${origEx.id}')" class="mt-0.5 w-6 h-6 rounded-full flex items-center justify-center border transition ${log.completed ? 'bg-[#00e599] border-[#00e599] text-slate-950 font-black shadow-[0_0_8px_rgba(0,229,153,0.5)]' : 'border-white/20 text-transparent hover:border-[#00e599]'}">
+                  <button type="button" onclick="toggleExerciseComplete('${origEx.id}')" class="mt-0.5 w-6 h-6 rounded-full flex items-center justify-center border transition ${log.completed ? 'bg-[#38bdf8] border-[#38bdf8] text-slate-950 font-black shadow-[0_0_8px_rgba(56,189,248,0.5)]' : 'border-white/20 text-transparent hover:border-[#38bdf8]'}">
                     <i class="fa-solid fa-check text-xs"></i>
                   </button>
                   <div>
-                    <h4 class="text-xs font-black ${log.completed ? 'text-[#00e599] line-through' : 'text-white'} flex items-center gap-1.5 flex-wrap">
-                      <span class="text-[#00e599] font-extrabold">${idx + 1}.</span> ${ex.name}
+                    <h4 class="text-xs font-black ${log.completed ? 'text-[#38bdf8] line-through' : 'text-white'} flex items-center gap-1.5 flex-wrap">
+                      <span class="text-[#38bdf8] font-extrabold">${idx + 1}.</span> ${ex.name}
                       ${isSwapped ? '<span class="text-[8px] bg-amber-500/10 text-amber-300 border border-amber-500/20 px-1 py-0.2 rounded font-bold uppercase">Alternate</span>' : ''}
                     </h4>
                     <p class="text-[10px] text-amber-300/90 font-semibold mt-0.5"><i class="fa-solid fa-bullseye text-[9px] mr-1"></i>${ex.cue}</p>
                   </div>
                 </div>
-                <span class="text-[9px] text-[#00e599] font-bold bg-[#141b16] px-2 py-0.5 rounded-lg border border-white/[0.04] shrink-0">${origEx.sets}</span>
+                <span class="text-[9px] text-[#38bdf8] font-bold bg-[#111921] px-2 py-0.5 rounded-lg border border-white/[0.04] shrink-0">${targetSetsLabel}</span>
               </div>
 
-              <!-- Weight & Rep Inputs (TrackMan Data Tile Style) -->
-              <div class="bg-[#060907] p-2.5 rounded-xl border border-white/[0.04] flex flex-wrap items-center justify-between gap-2">
+              <!-- TrackMan Data Tile Inputs -->
+              <div class="bg-[#070b0e] p-2.5 rounded-xl border border-white/[0.04] flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2 text-xs flex-1">
                   <div class="flex-1">
                     <span class="text-[8px] text-slate-500 uppercase tracking-widest block font-black mb-0.5">Weight (lbs)</span>
-                    <input type="number" id="weight_${origEx.id}" placeholder="e.g. 225" class="w-full bg-[#111713] text-[#00e599] font-mono font-bold p-1 rounded-lg border border-white/[0.06] text-xs">
+                    <input type="number" id="weight_${origEx.id}" placeholder="e.g. 225" class="w-full bg-[#111921] text-[#38bdf8] font-mono font-bold p-1 rounded-lg border border-white/[0.06] text-xs">
                   </div>
                   <div class="w-16">
                     <span class="text-[8px] text-slate-500 uppercase tracking-widest block font-black mb-0.5">Reps</span>
-                    <input type="number" id="reps_${origEx.id}" placeholder="5" class="w-full bg-[#111713] text-white font-mono font-bold p-1 rounded-lg border border-white/[0.06] text-xs text-center">
+                    <input type="number" id="reps_${origEx.id}" placeholder="5" class="w-full bg-[#111921] text-white font-mono font-bold p-1 rounded-lg border border-white/[0.06] text-xs text-center">
                   </div>
                 </div>
-                <button type="button" onclick="logExerciseSet('${origEx.id}')" class="bg-[#00e599] hover:bg-[#00c985] text-slate-950 font-black text-xs px-3 py-2 rounded-xl mt-3 flex items-center gap-1 shrink-0 shadow transition">
+                <button type="button" onclick="logExerciseSet('${origEx.id}')" class="bg-[#38bdf8] hover:bg-[#0ea5e9] text-slate-950 font-black text-xs px-3 py-2 rounded-xl mt-3 flex items-center gap-1 shrink-0 shadow transition">
                   <i class="fa-solid fa-plus text-[10px]"></i> Log Set
                 </button>
               </div>
@@ -1895,7 +2052,7 @@
               ${log.sets.length > 0 ? `
                 <div class="flex flex-wrap gap-1.5 pt-0.5">
                   ${log.sets.map((s, sIdx) => `
-                    <span class="text-[10px] bg-[#141b16] border border-white/[0.06] text-[#00e599] px-2 py-0.5 rounded-lg font-mono font-bold flex items-center gap-1.5">
+                    <span class="text-[10px] bg-[#111921] border border-white/[0.06] text-[#38bdf8] px-2 py-0.5 rounded-lg font-mono font-bold flex items-center gap-1.5">
                       Set ${sIdx + 1}: ${s.weight} lbs × ${s.reps}
                       <button type="button" onclick="deleteExerciseSet('${origEx.id}', ${sIdx})" class="text-slate-500 hover:text-red-400"><i class="fa-solid fa-xmark text-[9px]"></i></button>
                     </span>
@@ -1903,12 +2060,12 @@
                 </div>
               ` : ''}
 
-              <!-- Alternates & Tutorial Button -->
+              <!-- Action Row -->
               <div class="flex items-center justify-between pt-1 border-t border-white/[0.04]">
                 <button type="button" onclick="openAlternateModal('${origEx.id}', ${idx})" class="text-[10px] font-bold text-amber-300 hover:text-white bg-[#17140f] hover:bg-[#201c15] px-2.5 py-1 rounded-lg border border-amber-500/20 flex items-center gap-1.5 transition">
                   <i class="fa-solid fa-shuffle text-[9px]"></i> Swap (3 Alternates)
                 </button>
-                <button type="button" onclick="openDiagramModalByIndex(${idx})" class="text-[10px] font-bold text-[#00e599] hover:text-white bg-[#141b16] hover:bg-[#1b251e] px-2.5 py-1 rounded-lg border border-white/[0.06] flex items-center gap-1.5 transition">
+                <button type="button" onclick="openDiagramModalByIndex(${idx})" class="text-[10px] font-bold text-[#38bdf8] hover:text-white bg-[#111921] hover:bg-[#18232e] px-2.5 py-1 rounded-lg border border-white/[0.06] flex items-center gap-1.5 transition">
                   <i class="fa-solid fa-circle-play text-[10px]"></i> Correct Form
                 </button>
               </div>
@@ -1916,7 +2073,7 @@
           `;
         }).join('');
       } else {
-        // Non-Gym Days: Periodized Sim / Round / Recovery Checklists
+        // Non-Gym Days: Periodized Sim / Course / Recovery Checklists
         const cycleIndex = ((currentWeek - 1) % 4) + 1;
         let proto = null;
 
@@ -1935,14 +2092,14 @@
           const isDone = drillLogs[drillKey] || false;
 
           return `
-            <div class="bg-[#0d120f] p-3.5 rounded-2xl border ${isDone ? 'border-[#00e599]/60 bg-gradient-to-b from-[#101712] to-[#090d0a]' : 'border-white/[0.07]'} shadow-xl space-y-2">
+            <div class="bg-[#0c1217] p-3.5 rounded-2xl border ${isDone ? 'border-[#38bdf8]/60 bg-gradient-to-b from-[#101923] to-[#070b0e]' : 'border-white/[0.07]'} shadow-xl space-y-2">
               <div class="flex items-start gap-2.5">
-                <button type="button" onclick="toggleDrillComplete('${drill.id}')" class="mt-0.5 w-6 h-6 rounded-full flex items-center justify-center border transition ${isDone ? 'bg-[#00e599] border-[#00e599] text-slate-950 font-black shadow-[0_0_8px_rgba(0,229,153,0.5)]' : 'border-white/20 text-transparent hover:border-[#00e599]'}">
+                <button type="button" onclick="toggleDrillComplete('${drill.id}')" class="mt-0.5 w-6 h-6 rounded-full flex items-center justify-center border transition ${isDone ? 'bg-[#38bdf8] border-[#38bdf8] text-slate-950 font-black shadow-[0_0_8px_rgba(56,189,248,0.5)]' : 'border-white/20 text-transparent hover:border-[#38bdf8]'}">
                   <i class="fa-solid fa-check text-xs"></i>
                 </button>
                 <div class="flex-1">
-                  <h4 class="text-xs font-black ${isDone ? 'text-[#00e599] line-through' : 'text-white'} flex items-center gap-1.5">
-                    <span class="text-[#00e599] font-extrabold">${idx + 1}.</span> ${drill.title}
+                  <h4 class="text-xs font-black ${isDone ? 'text-[#38bdf8] line-through' : 'text-white'} flex items-center gap-1.5">
+                    <span class="text-[#38bdf8] font-extrabold">${idx + 1}.</span> ${drill.title}
                   </h4>
                   <p class="text-[11px] text-slate-300 leading-snug mt-1">${drill.cue}</p>
                 </div>
@@ -1985,6 +2142,7 @@
       weightInput.value = '';
       repsInput.value = '';
       renderTrainContent();
+      startRestTimer(90);
     }
 
     function deleteExerciseSet(origExId, setIdx) {
@@ -2009,7 +2167,7 @@
       const list = document.getElementById('alternatesOptionList');
 
       list.innerHTML = `
-        <button type="button" onclick="selectAlternate(null)" class="w-full text-left p-2.5 rounded-xl border border-white/[0.06] bg-[#141b16] hover:bg-[#1b251e] transition">
+        <button type="button" onclick="selectAlternate(null)" class="w-full text-left p-2.5 rounded-xl border border-white/[0.06] bg-[#111921] hover:bg-[#18232e] transition">
           <p class="text-xs font-bold text-white">Default: ${origEx.name}</p>
           <p class="text-[10px] text-slate-300 mt-0.5">Standard prescribed exercise</p>
         </button>
@@ -2068,11 +2226,8 @@
       document.getElementById('diagSetupText').innerText = origEx.setup || "Execute with controlled cadence, neutral spine, and full intent.";
       document.getElementById('diagCueText').innerText = origEx.golfTransfer || "Transfers ground force directly through the kinetic chain into clubhead release.";
 
-      const directBtn = document.getElementById('diagDirectVideoLink');
-      const searchBtn = document.getElementById('diagSearchVideoLink');
-      
-      directBtn.href = targetVideoUrl;
-      searchBtn.href = searchUrl;
+      document.getElementById('diagDirectVideoLink').href = targetVideoUrl;
+      document.getElementById('diagSearchVideoLink').href = searchUrl;
 
       document.getElementById('exerciseDiagramModal').classList.remove('hidden');
     }
@@ -2081,7 +2236,118 @@
       document.getElementById('exerciseDiagramModal').classList.add('hidden');
     }
 
-    // CUSTOM LOGGING
+    // ==========================================
+    // TRACKMAN TAB: 2D CORRIDOR & COASTAL DENSITY
+    // ==========================================
+    function toggleMarineLayer() {
+      marineLayerActive = !marineLayerActive;
+      const btn = document.getElementById('marineLayerToggleBtn');
+      const dot = document.getElementById('marineLayerDot');
+      if (marineLayerActive) {
+        btn.className = "text-[10px] bg-[#38bdf8]/20 text-[#38bdf8] font-bold px-2.5 py-1 rounded-xl border border-[#38bdf8]/40 flex items-center gap-1 transition";
+        dot.className = "w-2 h-2 rounded-full bg-[#38bdf8]";
+        document.getElementById('envTemp').value = 61;
+      } else {
+        btn.className = "text-[10px] bg-[#111921] text-slate-300 font-bold px-2.5 py-1 rounded-xl border border-white/[0.06] flex items-center gap-1 transition";
+        dot.className = "w-2 h-2 rounded-full bg-slate-500";
+        document.getElementById('envTemp').value = 68;
+      }
+      calculateEnvironmentalShift();
+    }
+
+    function calculateEnvironmentalShift() {
+      const temp = parseFloat(document.getElementById('envTemp').value) || 68;
+      const elev = parseFloat(document.getElementById('envElev').value) || 350;
+      
+      let factor = 1.0;
+      factor += ((temp - 70) * 0.001); // 1% per 10 degrees F
+      factor += (elev / 1000) * 0.015; // 1.5% per 1000ft
+      if (marineLayerActive) factor -= 0.035; // 3.5% dense coastal marine layer deduction
+
+      document.getElementById('envCarryDelta').innerText = (factor * 100).toFixed(1) + '%';
+      renderWedgeMatrix(factor);
+    }
+
+    function renderDispersionCanvas() {
+      const canvas = document.getElementById('dispersionCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width = canvas.parentElement.clientWidth;
+      const h = canvas.height = canvas.parentElement.clientHeight;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Draw Center Target Line & Corridor Borders (25-yd corridor)
+      const midX = w / 2;
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.07)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(midX, 0);
+      ctx.lineTo(midX, h);
+      ctx.stroke();
+
+      const corridorHalfWidth = w * 0.22;
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.03)';
+      ctx.fillRect(midX - corridorHalfWidth, 0, corridorHalfWidth * 2, h);
+
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.2)';
+      ctx.setLineDash([4, 4]);
+      ctx.strokeRect(midX - corridorHalfWidth, 0, corridorHalfWidth * 2, h);
+      ctx.setLineDash([]);
+
+      // Plot TrackMan Shots
+      let inCorridorCount = 0;
+      const plottedShots = trackmanShots.slice(0, 15);
+
+      plottedShots.forEach(s => {
+        const carry = parseFloat(s.carry) || 200;
+        const offline = parseFloat(s.offline) || 0; // Yards L/R
+
+        const y = h - ((carry - 100) / 220) * h;
+        const x = midX + (offline / 25) * corridorHalfWidth;
+
+        if (Math.abs(offline) <= 12.5) inCorridorCount++;
+
+        // Plot Ball
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = s.club === 'Driver' ? '#38bdf8' : '#cbd5e1';
+        ctx.fill();
+        ctx.strokeStyle = '#070b0e';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      });
+
+      const rate = plottedShots.length > 0 ? Math.round((inCorridorCount / plottedShots.length) * 100) : 80;
+      document.getElementById('corridorHitRate').innerText = `${rate}% In Corridor`;
+    }
+
+    // ==========================================
+    // GHIN SCORING & PREDICTIVE WHS SANDBOX
+    // ==========================================
+    function runWhsSimulation() {
+      const slope = parseFloat(document.getElementById('simSlope').value) || 125;
+      const rating = parseFloat(document.getElementById('simRating').value) || 71.5;
+      const gross = parseFloat(document.getElementById('simGrossScore').value) || 76;
+
+      const simDiff = ((gross - rating) * 113 / slope).toFixed(1);
+
+      // Clone existing 20 scores and insert new sim round
+      const cloneScores = [...ghinScores];
+      cloneScores.unshift({ diff: simDiff, used: true });
+      const current20 = cloneScores.slice(0, 20);
+
+      const countingSorted = current20.map(s => parseFloat(s.diff)).sort((a, b) => a - b).slice(0, 8);
+      const newIndex = (countingSorted.reduce((a, b) => a + b, 0) / 8).toFixed(1);
+      const currentIndex = parseFloat(document.getElementById('heroHandicap').innerText) || 8.1;
+      const delta = (newIndex - currentIndex).toFixed(1);
+
+      document.getElementById('simProjectedResult').innerHTML = `
+        <span class="${newIndex <= currentIndex ? 'text-[#38bdf8]' : 'text-amber-400'}">${newIndex} (${delta >= 0 ? '+' : ''}${delta})</span>
+      `;
+    }
+
+    // CUSTOM ACTIVITY LOGGING
     function openCustomActivityModal() {
       document.getElementById('customDateInput').value = new Date().toISOString().split('T')[0];
       document.getElementById('customActivityModal').classList.remove('hidden');
@@ -2108,13 +2374,13 @@
       const list = customActivities[selectedCalendarDayIdx] || [];
       if (list.length === 0) { container.innerHTML = ''; return; }
       container.innerHTML = `
-        <p class="text-[9px] font-black text-[#00e599] uppercase tracking-widest mt-2 mb-1">Logged Custom Sessions</p>
+        <p class="text-[9px] font-black text-[#38bdf8] uppercase tracking-widest mt-2 mb-1">Logged Custom Sessions</p>
         ${list.map((item, idx) => `
-          <div class="bg-[#090d0a] p-2.5 rounded-xl border border-white/[0.04] flex justify-between items-start">
+          <div class="bg-[#070b0e] p-2.5 rounded-xl border border-white/[0.04] flex justify-between items-start">
             <div>
               <div class="flex items-center gap-1.5 mb-0.5">
                 <span class="text-xs font-bold text-white">${item.title}</span>
-                <span class="text-[8px] bg-white/[0.06] text-[#00e599] px-1.5 py-0.2 rounded font-bold">${item.type}</span>
+                <span class="text-[8px] bg-white/[0.06] text-[#38bdf8] px-1.5 py-0.2 rounded font-bold">${item.type}</span>
                 <span class="text-[9px] text-slate-400">&bull; ${item.duration}</span>
               </div>
               ${item.notes ? `<p class="text-[11px] text-slate-300">${item.notes}</p>` : ''}
@@ -2167,11 +2433,11 @@
       renderWedgeMatrix();
       closeWedgeModal();
     }
-    function renderWedgeMatrix() {
+    function renderWedgeMatrix(factor = 1.0) {
       for (const club of ["50", "54", "58"]) {
-        document.getElementById(`wm_${club}_half`).innerText = wedgeMatrix[club].half + " yds";
-        document.getElementById(`wm_${club}_three`).innerText = wedgeMatrix[club].three + " yds";
-        document.getElementById(`wm_${club}_full`).innerText = wedgeMatrix[club].full + " yds";
+        document.getElementById(`wm_${club}_half`).innerText = Math.round(wedgeMatrix[club].half * factor) + " yds";
+        document.getElementById(`wm_${club}_three`).innerText = Math.round(wedgeMatrix[club].three * factor) + " yds";
+        document.getElementById(`wm_${club}_full`).innerText = Math.round(wedgeMatrix[club].full * factor) + " yds";
       }
     }
 
@@ -2196,7 +2462,7 @@
         return `
           <tr class="border-b border-white/[0.04]">
             <td class="py-1.5 px-2 font-bold text-white">${club}</td>
-            <td class="py-1.5 px-2 text-[#00e599] font-mono font-semibold">${avgCarry} yds</td>
+            <td class="py-1.5 px-2 text-[#38bdf8] font-mono font-semibold">${avgCarry} yds</td>
             <td class="py-1.5 px-2 text-slate-300 font-mono">${avgSpeed} mph</td>
             <td class="py-1.5 px-2 text-slate-400 font-mono">${avgSmash}</td>
             <td class="py-1.5 px-2 text-slate-500 font-mono">${d.carries.length}</td>
@@ -2246,12 +2512,14 @@
       const speed = parseFloat(document.getElementById('parsedSpeed').value);
       const carry = parseInt(document.getElementById('parsedCarry').value);
       const smash = parseFloat(document.getElementById('parsedSmash').value) || 1.48;
+      const offline = parseFloat(document.getElementById('parsedOffline').value) || 0;
       if (!speed || !carry) return alert("Verify speed and carry");
 
-      trackmanShots.unshift({ club, speed: speed.toFixed(1), carry, smash: smash.toFixed(2) });
+      trackmanShots.unshift({ club, speed: speed.toFixed(1), carry, smash: smash.toFixed(2), offline });
       localStorage.setItem('sb_trackman_shots', JSON.stringify(trackmanShots));
       renderTrackmanTable();
       renderBagGapping();
+      renderDispersionCanvas();
       document.getElementById('ocrResultForm').classList.add('hidden');
       alert("Shot recorded");
     }
@@ -2263,7 +2531,7 @@
         <tr class="border-b border-white/[0.04]">
           <td class="py-1.5 px-2 font-bold text-white">${s.club}</td>
           <td class="py-1.5 px-2 text-slate-300 font-mono">${s.carry} yds</td>
-          <td class="py-1.5 px-2 text-[#00e599] font-mono">${s.speed} mph</td>
+          <td class="py-1.5 px-2 text-[#38bdf8] font-mono">${s.speed} mph</td>
           <td class="py-1.5 px-2 text-slate-400 font-mono">${s.smash || '--'}</td>
         </tr>
       `).join('');
@@ -2325,6 +2593,7 @@
         }
 
         renderScoringTab();
+        runWhsSimulation();
         if (interactive) alert(`GHIN Synced!\nLive Index: ${data.handicapIndex || '8.1'}\n${ghinScores.length} rounds loaded.`);
       } catch (err) {
         if (interactive) alert("Sync error: " + err.message);
@@ -2346,27 +2615,31 @@
         const eighthDiff = countingScores[countingScores.length - 1].toFixed(1);
         document.getElementById('sim8thDiff').innerText = eighthDiff;
         document.getElementById('impactSimSummary').innerHTML = `Your 8th counting differential is <strong class="text-amber-300 font-mono">${eighthDiff}</strong>.`;
-        document.getElementById('simTargetAdvice').innerHTML = `Shoot a differential below <strong class="text-[#00e599] font-mono">${eighthDiff}</strong> in your next round to knock off this score and lower your 8.1 Index.`;
+        document.getElementById('simTargetAdvice').innerHTML = `Shoot a differential below <strong class="text-[#38bdf8] font-mono">${eighthDiff}</strong> in your next round to knock off this score and lower your 8.1 Index.`;
       }
 
       if (ghinScores.length === 0) {
         listContainer.innerHTML = `<p class="text-xs text-slate-500 py-3 text-center">No rounds synced yet. Tap 'Sync' above.</p>`;
       } else {
-        listContainer.innerHTML = ghinScores.map(s => `
-          <div class="bg-[#090d0a] p-3 rounded-xl border ${s.isUsed ? 'border-amber-500/30 bg-gradient-to-r from-[#141b16] to-[#090d0a]' : 'border-white/[0.04]'} flex justify-between items-center shadow-sm">
-            <div>
-              <div class="flex items-center gap-1.5 mb-0.5">
-                <span class="font-bold text-white text-xs">${s.course}</span>
-                ${s.isUsed ? '<span class="text-[8px] bg-amber-400 text-slate-950 font-black px-1.5 py-0.2 rounded uppercase">Counting</span>' : ''}
+        listContainer.innerHTML = ghinScores.map((s, idx) => {
+          const roundsUntilDrop = 20 - idx;
+          return `
+            <div class="bg-[#070b0e] p-3 rounded-xl border ${s.isUsed ? 'border-amber-500/30 bg-gradient-to-r from-[#111d27] to-[#070b0e]' : 'border-white/[0.04]'} flex justify-between items-center shadow-sm">
+              <div>
+                <div class="flex items-center gap-1.5 mb-0.5">
+                  <span class="font-bold text-white text-xs">${s.course}</span>
+                  ${s.isUsed ? '<span class="text-[8px] bg-amber-400 text-slate-950 font-black px-1.5 py-0.2 rounded uppercase">Counting</span>' : ''}
+                  <span class="text-[8px] bg-white/[0.05] text-slate-400 px-1.5 py-0.2 rounded font-mono">Drops in ${roundsUntilDrop}</span>
+                </div>
+                <p class="text-[10px] text-slate-400">${s.date} &bull; ${s.rating}/${s.slope}</p>
               </div>
-              <p class="text-[10px] text-slate-400">${s.date} &bull; ${s.rating}/${s.slope}</p>
+              <div class="text-right">
+                <span class="text-xs font-black bg-[#111921] text-[#38bdf8] border border-white/[0.06] px-2 py-1 rounded-lg inline-block mb-0.5 font-mono">${s.score}</span>
+                <p class="text-[10px] font-mono ${s.isUsed ? 'text-amber-400 font-bold' : 'text-slate-400'}">Diff: ${s.diff}</p>
+              </div>
             </div>
-            <div class="text-right">
-              <span class="text-xs font-black bg-[#141b16] text-[#00e599] border border-white/[0.06] px-2 py-1 rounded-lg inline-block mb-0.5 font-mono">${s.score}</span>
-              <p class="text-[10px] font-mono ${s.isUsed ? 'text-amber-400 font-bold' : 'text-slate-400'}">Diff: ${s.diff}</p>
-            </div>
-          </div>
-        `).join('');
+          `;
+        }).join('');
       }
       initChart();
     }
@@ -2381,7 +2654,7 @@
       const reversed = [...ghinScores].reverse();
       const labels = reversed.length > 0 ? reversed.map(r => r.date) : ['R1', 'R2', 'R3', 'R4', 'R5'];
       const dataPoints = reversed.length > 0 ? reversed.map(r => parseFloat(r.diff)) : [8.4, 8.2, 8.1, 7.8, 8.1];
-      const pointColors = reversed.length > 0 ? reversed.map(r => r.isUsed ? '#f59e0b' : '#00e599') : ['#00e599', '#00e599', '#00e599', '#00e599', '#00e599'];
+      const pointColors = reversed.length > 0 ? reversed.map(r => r.isUsed ? '#f59e0b' : '#38bdf8') : ['#38bdf8', '#38bdf8', '#38bdf8', '#38bdf8', '#38bdf8'];
 
       chartInstance = new Chart(ctx, {
         type: 'line',
@@ -2391,8 +2664,8 @@
             {
               label: 'Differential',
               data: dataPoints,
-              borderColor: '#00e599',
-              backgroundColor: 'rgba(0, 229, 153, 0.1)',
+              borderColor: '#38bdf8',
+              backgroundColor: 'rgba(56, 189, 248, 0.1)',
               pointBackgroundColor: pointColors,
               pointRadius: reversed.length > 0 ? reversed.map(r => r.isUsed ? 5 : 3) : 3,
               tension: 0.35,
@@ -2414,7 +2687,7 @@
           plugins: { legend: { display: false } },
           scales: {
             x: { ticks: { color: '#64748b', font: { size: 9 } }, grid: { display: false } },
-            y: { ticks: { color: '#64748b', font: { size: 9 } }, grid: { color: '#141b16' } }
+            y: { ticks: { color: '#64748b', font: { size: 9 } }, grid: { color: '#111921' } }
           }
         }
       });
@@ -2431,6 +2704,8 @@
       renderBagGapping();
       renderTrackmanTable();
       renderScoringTab();
+      calculateEnvironmentalShift();
+      runWhsSimulation();
 
       const now = Date.now();
       const twelveHours = 12 * 60 * 60 * 1000;
