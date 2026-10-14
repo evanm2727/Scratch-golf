@@ -190,9 +190,9 @@
       <div id="trainContentList" class="space-y-2.5"></div>
     </div>
 
-    <!-- TAB 3: TRACKMAN & WEDGE MATRIX -->
+  <!-- TAB 3: TRACKMAN & WEDGE MATRIX -->
     <div id="tab-trackman" class="tab-pane hidden space-y-3">
-     <!-- 2D Visual Corridor & Dispersion Heatmap -->
+      <!-- 1. 2D Visual Corridor & Dispersion Heatmap -->
       <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl">
         <div class="flex justify-between items-center mb-2 px-1">
           <div>
@@ -221,7 +221,7 @@
         </div>
       </div>
 
-      <!-- Wedge Matrix -->
+      <!-- 2. Wedge Matrix -->
       <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl">
         <div class="flex justify-between items-center mb-2.5">
           <div>
@@ -263,7 +263,7 @@
         </div>
       </div>
 
-      <<!-- TrackMan Studio URL Scanner, OCR Reader & Manual Logger -->
+      <!-- 3. TrackMan Studio URL Scanner, OCR Reader & Manual Logger -->
       <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl space-y-3">
         <div class="flex justify-between items-center">
           <h2 class="text-xs font-black text-white flex items-center gap-2">
@@ -279,7 +279,6 @@
           </div>
         </div>
 
-        <!-- 1. TrackMan Studio Report URL Scanner -->
         <div class="bg-[#070b0e] p-2.5 rounded-xl border border-white/[0.05] space-y-2">
           <div class="flex justify-between items-center">
             <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8]">Studio Report URL or File Import</span>
@@ -299,7 +298,6 @@
           </p>
         </div>
 
-        <!-- 2. Camera / Photo OCR Buttons -->
         <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="processTrackmanImage(event)">
         <input type="file" id="galleryInput" accept="image/*" class="hidden" onchange="processTrackmanImage(event)">
 
@@ -317,7 +315,6 @@
           <p class="text-xs text-slate-300 font-medium">Scanning monitor metrics...</p>
         </div>
 
-        <!-- 3. Single-Shot Manual Entry / OCR Confirmation Form -->
         <div id="ocrResultForm" class="pt-2 border-t border-white/[0.06]">
           <div class="grid grid-cols-5 gap-1.5 mb-2 text-xs">
             <div>
@@ -358,48 +355,7 @@
         </div>
       </div>
 
-        <!-- Always visible by default so you can log shots anytime -->
-        <div id="ocrResultForm" class="mt-3 pt-3 border-t border-white/[0.06]">
-          <div class="grid grid-cols-5 gap-1.5 mb-2 text-xs">
-            <div>
-              <label class="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Club</label>
-              <select id="parsedClub" class="w-full bg-[#111921] rounded-lg p-1.5 border border-white/[0.06] text-white text-xs">
-                <option value="Driver">Driver</option>
-                <option value="3-Wood">3-Wood</option>
-                <option value="2-Iron">2-Iron</option>
-                <option value="4-Iron">4-Iron</option>
-                <option value="6-Iron">6-Iron</option>
-                <option value="8-Iron">8-Iron</option>
-                <option value="PW">PW</option>
-                <option value="50-Deg">50°</option>
-                <option value="54-Deg">54°</option>
-                <option value="58-Deg">58°</option>
-              </select>
-            </div>
-            <div>
-              <label class="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Ball Spd</label>
-              <input type="number" step="0.1" id="parsedSpeed" placeholder="172" class="w-full bg-[#111921] rounded-lg p-1.5 border border-white/[0.06] text-[#38bdf8] font-mono font-bold text-xs">
-            </div>
-            <div>
-              <label class="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Carry</label>
-              <input type="number" id="parsedCarry" placeholder="295" class="w-full bg-[#111921] rounded-lg p-1.5 border border-white/[0.06] text-slate-200 font-mono text-xs">
-            </div>
-            <div>
-              <label class="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Smash</label>
-              <input type="number" step="0.01" id="parsedSmash" placeholder="1.49" class="w-full bg-[#111921] rounded-lg p-1.5 border border-white/[0.06] text-slate-200 font-mono text-xs">
-            </div>
-            <div>
-              <label class="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Off (-L/+R)</label>
-              <input type="number" id="parsedOffline" placeholder="-4" class="w-full bg-[#111921] rounded-lg p-1.5 border border-white/[0.06] text-amber-300 font-mono text-xs">
-            </div>
-          </div>
-          <button type="button" onclick="confirmParsedShot()" class="w-full bg-[#38bdf8] hover:bg-[#0ea5e9] text-slate-950 font-black text-xs py-2 rounded-xl shadow transition">
-            Plot & Save Shot
-          </button>
-        </div>
-      </div>
-
-      <!-- Bag Gapping & Recent Shots -->
+      <!-- 4. Bag Gapping Benchmarks -->
       <div class="bg-[#0c1217] p-3 rounded-2xl border border-white/[0.07] shadow-xl">
         <h3 class="text-xs font-black text-slate-300 uppercase tracking-wider mb-2 flex items-center justify-between">
           <span>Bag Gapping Benchmarks</span>
@@ -421,6 +377,7 @@
         </div>
       </div>
 
+      <!-- 5. Logged Shots History -->
       <div class="bg-[#0c1217] p-3 rounded-2xl border border-white/[0.07] shadow-xl">
         <h3 class="text-xs font-black text-slate-300 uppercase tracking-wider mb-2">Logged Shots History</h3>
         <div class="overflow-x-auto">
@@ -438,7 +395,6 @@
         </div>
       </div>
     </div>
-
     <!-- TAB 4: PLAY (ON-COURSE STRATEGY & PACE HUB) -->
     <div id="tab-play" class="tab-pane hidden space-y-3">
       <!-- Course & Tee Setup -->
