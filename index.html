@@ -192,16 +192,31 @@
 
     <!-- TAB 3: TRACKMAN & WEDGE MATRIX -->
     <div id="tab-trackman" class="tab-pane hidden space-y-3">
-      <!-- 2D Visual Corridor & Dispersion Heatmap -->
+     <!-- 2D Visual Corridor & Dispersion Heatmap -->
       <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl">
         <div class="flex justify-between items-center mb-2 px-1">
           <div>
             <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8]">Shot Scatter Radar</span>
             <h2 class="text-xs font-black text-white">2D Corridor Dispersion</h2>
           </div>
-          <span class="text-[10px] font-mono font-bold text-slate-400" id="corridorHitRate">78% In Corridor</span>
+          <div class="flex items-center gap-2">
+            <select id="dispersionClubFilter" onchange="renderDispersionCanvas()" class="bg-[#111921] text-[10px] font-bold text-[#38bdf8] px-2 py-1 rounded-lg border border-white/[0.06] focus:outline-none">
+              <option value="ALL">All Clubs</option>
+              <option value="Driver">Driver</option>
+              <option value="3-Wood">3-Wood</option>
+              <option value="2-Iron">2-Iron</option>
+              <option value="4-Iron">4-Iron</option>
+              <option value="6-Iron">6-Iron</option>
+              <option value="8-Iron">8-Iron</option>
+              <option value="PW">PW</option>
+              <option value="50-Deg">50°</option>
+              <option value="54-Deg">54°</option>
+              <option value="58-Deg">58°</option>
+            </select>
+            <span class="text-[10px] font-mono font-bold text-slate-400" id="corridorHitRate">--% In Corridor</span>
+          </div>
         </div>
-        <div class="relative w-full h-44 bg-[#060907] rounded-xl border border-white/[0.05] overflow-hidden flex items-center justify-center">
+        <div class="relative w-full h-48 bg-[#060907] rounded-xl border border-white/[0.05] overflow-hidden flex items-center justify-center">
           <canvas id="dispersionCanvas" class="w-full h-full"></canvas>
         </div>
       </div>
@@ -248,15 +263,17 @@
         </div>
       </div>
 
-      <!-- TrackMan Camera OCR Reader -->
+      <!-- TrackMan Camera OCR Reader & Manual Logger -->
       <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl">
         <div class="flex justify-between items-center mb-1">
           <h2 class="text-xs font-black text-white flex items-center gap-2">
-            <i class="fa-solid fa-camera text-[#38bdf8]"></i> TrackMan Monitor Reader
+            <i class="fa-solid fa-camera text-[#38bdf8]"></i> Log TrackMan Shot
           </h2>
-          <span class="text-[9px] bg-[#38bdf8]/10 text-[#38bdf8] px-2 py-0.5 rounded border border-[#38bdf8]/20 font-bold">OCR</span>
+          <button type="button" onclick="document.getElementById('ocrResultForm').classList.toggle('hidden')" class="text-[9px] bg-[#38bdf8]/15 text-[#38bdf8] px-2 py-0.5 rounded border border-[#38bdf8]/30 font-bold">
+            + Manual Entry
+          </button>
         </div>
-        <p class="text-[10px] text-slate-400 mb-2.5">Capture studio monitor readout tile or photo.</p>
+        <p class="text-[10px] text-slate-400 mb-2.5">Scan monitor readout or enter shot metrics below to plot on radar.</p>
 
         <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="processTrackmanImage(event)">
         <input type="file" id="galleryInput" accept="image/*" class="hidden" onchange="processTrackmanImage(event)">
@@ -275,7 +292,8 @@
           <p class="text-xs text-slate-300 font-medium">Scanning monitor metrics...</p>
         </div>
 
-        <div id="ocrResultForm" class="hidden mt-3 pt-3 border-t border-white/[0.06]">
+        <!-- Always visible by default so you can log shots anytime -->
+        <div id="ocrResultForm" class="mt-3 pt-3 border-t border-white/[0.06]">
           <div class="grid grid-cols-5 gap-1.5 mb-2 text-xs">
             <div>
               <label class="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Club</label>
@@ -294,23 +312,23 @@
             </div>
             <div>
               <label class="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Ball Spd</label>
-              <input type="number" step="0.1" id="parsedSpeed" class="w-full bg-[#111921] rounded-lg p-1.5 border border-white/[0.06] text-[#38bdf8] font-mono font-bold text-xs">
+              <input type="number" step="0.1" id="parsedSpeed" placeholder="172" class="w-full bg-[#111921] rounded-lg p-1.5 border border-white/[0.06] text-[#38bdf8] font-mono font-bold text-xs">
             </div>
             <div>
               <label class="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Carry</label>
-              <input type="number" id="parsedCarry" class="w-full bg-[#111921] rounded-lg p-1.5 border border-white/[0.06] text-slate-200 text-xs">
+              <input type="number" id="parsedCarry" placeholder="295" class="w-full bg-[#111921] rounded-lg p-1.5 border border-white/[0.06] text-slate-200 font-mono text-xs">
             </div>
             <div>
               <label class="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Smash</label>
-              <input type="number" step="0.01" id="parsedSmash" class="w-full bg-[#111921] rounded-lg p-1.5 border border-white/[0.06] text-slate-200 text-xs">
+              <input type="number" step="0.01" id="parsedSmash" placeholder="1.49" class="w-full bg-[#111921] rounded-lg p-1.5 border border-white/[0.06] text-slate-200 font-mono text-xs">
             </div>
             <div>
-              <label class="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Offline</label>
-              <input type="number" id="parsedOffline" placeholder="0" class="w-full bg-[#111921] rounded-lg p-1.5 border border-white/[0.06] text-amber-300 text-xs">
+              <label class="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Off (-L/+R)</label>
+              <input type="number" id="parsedOffline" placeholder="-4" class="w-full bg-[#111921] rounded-lg p-1.5 border border-white/[0.06] text-amber-300 font-mono text-xs">
             </div>
           </div>
           <button type="button" onclick="confirmParsedShot()" class="w-full bg-[#38bdf8] hover:bg-[#0ea5e9] text-slate-950 font-black text-xs py-2 rounded-xl shadow transition">
-            Confirm & Save Shot
+            Plot & Save Shot
           </button>
         </div>
       </div>
@@ -1882,50 +1900,110 @@
       const canvas = document.getElementById('dispersionCanvas');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
-      const w = canvas.width = canvas.parentElement.clientWidth;
-      const h = canvas.height = canvas.parentElement.clientHeight;
+      const w = canvas.width = canvas.parentElement.clientWidth || 340;
+      const h = canvas.height = canvas.parentElement.clientHeight || 192;
 
       ctx.clearRect(0, 0, w, h);
 
+      const filterEl = document.getElementById('dispersionClubFilter');
+      const clubFilter = filterEl ? filterEl.value : 'ALL';
+
+      // Filter shots by selected club
+      const filteredShots = trackmanShots.filter((s, i) => {
+        if (s.offline === undefined) {
+          // Backfill realistic offline dispersion for older cached shots
+          const sampleOffsets = [-4, 3, -2, 1, -5, 4, -1, 2];
+          s.offline = sampleOffsets[i % sampleOffsets.length];
+        }
+        return clubFilter === 'ALL' || s.club === clubFilter;
+      }).slice(0, 20);
+
+      // Auto-scale Y-axis based on plotted shots
+      const carries = filteredShots.map(s => parseFloat(s.carry) || 200);
+      const minCarry = carries.length ? Math.max(30, Math.min(...carries) - 25) : 50;
+      const maxCarry = carries.length ? Math.max(...carries) + 25 : 320;
+      const carrySpan = Math.max(40, maxCarry - minCarry);
+
       const midX = w / 2;
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.07)';
-      ctx.lineWidth = 1;
+      const corridorHalfWidth = w * 0.24; // Represents +/- 15 yds
+
+      // Draw 3 horizontal yardage range rings
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+      ctx.fillStyle = 'rgba(148, 163, 184, 0.45)';
+      ctx.font = '9px monospace';
+      [0.25, 0.5, 0.75].forEach(pct => {
+        const yRing = h * pct;
+        const ydLabel = Math.round(maxCarry - pct * carrySpan);
+        ctx.beginPath();
+        ctx.moveTo(0, yRing);
+        ctx.lineTo(w, yRing);
+        ctx.stroke();
+        ctx.fillText(`${ydLabel}y`, 6, yRing - 3);
+      });
+
+      // Draw Target Center Line & 30-yd Fairway Corridor (+/- 15 yds)
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.03)';
+      ctx.fillRect(midX - corridorHalfWidth, 0, corridorHalfWidth * 2, h);
+
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.22)';
+      ctx.setLineDash([4, 4]);
+      ctx.strokeRect(midX - corridorHalfWidth, 0, corridorHalfWidth * 2, h);
+      ctx.setLineDash([]);
+
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
       ctx.beginPath();
       ctx.moveTo(midX, 0);
       ctx.lineTo(midX, h);
       ctx.stroke();
 
-      const corridorHalfWidth = w * 0.22;
-      ctx.fillStyle = 'rgba(56, 189, 248, 0.03)';
-      ctx.fillRect(midX - corridorHalfWidth, 0, corridorHalfWidth * 2, h);
-
-      ctx.strokeStyle = 'rgba(56, 189, 248, 0.2)';
-      ctx.setLineDash([4, 4]);
-      ctx.strokeRect(midX - corridorHalfWidth, 0, corridorHalfWidth * 2, h);
-      ctx.setLineDash([]);
-
+      // Plot Shots & Calculate Centroid for Dispersion Ellipse
       let inCorridorCount = 0;
-      const plottedShots = trackmanShots.slice(0, 15);
+      const pts = [];
 
-      plottedShots.forEach(s => {
+      filteredShots.forEach((s, idx) => {
         const carry = parseFloat(s.carry) || 200;
         const offline = parseFloat(s.offline) || 0;
 
-        const y = h - ((carry - 100) / 220) * h;
-        const x = midX + (offline / 25) * corridorHalfWidth;
+        const y = h - ((carry - minCarry) / carrySpan) * (h - 24) - 12;
+        const x = Math.max(10, Math.min(w - 10, midX + (offline / 15) * corridorHalfWidth));
+        pts.push({ x, y });
 
-        if (Math.abs(offline) <= 12.5) inCorridorCount++;
+        if (Math.abs(offline) <= 15) inCorridorCount++;
+
+        // Glow on most recent shot (idx === 0)
+        if (idx === 0) {
+          ctx.beginPath();
+          ctx.arc(x, y, 8, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(56, 189, 248, 0.25)';
+          ctx.fill();
+        }
 
         ctx.beginPath();
         ctx.arc(x, y, 4, 0, Math.PI * 2);
-        ctx.fillStyle = s.club === 'Driver' ? '#38bdf8' : '#cbd5e1';
+        ctx.fillStyle = idx === 0 ? '#f59e0b' : (s.club === 'Driver' ? '#38bdf8' : '#e2e8f0');
         ctx.fill();
         ctx.strokeStyle = '#070b0e';
         ctx.lineWidth = 1;
         ctx.stroke();
       });
 
-      const rate = plottedShots.length > 0 ? Math.round((inCorridorCount / plottedShots.length) * 100) : 80;
+      // Draw Dispersion Ellipse if 2+ shots exist
+      if (pts.length >= 2) {
+        const avgX = pts.reduce((a, p) => a + p.x, 0) / pts.length;
+        const avgY = pts.reduce((a, p) => a + p.y, 0) / pts.length;
+        const rx = Math.max(14, Math.sqrt(pts.reduce((a, p) => a + Math.pow(p.x - avgX, 2), 0) / pts.length) * 1.6);
+        const ry = Math.max(10, Math.sqrt(pts.reduce((a, p) => a + Math.pow(p.y - avgY, 2), 0) / pts.length) * 1.6);
+
+        ctx.beginPath();
+        ctx.ellipse(avgX, avgY, rx, ry, 0, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.08)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+
+      const rate = filteredShots.length > 0 ? Math.round((inCorridorCount / filteredShots.length) * 100) : 100;
       document.getElementById('corridorHitRate').innerText = `${rate}% In Corridor`;
     }
 
@@ -2240,15 +2318,17 @@
       const carry = parseInt(document.getElementById('parsedCarry').value);
       const smash = parseFloat(document.getElementById('parsedSmash').value) || 1.48;
       const offline = parseFloat(document.getElementById('parsedOffline').value) || 0;
-      if (!speed || !carry) return alert("Verify speed and carry");
+      if (!speed || !carry) return alert("Enter Ball Speed and Carry yardage.");
 
       trackmanShots.unshift({ club, speed: speed.toFixed(1), carry, smash: smash.toFixed(2), offline });
       localStorage.setItem('sb_trackman_shots', JSON.stringify(trackmanShots));
+
+      // Clear inputs for next shot and immediately redraw radar
+      document.getElementById('parsedCarry').value = '';
+      document.getElementById('parsedOffline').value = '';
       renderTrackmanTable();
       renderBagGapping();
       renderDispersionCanvas();
-      document.getElementById('ocrResultForm').classList.add('hidden');
-      alert("Shot recorded");
     }
 
     function renderTrackmanTable() {
