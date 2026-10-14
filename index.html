@@ -263,34 +263,100 @@
         </div>
       </div>
 
-      <!-- TrackMan Camera OCR Reader & Manual Logger -->
-      <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl">
-        <div class="flex justify-between items-center mb-1">
+      <<!-- TrackMan Studio URL Scanner, OCR Reader & Manual Logger -->
+      <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl space-y-3">
+        <div class="flex justify-between items-center">
           <h2 class="text-xs font-black text-white flex items-center gap-2">
-            <i class="fa-solid fa-camera text-[#38bdf8]"></i> Log TrackMan Shot
+            <i class="fa-solid fa-satellite-dish text-[#38bdf8]"></i> Log TrackMan Studio Data
           </h2>
-          <button type="button" onclick="document.getElementById('ocrResultForm').classList.toggle('hidden')" class="text-[9px] bg-[#38bdf8]/15 text-[#38bdf8] px-2 py-0.5 rounded border border-[#38bdf8]/30 font-bold">
-            + Manual Entry
-          </button>
+          <div class="flex items-center gap-1.5">
+            <button type="button" onclick="clearTrackmanHistory()" class="text-[9px] bg-red-500/10 hover:bg-red-500/20 text-red-300 px-2 py-0.5 rounded border border-red-500/20 font-bold transition">
+              Reset Data
+            </button>
+            <button type="button" onclick="document.getElementById('ocrResultForm').classList.toggle('hidden')" class="text-[9px] bg-[#38bdf8]/15 text-[#38bdf8] px-2 py-0.5 rounded border border-[#38bdf8]/30 font-bold">
+              Manual / OCR
+            </button>
+          </div>
         </div>
-        <p class="text-[10px] text-slate-400 mb-2.5">Scan monitor readout or enter shot metrics below to plot on radar.</p>
 
+        <!-- 1. TrackMan Studio Report URL Scanner -->
+        <div class="bg-[#070b0e] p-2.5 rounded-xl border border-white/[0.05] space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8]">Studio Report URL or File Import</span>
+            <button type="button" onclick="document.getElementById('reportFileInput').click()" class="text-[9px] text-slate-400 hover:text-white underline">
+              Or Upload CSV/JSON
+            </button>
+            <input type="file" id="reportFileInput" accept=".csv,.json,.txt,.html" class="hidden" onchange="importTrackmanReportFile(event)">
+          </div>
+          <div class="flex gap-1.5">
+            <input type="url" id="trackmanReportUrl" placeholder="Paste https://web-dynamic-reports.trackmangolf.com/?r=..." class="flex-1 bg-[#111921] text-xs px-2.5 py-2 rounded-xl border border-white/[0.06] text-white placeholder-slate-500 focus:outline-none focus:border-[#38bdf8]">
+            <button type="button" onclick="scanTrackmanReportUrl()" id="scanUrlBtn" class="bg-[#38bdf8] hover:bg-[#0ea5e9] text-slate-950 font-black text-xs px-3.5 py-2 rounded-xl shrink-0 shadow transition flex items-center gap-1.5">
+              <i class="fa-solid fa-bolt text-[10px]"></i> Scan
+            </button>
+          </div>
+          <p class="text-[10px] text-slate-400 leading-tight" id="urlScanStatus">
+            Paste your TrackMan dynamic report link to bulk-import all session shots.
+          </p>
+        </div>
+
+        <!-- 2. Camera / Photo OCR Buttons -->
         <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="processTrackmanImage(event)">
         <input type="file" id="galleryInput" accept="image/*" class="hidden" onchange="processTrackmanImage(event)">
 
         <div class="grid grid-cols-2 gap-2">
-          <button type="button" onclick="document.getElementById('cameraInput').click()" class="bg-[#38bdf8] hover:bg-[#0ea5e9] text-slate-950 font-black text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 shadow transition">
-            <i class="fa-solid fa-camera"></i> Camera
+          <button type="button" onclick="document.getElementById('cameraInput').click()" class="bg-[#111921] hover:bg-[#18232e] text-white font-bold text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 border border-white/[0.06] transition">
+            <i class="fa-solid fa-camera text-[#38bdf8]"></i> Scan Monitor Photo
           </button>
-          <button type="button" onclick="document.getElementById('galleryInput').click()" class="bg-[#111921] hover:bg-[#18232e] text-[#38bdf8] font-bold text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 border border-white/[0.06] transition">
-            <i class="fa-solid fa-images"></i> Photos
+          <button type="button" onclick="document.getElementById('galleryInput').click()" class="bg-[#111921] hover:bg-[#18232e] text-[#38bdf8] font-bold text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 border border-white/[0.06] transition">
+            <i class="fa-solid fa-images"></i> Upload Screenshot
           </button>
         </div>
 
-        <div id="ocrStatus" class="hidden mt-3 p-3 rounded-xl bg-[#070b0e] border border-white/[0.06] text-center">
+        <div id="ocrStatus" class="hidden p-3 rounded-xl bg-[#070b0e] border border-white/[0.06] text-center">
           <div class="inline-block animate-spin text-[#38bdf8] text-base mb-1"><i class="fa-solid fa-circle-notch"></i></div>
           <p class="text-xs text-slate-300 font-medium">Scanning monitor metrics...</p>
         </div>
+
+        <!-- 3. Single-Shot Manual Entry / OCR Confirmation Form -->
+        <div id="ocrResultForm" class="pt-2 border-t border-white/[0.06]">
+          <div class="grid grid-cols-5 gap-1.5 mb-2 text-xs">
+            <div>
+              <label class="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Club</label>
+              <select id="parsedClub" class="w-full bg-[#111921] rounded-lg p-1.5 border border-white/[0.06] text-white text-xs">
+                <option value="Driver">Driver</option>
+                <option value="3-Wood">3-Wood</option>
+                <option value="2-Iron">2-Iron</option>
+                <option value="4-Iron">4-Iron</option>
+                <option value="6-Iron">6-Iron</option>
+                <option value="8-Iron">8-Iron</option>
+                <option value="PW">PW</option>
+                <option value="50-Deg">50°</option>
+                <option value="54-Deg">54°</option>
+                <option value="58-Deg">58°</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Ball Spd</label>
+              <input type="number" step="0.1" id="parsedSpeed" placeholder="172" class="w-full bg-[#111921] rounded-lg p-1.5 border border-white/[0.06] text-[#38bdf8] font-mono font-bold text-xs">
+            </div>
+            <div>
+              <label class="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Carry</label>
+              <input type="number" id="parsedCarry" placeholder="295" class="w-full bg-[#111921] rounded-lg p-1.5 border border-white/[0.06] text-slate-200 font-mono text-xs">
+            </div>
+            <div>
+              <label class="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Smash</label>
+              <input type="number" step="0.01" id="parsedSmash" placeholder="1.49" class="w-full bg-[#111921] rounded-lg p-1.5 border border-white/[0.06] text-slate-200 font-mono text-xs">
+            </div>
+            <div>
+              <label class="text-[8px] text-slate-400 uppercase font-bold block mb-0.5">Off (-L/+R)</label>
+              <input type="number" id="parsedOffline" placeholder="-4" class="w-full bg-[#111921] rounded-lg p-1.5 border border-white/[0.06] text-amber-300 font-mono text-xs">
+            </div>
+          </div>
+          <button type="button" onclick="confirmParsedShot()" class="w-full bg-[#38bdf8] hover:bg-[#0ea5e9] text-slate-950 font-black text-xs py-2 rounded-xl shadow transition">
+            Plot & Save Single Shot
+          </button>
+        </div>
+      </div>
 
         <!-- Always visible by default so you can log shots anytime -->
         <div id="ocrResultForm" class="mt-3 pt-3 border-t border-white/[0.06]">
@@ -2275,7 +2341,201 @@
         `;
       }).join('');
     }
+// ==========================================
+    // TRACKMAN STUDIO URL & FILE IMPORTER
+    // ==========================================
+    function normalizeTrackmanClub(rawClub) {
+      if (!rawClub) return 'Driver';
+      const c = String(rawClub).toUpperCase().trim();
+      if (c.includes('DR') || c === '1W' || c.includes('DRIVER')) return 'Driver';
+      if (c.includes('3W') || c.includes('3 WOOD') || c.includes('3-WOOD')) return '3-Wood';
+      if (c.includes('2I') || c.includes('2 IRON') || c.includes('2-IRON')) return '2-Iron';
+      if (c.includes('3I') || c.includes('4I') || c.includes('4 IRON') || c.includes('4-IRON')) return '4-Iron';
+      if (c.includes('5I') || c.includes('6I') || c.includes('6 IRON') || c.includes('6-IRON')) return '6-Iron';
+      if (c.includes('7I') || c.includes('8I') || c.includes('8 IRON') || c.includes('8-IRON')) return '8-Iron';
+      if (c.includes('9I') || c.includes('PW') || c.includes('PITCH')) return 'PW';
+      if (c.includes('50') || c.includes('GW') || c.includes('GAP') || c.includes('AW')) return '50-Deg';
+      if (c.includes('54') || c.includes('56') || c.includes('SW') || c.includes('SAND')) return '54-Deg';
+      if (c.includes('58') || c.includes('60') || c.includes('LW') || c.includes('LOB')) return '58-Deg';
+      return 'Driver';
+    }
 
+    async function scanTrackmanReportUrl() {
+      const urlInput = document.getElementById('trackmanReportUrl');
+      const statusEl = document.getElementById('urlScanStatus');
+      const btn = document.getElementById('scanUrlBtn');
+      const rawUrl = urlInput.value.trim();
+
+      if (!rawUrl) return alert("Paste your TrackMan Studio report link first.");
+
+      // Extract Report UUID (?r=... or standard UUID in URL)
+      const uuidMatch = rawUrl.match(/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/);
+      const paramMatch = rawUrl.match(/[?&](?:r|id|reportId)=([^&#]+)/i);
+      const reportId = uuidMatch ? uuidMatch[0] : (paramMatch ? paramMatch[1] : null);
+
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i>`;
+      statusEl.innerHTML = `<span class="text-[#38bdf8]">Connecting to TrackMan report server...</span>`;
+
+      try {
+        let payload = null;
+
+        // Candidate endpoints to try (Direct API + CORS Proxies)
+        const candidateUrls = [];
+        if (reportId) {
+          const apiTarget1 = `https://web-dynamic-reports.trackmangolf.com/api/dynamicreports/getreport?reportId=${reportId}`;
+          const apiTarget2 = `https://api.trackmangolf.com/api/dynamicreports/getreport?reportId=${reportId}`;
+          candidateUrls.push(
+            apiTarget1,
+            `https://corsproxy.io/?${encodeURIComponent(apiTarget1)}`,
+            `https://api.allorigins.win/raw?url=${encodeURIComponent(apiTarget1)}`,
+            `https://corsproxy.io/?${encodeURIComponent(apiTarget2)}`
+          );
+        }
+        candidateUrls.push(
+          rawUrl,
+          `https://api.allorigins.win/raw?url=${encodeURIComponent(rawUrl)}`,
+          `https://corsproxy.io/?${encodeURIComponent(rawUrl)}`
+        );
+
+        for (const endpoint of candidateUrls) {
+          try {
+            const res = await fetch(endpoint);
+            if (!res.ok) continue;
+            const text = await res.text();
+            if (text && (text.includes('StrokeGroups') || text.includes('BallSpeed') || text.includes('Carry'))) {
+              payload = text;
+              break;
+            }
+          } catch (e) {}
+        }
+
+        if (!payload) {
+          throw new Error("TrackMan blocked direct browser access. Export/save the report as CSV or JSON and tap 'Or Upload CSV/JSON' above.");
+        }
+
+        const importedCount = parseAndImportTrackmanContent(payload);
+        if (importedCount > 0) {
+          statusEl.innerHTML = `<span class="text-emerald-400 font-bold">&check; Imported ${importedCount} shots from Studio report!</span>`;
+          urlInput.value = '';
+        } else {
+          throw new Error("Report reached, but shots require client login. Use 'Or Upload CSV/JSON' with your downloaded file.");
+        }
+      } catch (err) {
+        statusEl.innerHTML = `<span class="text-amber-400">${err.message}</span>`;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-bolt text-[10px]"></i> Scan`;
+      }
+    }
+
+    function importTrackmanReportFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const statusEl = document.getElementById('urlScanStatus');
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const count = parseAndImportTrackmanContent(e.target.result);
+        if (count > 0) {
+          statusEl.innerHTML = `<span class="text-emerald-400 font-bold">&check; Imported ${count} shots from ${file.name}!</span>`;
+        } else {
+          statusEl.innerHTML = `<span class="text-amber-400">Could not find shot rows in ${file.name}. Verify it contains Ball Speed & Carry columns.</span>`;
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function parseAndImportTrackmanContent(rawText) {
+      const newShots = [];
+
+      // 1. Try parsing as TrackMan Dynamic Report JSON (StrokeGroups format)
+      try {
+        const json = JSON.parse(rawText);
+        const groups = json.StrokeGroups || json.strokeGroups || (json.data && json.data.StrokeGroups) || [];
+        groups.forEach(group => {
+          const club = normalizeTrackmanClub(group.Club || group.club || group.Name);
+          const strokes = group.Strokes || group.strokes || [];
+          strokes.forEach(stroke => {
+            if (stroke.IsIgnored || stroke.isIgnored) return;
+            const m = stroke.NormalizedMeasurement || stroke.Measurement || stroke.measurement || stroke;
+            let ballSpd = parseFloat(m.BallSpeed ?? m.ballSpeed);
+            let carry = parseFloat(m.Carry ?? m.carry);
+            let smash = parseFloat(m.SmashFactor ?? m.smashFactor) || 1.45;
+            let offline = parseFloat(m.CarrySide ?? m.carrySide ?? m.Side ?? 0);
+
+            if (!isNaN(ballSpd) && !isNaN(carry)) {
+              // Convert TrackMan raw metric JSON (m/s & meters) to mph & yards
+              if (ballSpd < 92) {
+                ballSpd = ballSpd * 2.23694;
+                carry = carry * 1.09361;
+                offline = offline * 1.09361;
+              }
+              newShots.push({
+                club,
+                speed: ballSpd.toFixed(1),
+                carry: Math.round(carry),
+                smash: smash.toFixed(2),
+                offline: Math.round(offline)
+              });
+            }
+          });
+        });
+      } catch (e) {}
+
+      // 2. Fallback: Parse CSV / TSV rows if input was a CSV export
+      if (newShots.length === 0) {
+        const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+        let clubIdx = -1, speedIdx = -1, carryIdx = -1, smashIdx = -1, offlineIdx = -1;
+
+        lines.forEach(line => {
+          const cols = line.split(/[,;\t]/).map(c => c.replace(/^["']|["']$/g, '').trim());
+          const lowerCols = cols.map(c => c.toLowerCase());
+
+          if (speedIdx === -1 && lowerCols.some(c => c.includes('ball speed') || c.includes('carry'))) {
+            clubIdx = lowerCols.findIndex(c => c.includes('club') || c.includes('tag'));
+            speedIdx = lowerCols.findIndex(c => c.includes('ball speed') || c === 'bspeed');
+            carryIdx = lowerCols.findIndex(c => c === 'carry' || c.includes('carry flat'));
+            smashIdx = lowerCols.findIndex(c => c.includes('smash'));
+            offlineIdx = lowerCols.findIndex(c => c.includes('side') || c.includes('offline'));
+            return;
+          }
+
+          if (speedIdx !== -1 && carryIdx !== -1 && cols.length > Math.max(speedIdx, carryIdx)) {
+            const spd = parseFloat(cols[speedIdx]);
+            const crry = parseFloat(cols[carryIdx]);
+            if (!isNaN(spd) && !isNaN(crry) && spd > 40 && crry > 20) {
+              const club = clubIdx !== -1 ? normalizeTrackmanClub(cols[clubIdx]) : 'Driver';
+              const smsh = (smashIdx !== -1 && !isNaN(parseFloat(cols[smashIdx]))) ? parseFloat(cols[smashIdx]).toFixed(2) : '1.45';
+              let off = 0;
+              if (offlineIdx !== -1 && cols[offlineIdx]) {
+                const rawOff = cols[offlineIdx].toUpperCase();
+                off = parseFloat(rawOff) || 0;
+                if (rawOff.includes('L') && off > 0) off = -off;
+              }
+              newShots.push({ club, speed: spd.toFixed(1), carry: Math.round(crry), smash: smsh, offline: Math.round(off) });
+            }
+          }
+        });
+      }
+
+      if (newShots.length > 0) {
+        trackmanShots = [...newShots, ...trackmanShots];
+        localStorage.setItem('sb_trackman_shots', JSON.stringify(trackmanShots));
+        renderTrackmanTable();
+        renderBagGapping();
+        renderDispersionCanvas();
+      }
+      return newShots.length;
+    }
+
+    function clearTrackmanHistory() {
+      if (!confirm("Clear current TrackMan shots so only your newly imported Studio data is shown?")) return;
+      trackmanShots = [];
+      localStorage.setItem('sb_trackman_shots', JSON.stringify(trackmanShots));
+      renderTrackmanTable();
+      renderBagGapping();
+      renderDispersionCanvas();
+    }
     async function processTrackmanImage(event) {
       const file = event.target.files[0];
       if (!file) return;
