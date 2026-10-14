@@ -190,7 +190,7 @@
       <div id="trainContentList" class="space-y-2.5"></div>
     </div>
 
-  <!-- TAB 3: TRACKMAN & WEDGE MATRIX -->
+ <!-- TAB 3: TRACKMAN & WEDGE MATRIX -->
     <div id="tab-trackman" class="tab-pane hidden space-y-3">
       <!-- 1. 2D Visual Corridor & Dispersion Heatmap -->
       <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl">
@@ -264,18 +264,29 @@
       </div>
 
       <!-- 3. TrackMan Studio URL Scanner, OCR Reader & Manual Logger -->
-     <div class="bg-[#070b0e] p-2.5 rounded-xl border border-white/[0.05] space-y-2">
-          <div class="flex justify-between items-center flex-wrap gap-1">
+      <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl space-y-3">
+        <div class="flex justify-between items-center">
+          <h2 class="text-xs font-black text-white flex items-center gap-2">
+            <i class="fa-solid fa-satellite-dish text-[#38bdf8]"></i> Log TrackMan Studio Data
+          </h2>
+          <div class="flex items-center gap-1.5">
+            <button type="button" onclick="clearTrackmanHistory()" class="text-[9px] bg-red-500/10 hover:bg-red-500/20 text-red-300 px-2 py-0.5 rounded border border-red-500/20 font-bold transition">
+              Reset Data
+            </button>
+            <button type="button" onclick="document.getElementById('ocrResultForm').classList.toggle('hidden')" class="text-[9px] bg-[#38bdf8]/15 text-[#38bdf8] px-2 py-0.5 rounded border border-[#38bdf8]/30 font-bold">
+              Manual / OCR
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-[#070b0e] p-2.5 rounded-xl border border-white/[0.05] space-y-2">
+          <div class="flex justify-between items-center">
             <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8]">Studio URL or TrackPull CSV</span>
             <div class="flex items-center gap-2">
-              <button type="button" onclick="document.getElementById('trackPullCsvInput').click()" class="text-[9px] text-[#38bdf8] font-bold underline">
-                + Upload TrackPull CSV
+              <button type="button" onclick="document.getElementById('trackPullCsvInput').click()" class="text-[9px] text-[#38bdf8] font-bold underline cursor-pointer">
+                + Upload CSV
               </button>
               <input type="file" id="trackPullCsvInput" accept=".csv" class="hidden" onchange="importTrackPullCsv(event)">
-              <button type="button" onclick="document.getElementById('reportFileInput').click()" class="text-[9px] text-slate-400 hover:text-white underline">
-                JSON/Report
-              </button>
-              <input type="file" id="reportFileInput" accept=".csv,.json,.txt,.html" class="hidden" onchange="importTrackmanReportFile(event)">
             </div>
           </div>
           <div class="flex gap-1.5">
@@ -286,25 +297,6 @@
           </div>
           <p class="text-[10px] text-slate-400 leading-tight" id="urlScanStatus">
             Paste report URL or upload your TrackPull portal CSV archive to bulk-import all session shots.
-          </p>
-        </div>
-
-        <div class="bg-[#070b0e] p-2.5 rounded-xl border border-white/[0.05] space-y-2">
-          <div class="flex justify-between items-center">
-            <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8]">Studio Report URL or File Import</span>
-            <button type="button" onclick="document.getElementById('reportFileInput').click()" class="text-[9px] text-slate-400 hover:text-white underline">
-              Or Upload CSV/JSON
-            </button>
-            <input type="file" id="reportFileInput" accept=".csv,.json,.txt,.html" class="hidden" onchange="importTrackmanReportFile(event)">
-          </div>
-          <div class="flex gap-1.5">
-            <input type="url" id="trackmanReportUrl" placeholder="Paste https://web-dynamic-reports.trackmangolf.com/?r=..." class="flex-1 bg-[#111921] text-xs px-2.5 py-2 rounded-xl border border-white/[0.06] text-white placeholder-slate-500 focus:outline-none focus:border-[#38bdf8]">
-            <button type="button" onclick="scanTrackmanReportUrl()" id="scanUrlBtn" class="bg-[#38bdf8] hover:bg-[#0ea5e9] text-slate-950 font-black text-xs px-3.5 py-2 rounded-xl shrink-0 shadow transition flex items-center gap-1.5">
-              <i class="fa-solid fa-bolt text-[10px]"></i> Scan
-            </button>
-          </div>
-          <p class="text-[10px] text-slate-400 leading-tight" id="urlScanStatus">
-            Paste your TrackMan dynamic report link to bulk-import all session shots.
           </p>
         </div>
 
@@ -364,6 +356,47 @@
           </button>
         </div>
       </div>
+
+      <!-- 4. Bag Gapping Benchmarks -->
+      <div class="bg-[#0c1217] p-3 rounded-2xl border border-white/[0.07] shadow-xl">
+        <h3 class="text-xs font-black text-slate-300 uppercase tracking-wider mb-2 flex items-center justify-between">
+          <span>Bag Gapping Benchmarks</span>
+          <span class="text-[9px] text-[#38bdf8] font-semibold">Real-Time Averages</span>
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="text-[8px] text-[#38bdf8] uppercase tracking-widest bg-[#0b0e0c] border-b border-white/[0.06]">
+              <tr>
+                <th class="py-1.5 px-2">Club</th>
+                <th class="py-1.5 px-2">Avg Carry</th>
+                <th class="py-1.5 px-2">Avg Ball Spd</th>
+                <th class="py-1.5 px-2">Avg Smash</th>
+                <th class="py-1.5 px-2">Shots</th>
+              </tr>
+            </thead>
+            <tbody id="bagGappingTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 5. Logged Shots History -->
+      <div class="bg-[#0c1217] p-3 rounded-2xl border border-white/[0.07] shadow-xl">
+        <h3 class="text-xs font-black text-slate-300 uppercase tracking-wider mb-2">Logged Shots History</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="text-[8px] text-[#38bdf8] uppercase tracking-widest bg-[#0b0e0c] border-b border-white/[0.06]">
+              <tr>
+                <th class="py-1.5 px-2">Club</th>
+                <th class="py-1.5 px-2">Carry</th>
+                <th class="py-1.5 px-2">Ball Spd</th>
+                <th class="py-1.5 px-2">Smash</th>
+              </tr>
+            </thead>
+            <tbody id="trackmanShotsTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
 
       <!-- 4. Bag Gapping Benchmarks -->
       <div class="bg-[#0c1217] p-3 rounded-2xl border border-white/[0.07] shadow-xl">
@@ -2348,6 +2381,9 @@
 // ==========================================
     // TRACKPULL PORTAL ARCHIVE CSV IMPORTER
     // ==========================================
+   // ==========================================
+    // TRACKPULL PORTAL ARCHIVE CSV IMPORTER
+    // ==========================================
     function importTrackPullCsv(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -2362,9 +2398,10 @@
           return;
         }
 
-        // Find header row containing column titles
-        let headerIdx = lines.findIndex(l => l.includes('Club') && l.includes('Carry (yds)'));
-        if (headerIdx === -1) headerIdx = 1; // Default to line 2 if skiprows=1 equivalent
+        // Dynamically find the row where column headers are located
+        let headerIdx = lines.findIndex(l => l.toLowerCase().includes('club') && l.toLowerCase().includes('carry (yds)'));
+        if (headerIdx === -1) headerIdx = lines.findIndex(l => l.toLowerCase().includes('ball speed'));
+        if (headerIdx === -1) headerIdx = 0;
 
         const headers = lines[headerIdx].split(',').map(h => h.replace(/^["']|["']$/g, '').trim());
         const clubIdx = headers.findIndex(h => h.toLowerCase() === 'club');
@@ -2373,10 +2410,10 @@
         const clubSpdIdx = headers.findIndex(h => h.toLowerCase().includes('club speed'));
         const carryIdx = headers.findIndex(h => h.toLowerCase() === 'carry (yds)');
         const smashIdx = headers.findIndex(h => h.toLowerCase().includes('smash factor'));
-        const offlineIdx = headers.findIndex(h => h.toLowerCase() === 'carry side (yds)');
+        const offlineIdx = headers.findIndex(h => h.toLowerCase().includes('carry side (yds)'));
 
         if (carryIdx === -1) {
-          statusEl.innerHTML = `<span class="text-amber-400">Could not find 'Carry (yds)' column in CSV.</span>`;
+          statusEl.innerHTML = `<span class="text-amber-400">Could not find 'Carry (yds)' column in CSV headers.</span>`;
           return;
         }
 
@@ -2385,9 +2422,9 @@
           const cols = lines[i].split(',').map(c => c.replace(/^["']|["']$/g, '').trim());
           if (cols.length <= carryIdx) continue;
 
-          // Skip summary rows like 'Average' or 'Standard Deviation'
+          // Skip summary rows like 'Average'
           const rowType = typeIdx !== -1 ? cols[typeIdx] : 'Shot';
-          if (rowType && rowType.toLowerCase() !== 'shot') continue;
+          if (rowType && rowType.toLowerCase() === 'average') continue;
 
           const rawClub = clubIdx !== -1 ? cols[clubIdx] : 'Driver';
           const club = normalizeTrackmanClub(rawClub);
