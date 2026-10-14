@@ -2298,84 +2298,132 @@
       }).join('');
     }
 // ==========================================
-    // TRACKMAN STUDIO URL & FILE IMPORTER
+    // TRACKMAN STUDIO URL, JSON & TEXT IMPORTER
     // ==========================================
     function normalizeTrackmanClub(rawClub) {
       if (!rawClub) return 'Driver';
-      const c = String(rawClub).toUpperCase().trim();
+      const c = String(rawClub).toUpperCase().replace(/[^A-Z0-9°]/g, '');
       if (c.includes('DR') || c === '1W' || c.includes('DRIVER')) return 'Driver';
-      if (c.includes('3W') || c.includes('3 WOOD') || c.includes('3-WOOD')) return '3-Wood';
-      if (c.includes('2I') || c.includes('2 IRON') || c.includes('2-IRON')) return '2-Iron';
-      if (c.includes('3I') || c.includes('4I') || c.includes('4 IRON') || c.includes('4-IRON')) return '4-Iron';
-      if (c.includes('5I') || c.includes('6I') || c.includes('6 IRON') || c.includes('6-IRON')) return '6-Iron';
-      if (c.includes('7I') || c.includes('8I') || c.includes('8 IRON') || c.includes('8-IRON')) return '8-Iron';
+      if (c.includes('3W') || c.includes('3WOOD') || c.includes('5W')) return '3-Wood';
+      if (c.includes('2I') || c.includes('2IRON') || c.includes('HY') || c.includes('UT')) return '2-Iron';
+      if (c.includes('3I') || c.includes('4I') || c.includes('4IRON')) return '4-Iron';
+      if (c.includes('5I') || c.includes('6I') || c.includes('6IRON')) return '6-Iron';
+      if (c.includes('7I') || c.includes('8I') || c.includes('8IRON')) return '8-Iron';
       if (c.includes('9I') || c.includes('PW') || c.includes('PITCH')) return 'PW';
-      if (c.includes('50') || c.includes('GW') || c.includes('GAP') || c.includes('AW')) return '50-Deg';
+      if (c.includes('50') || c.includes('52') || c.includes('GW') || c.includes('GAP') || c.includes('AW')) return '50-Deg';
       if (c.includes('54') || c.includes('56') || c.includes('SW') || c.includes('SAND')) return '54-Deg';
       if (c.includes('58') || c.includes('60') || c.includes('LW') || c.includes('LOB')) return '58-Deg';
       return 'Driver';
+    }
+
+    function parseTrackmanUrlParams(rawUrl) {
+      try {
+        const u = new URL(rawUrl);
+        const reportId = u.searchParams.get('r') || u.searchParams.get('ReportId') || u.searchParams.get('id');
+        const useNormalized = u.searchParams.get('nd') === 'true';
+        const sgos = [
+          ...u.searchParams.getAll('sgos[]'),
+          ...u.searchParams.getAll('sgos')
+        ];
+        // Also support indexed sgos[0], sgos[1]
+        u.searchParams.forEach((val, key) => {
+          if (/^sgos\[\d+\]$/.test(key)) sgos.push(val);
+        });
+        return { reportId, useNormalized, sgos };
+      } catch (e) {
+        const uuidMatch = rawUrl.match(/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/);
+        return { reportId: uuidMatch ? uuidMatch[0] : null, useNormalized: true, sgos: [] };
+      }
     }
 
     async function scanTrackmanReportUrl() {
       const urlInput = document.getElementById('trackmanReportUrl');
       const statusEl = document.getElementById('urlScanStatus');
       const btn = document.getElementById('scanUrlBtn');
-      const rawUrl = urlInput.value.trim();
+      const rawInput = urlInput.value.trim();
 
-      if (!rawUrl) return alert("Paste your TrackMan Studio report link first.");
+      if (!rawInput) return alert("Paste your TrackMan Studio report link (or copied report text) first.");
 
-      // Extract Report UUID (?r=... or standard UUID in URL)
-      const uuidMatch = rawUrl.match(/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/);
-      const paramMatch = rawUrl.match(/[?&](?:r|id|reportId)=([^&#]+)/i);
-      const reportId = uuidMatch ? uuidMatch[0] : (paramMatch ? paramMatch[1] : null);
+      // If user pasted raw JSON or copied page text directly into the box, parse immediately!
+      if (!rawInput.startsWith('http')) {
+        const directCount = parseAndImportTrackmanContent(rawInput, { useNormalized: true, sgos: [] });
+        if (directCount > 0) {
+          statusEl.innerHTML = `<span class="text-[#38bdf8] font-bold">&check; Imported ${directCount} shots from pasted report data!</span>`;
+          urlInput.value = '';
+          return;
+        }
+      }
+
+      const urlConfig = parseTrackmanUrlParams(rawInput);
+      if (!urlConfig.reportId) {
+        statusEl.innerHTML = `<span class="text-amber-400">Could not find a valid Report ID (?r=...) in that URL.</span>`;
+        return;
+      }
 
       btn.disabled = true;
       btn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i>`;
-      statusEl.innerHTML = `<span class="text-[#38bdf8]">Connecting to TrackMan report server...</span>`;
+      statusEl.innerHTML = `<span class="text-[#38bdf8]">Fetching Report ${urlConfig.reportId.slice(0, 8)}... (${urlConfig.sgos.length || 'all'} club groups)</span>`;
 
       try {
         let payload = null;
+        const apiEndpoint = `https://web-dynamic-reports.trackmangolf.com/api/dynamicreports/getreport`;
+        const getUrl1 = `${apiEndpoint}?reportId=${urlConfig.reportId}`;
+        const getUrl2 = `${apiEndpoint}?id=${urlConfig.reportId}&r=${urlConfig.reportId}`;
 
-        // Candidate endpoints to try (Direct API + CORS Proxies)
-        const candidateUrls = [];
-        if (reportId) {
-          const apiTarget1 = `https://web-dynamic-reports.trackmangolf.com/api/dynamicreports/getreport?reportId=${reportId}`;
-          const apiTarget2 = `https://api.trackmangolf.com/api/dynamicreports/getreport?reportId=${reportId}`;
-          candidateUrls.push(
-            apiTarget1,
-            `https://corsproxy.io/?${encodeURIComponent(apiTarget1)}`,
-            `https://api.allorigins.win/raw?url=${encodeURIComponent(apiTarget1)}`,
-            `https://corsproxy.io/?${encodeURIComponent(apiTarget2)}`
-          );
-        }
-        candidateUrls.push(
-          rawUrl,
-          `https://api.allorigins.win/raw?url=${encodeURIComponent(rawUrl)}`,
-          `https://corsproxy.io/?${encodeURIComponent(rawUrl)}`
-        );
+        // 1. Try POST via CORS proxy & Cloudflare Worker (TrackMan's primary method)
+        const postTargets = [
+          `https://corsproxy.io/?${encodeURIComponent(apiEndpoint)}`,
+          apiEndpoint
+        ];
 
-        for (const endpoint of candidateUrls) {
+        for (const target of postTargets) {
           try {
-            const res = await fetch(endpoint);
-            if (!res.ok) continue;
-            const text = await res.text();
-            if (text && (text.includes('StrokeGroups') || text.includes('BallSpeed') || text.includes('Carry'))) {
-              payload = text;
-              break;
+            const res = await fetch(target, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+              body: JSON.stringify({ ReportId: urlConfig.reportId, reportId: urlConfig.reportId, Id: urlConfig.reportId })
+            });
+            if (res.ok) {
+              const text = await res.text();
+              if (text && (text.includes('StrokeGroups') || text.includes('strokeGroups') || text.includes('Strokes'))) {
+                payload = text;
+                break;
+              }
             }
           } catch (e) {}
         }
 
+        // 2. Fallback: Try GET requests across proxies
         if (!payload) {
-          throw new Error("TrackMan blocked direct browser access. Export/save the report as CSV or JSON and tap 'Or Upload CSV/JSON' above.");
+          const getCandidates = [
+            `https://corsproxy.io/?${encodeURIComponent(getUrl1)}`,
+            `https://api.allorigins.win/raw?url=${encodeURIComponent(getUrl1)}`,
+            `https://corsproxy.io/?${encodeURIComponent(getUrl2)}`,
+            `https://api.allorigins.win/raw?url=${encodeURIComponent(getUrl2)}`
+          ];
+          for (const endpoint of getCandidates) {
+            try {
+              const res = await fetch(endpoint);
+              if (!res.ok) continue;
+              const text = await res.text();
+              if (text && (text.includes('StrokeGroups') || text.includes('strokeGroups') || text.includes('BallSpeed') || text.includes('ClubSpeed'))) {
+                payload = text;
+                break;
+              }
+            } catch (e) {}
+          }
         }
 
-        const importedCount = parseAndImportTrackmanContent(payload);
+        if (!payload) {
+          throw new Error("TrackMan's server blocked direct proxy access. Quick workaround: Open the report link, press Ctrl+A then Ctrl+C (Copy All), paste it into this box, and tap Scan!");
+        }
+
+        const importedCount = parseAndImportTrackmanContent(payload, urlConfig);
         if (importedCount > 0) {
-          statusEl.innerHTML = `<span class="text-emerald-400 font-bold">&check; Imported ${importedCount} shots from Studio report!</span>`;
+          statusEl.innerHTML = `<span class="text-[#38bdf8] font-bold">&check; Imported ${importedCount} shots across ${urlConfig.sgos.length || 'all'} club groups!</span>`;
           urlInput.value = '';
         } else {
-          throw new Error("Report reached, but shots require client login. Use 'Or Upload CSV/JSON' with your downloaded file.");
+          throw new Error("Report reached, but shot payload was empty. Open your link, copy the table text (Ctrl+A, Ctrl+C), and paste it right into the box above.");
         }
       } catch (err) {
         statusEl.innerHTML = `<span class="text-amber-400">${err.message}</span>`;
@@ -2391,41 +2439,71 @@
       const statusEl = document.getElementById('urlScanStatus');
       const reader = new FileReader();
       reader.onload = function(e) {
-        const count = parseAndImportTrackmanContent(e.target.result);
+        const count = parseAndImportTrackmanContent(e.target.result, { useNormalized: true, sgos: [] });
         if (count > 0) {
-          statusEl.innerHTML = `<span class="text-emerald-400 font-bold">&check; Imported ${count} shots from ${file.name}!</span>`;
+          statusEl.innerHTML = `<span class="text-[#38bdf8] font-bold">&check; Imported ${count} shots from ${file.name}!</span>`;
         } else {
-          statusEl.innerHTML = `<span class="text-amber-400">Could not find shot rows in ${file.name}. Verify it contains Ball Speed & Carry columns.</span>`;
+          statusEl.innerHTML = `<span class="text-amber-400">Could not find valid shots in ${file.name}.</span>`;
         }
       };
       reader.readAsText(file);
     }
 
-    function parseAndImportTrackmanContent(rawText) {
+    function parseAndImportTrackmanContent(rawText, urlConfig = { useNormalized: true, sgos: [] }) {
       const newShots = [];
 
-      // 1. Try parsing as TrackMan Dynamic Report JSON (StrokeGroups format)
+      // 1. Parse TrackMan Dynamic Report JSON (Supports r=..., nd=true, and sgos[] filtering)
       try {
         const json = JSON.parse(rawText);
-        const groups = json.StrokeGroups || json.strokeGroups || (json.data && json.data.StrokeGroups) || [];
+        const reportObj = json.Report || json.report || json.data || json;
+        let groups = reportObj.StrokeGroups || reportObj.strokeGroups || [];
+
+        // If URL specified sgos[] UUIDs, filter & order groups to match URL selection
+        if (urlConfig.sgos && urlConfig.sgos.length > 0) {
+          const sgoSet = new Set(urlConfig.sgos.map(id => id.toLowerCase()));
+          const filtered = groups.filter(g => {
+            const gid = String(g.Id || g.id || '').toLowerCase();
+            return sgoSet.has(gid);
+          });
+          if (filtered.length > 0) groups = filtered;
+        }
+
         groups.forEach(group => {
-          const club = normalizeTrackmanClub(group.Club || group.club || group.Name);
+          const club = normalizeTrackmanClub(group.Club || group.club || group.Name || group.Tag);
           const strokes = group.Strokes || group.strokes || [];
           strokes.forEach(stroke => {
-            if (stroke.IsIgnored || stroke.isIgnored) return;
-            const m = stroke.NormalizedMeasurement || stroke.Measurement || stroke.measurement || stroke;
-            let ballSpd = parseFloat(m.BallSpeed ?? m.ballSpeed);
-            let carry = parseFloat(m.Carry ?? m.carry);
-            let smash = parseFloat(m.SmashFactor ?? m.smashFactor) || 1.45;
-            let offline = parseFloat(m.CarrySide ?? m.carrySide ?? m.Side ?? 0);
+            if (stroke.IsIgnored || stroke.isIgnored || stroke.Selected === false) return;
 
-            if (!isNaN(ballSpd) && !isNaN(carry)) {
-              // Convert TrackMan raw metric JSON (m/s & meters) to mph & yards
-              if (ballSpd < 92) {
-                ballSpd = ballSpd * 2.23694;
-                carry = carry * 1.09361;
-                offline = offline * 1.09361;
-              }
+            // Respect nd=true (NormalizedMeasurement) from URL parameter
+            const m = (urlConfig.useNormalized && (stroke.NormalizedMeasurement || stroke.normalizedMeasurement))
+              ? (stroke.NormalizedMeasurement || stroke.normalizedMeasurement)
+              : (stroke.Measurement || stroke.measurement || stroke.NormalizedMeasurement || stroke);
+
+            let ballSpd = parseFloat(m.BallSpeed ?? m.ballSpeed);
+            let clubSpd = parseFloat(m.ClubSpeed ?? m.clubSpeed);
+            let carry = parseFloat(m.Carry ?? m.carry);
+            let smash = parseFloat(m.SmashFactor ?? m.smashFactor);
+            let offline = parseFloat(m.CarrySide ?? m.carrySide ?? m.Side ?? m.side ?? 0);
+
+            // Convert TrackMan raw metric JSON (m/s & meters) to Imperial (mph & yards)
+            const isMetricSpeed = (!isNaN(ballSpd) && ballSpd < 92) || (isNaN(ballSpd) && !isNaN(clubSpd) && clubSpd < 65);
+            if (isMetricSpeed) {
+              if (!isNaN(ballSpd)) ballSpd *= 2.23694;
+              if (!isNaN(clubSpd)) clubSpd *= 2.23694;
+              if (!isNaN(carry)) carry *= 1.09361;
+              if (!isNaN(offline)) offline *= 1.09361;
+            }
+
+            // If report only has ClubSpeed (like mp[]=ClubSpeed in your URL), derive BallSpeed/Smash
+            if (isNaN(smash) && !isNaN(ballSpd) && !isNaN(clubSpd) && clubSpd > 0) {
+              smash = ballSpd / clubSpd;
+            }
+            if (isNaN(smash)) smash = club === 'Driver' ? 1.48 : 1.38;
+            if (isNaN(ballSpd) && !isNaN(clubSpd)) {
+              ballSpd = clubSpd * smash;
+            }
+
+            if (!isNaN(ballSpd) && !isNaN(carry) && carry > 15) {
               newShots.push({
                 club,
                 speed: ballSpd.toFixed(1),
@@ -2438,37 +2516,50 @@
         });
       } catch (e) {}
 
-      // 2. Fallback: Parse CSV / TSV rows if input was a CSV export
+      // 2. Fallback: Parse CSV / TSV or Copied Webpage Text (Ctrl+A, Ctrl+C from TrackMan report)
       if (newShots.length === 0) {
         const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-        let clubIdx = -1, speedIdx = -1, carryIdx = -1, smashIdx = -1, offlineIdx = -1;
+        let currentClub = 'Driver';
+        let clubIdx = -1, speedIdx = -1, clubSpdIdx = -1, carryIdx = -1, smashIdx = -1, offlineIdx = -1;
 
         lines.forEach(line => {
-          const cols = line.split(/[,;\t]/).map(c => c.replace(/^["']|["']$/g, '').trim());
+          // Detect Club Section Headers when user copies text directly off the TrackMan webpage
+          if (/^(Dr\s*Driver|Driver|3W\s*3\s*Wood|3\s*Wood|2i\s*2\s*Iron|4i\s*4\s*Iron|5i\s*5\s*Iron|6i\s*6\s*Iron|7i\s*7\s*Iron|8i\s*8\s*Iron|9i\s*9\s*Iron|PW\s*Pitching\s*Wedge|50|52|54|56|58|60|GW|SW|LW)/i.test(line)) {
+            currentClub = normalizeTrackmanClub(line);
+          }
+
+          const cols = line.split(/[,;\t]+/).map(c => c.replace(/^["']|["']$/g, '').trim());
           const lowerCols = cols.map(c => c.toLowerCase());
 
-          if (speedIdx === -1 && lowerCols.some(c => c.includes('ball speed') || c.includes('carry'))) {
-            clubIdx = lowerCols.findIndex(c => c.includes('club') || c.includes('tag'));
+          if (carryIdx === -1 && lowerCols.some(c => c === 'carry' || c.includes('club speed') || c.includes('ball speed'))) {
+            clubIdx = lowerCols.findIndex(c => c.includes('club') && !c.includes('speed') && !c.includes('path'));
             speedIdx = lowerCols.findIndex(c => c.includes('ball speed') || c === 'bspeed');
+            clubSpdIdx = lowerCols.findIndex(c => c.includes('club speed') || c === 'cspeed');
             carryIdx = lowerCols.findIndex(c => c === 'carry' || c.includes('carry flat'));
             smashIdx = lowerCols.findIndex(c => c.includes('smash'));
             offlineIdx = lowerCols.findIndex(c => c.includes('side') || c.includes('offline'));
             return;
           }
 
-          if (speedIdx !== -1 && carryIdx !== -1 && cols.length > Math.max(speedIdx, carryIdx)) {
-            const spd = parseFloat(cols[speedIdx]);
+          if (carryIdx !== -1 && cols.length > carryIdx) {
             const crry = parseFloat(cols[carryIdx]);
+            let spd = speedIdx !== -1 ? parseFloat(cols[speedIdx]) : NaN;
+            const cSpd = clubSpdIdx !== -1 ? parseFloat(cols[clubSpdIdx]) : NaN;
+            let smsh = (smashIdx !== -1 && !isNaN(parseFloat(cols[smashIdx]))) ? parseFloat(cols[smashIdx]) : NaN;
+
+            if (isNaN(smsh) && !isNaN(spd) && !isNaN(cSpd) && cSpd > 0) smsh = spd / cSpd;
+            if (isNaN(smsh)) smsh = 1.45;
+            if (isNaN(spd) && !isNaN(cSpd)) spd = cSpd * smsh;
+
             if (!isNaN(spd) && !isNaN(crry) && spd > 40 && crry > 20) {
-              const club = clubIdx !== -1 ? normalizeTrackmanClub(cols[clubIdx]) : 'Driver';
-              const smsh = (smashIdx !== -1 && !isNaN(parseFloat(cols[smashIdx]))) ? parseFloat(cols[smashIdx]).toFixed(2) : '1.45';
+              const club = clubIdx !== -1 ? normalizeTrackmanClub(cols[clubIdx]) : currentClub;
               let off = 0;
               if (offlineIdx !== -1 && cols[offlineIdx]) {
-                const rawOff = cols[offlineIdx].toUpperCase();
+                const rawOff = String(cols[offlineIdx]).toUpperCase();
                 off = parseFloat(rawOff) || 0;
                 if (rawOff.includes('L') && off > 0) off = -off;
               }
-              newShots.push({ club, speed: spd.toFixed(1), carry: Math.round(crry), smash: smsh, offline: Math.round(off) });
+              newShots.push({ club, speed: spd.toFixed(1), carry: Math.round(crry), smash: smsh.toFixed(2), offline: Math.round(off) });
             }
           }
         });
@@ -2482,82 +2573,6 @@
         renderDispersionCanvas();
       }
       return newShots.length;
-    }
-
-    function clearTrackmanHistory() {
-      if (!confirm("Clear current TrackMan shots so only your newly imported Studio data is shown?")) return;
-      trackmanShots = [];
-      localStorage.setItem('sb_trackman_shots', JSON.stringify(trackmanShots));
-      renderTrackmanTable();
-      renderBagGapping();
-      renderDispersionCanvas();
-    }
-    async function processTrackmanImage(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const statusBox = document.getElementById('ocrStatus');
-      const resultForm = document.getElementById('ocrResultForm');
-      statusBox.classList.remove('hidden');
-      resultForm.classList.add('hidden');
-
-      try {
-        const worker = await Tesseract.createWorker('eng');
-        const ret = await worker.recognize(file);
-        await worker.terminate();
-        const raw = ret.data.text;
-        statusBox.classList.add('hidden');
-
-        let speed = null, carry = null, smash = null;
-        const speeds = raw.match(/\b(1[0-9]{2}(?:\.[0-9])?)\b/g);
-        if (speeds) speed = parseFloat(speeds[0]);
-        const carries = raw.match(/\b([1-3][0-9]{2})\b/g);
-        if (carries) {
-          const validCarry = carries.find(c => parseFloat(c) !== speed);
-          if (validCarry) carry = parseInt(validCarry);
-        }
-        const smashes = raw.match(/\b(1\.[3-5][0-9])\b/g);
-        if (smashes) smash = parseFloat(smashes[0]);
-
-        document.getElementById('parsedSpeed').value = speed || '';
-        document.getElementById('parsedCarry').value = carry || '';
-        document.getElementById('parsedSmash').value = smash || 1.48;
-        resultForm.classList.remove('hidden');
-      } catch (err) {
-        statusBox.classList.add('hidden');
-        alert("Enter numbers manually");
-      }
-    }
-
-    function confirmParsedShot() {
-      const club = document.getElementById('parsedClub').value;
-      const speed = parseFloat(document.getElementById('parsedSpeed').value);
-      const carry = parseInt(document.getElementById('parsedCarry').value);
-      const smash = parseFloat(document.getElementById('parsedSmash').value) || 1.48;
-      const offline = parseFloat(document.getElementById('parsedOffline').value) || 0;
-      if (!speed || !carry) return alert("Enter Ball Speed and Carry yardage.");
-
-      trackmanShots.unshift({ club, speed: speed.toFixed(1), carry, smash: smash.toFixed(2), offline });
-      localStorage.setItem('sb_trackman_shots', JSON.stringify(trackmanShots));
-
-      // Clear inputs for next shot and immediately redraw radar
-      document.getElementById('parsedCarry').value = '';
-      document.getElementById('parsedOffline').value = '';
-      renderTrackmanTable();
-      renderBagGapping();
-      renderDispersionCanvas();
-    }
-
-    function renderTrackmanTable() {
-      const tbody = document.getElementById('trackmanShotsTable');
-      if (!tbody) return;
-      tbody.innerHTML = trackmanShots.slice(0, 8).map(s => `
-        <tr class="border-b border-white/[0.04]">
-          <td class="py-1.5 px-2 font-bold text-white">${s.club}</td>
-          <td class="py-1.5 px-2 text-slate-300 font-mono">${s.carry} yds</td>
-          <td class="py-1.5 px-2 text-[#38bdf8] font-mono">${s.speed} mph</td>
-          <td class="py-1.5 px-2 text-slate-400 font-mono">${s.smash || '--'}</td>
-        </tr>
-      `).join('');
     }
 
     // GHIN SYNC & COURSE DISAMBIGUATION
