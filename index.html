@@ -644,11 +644,11 @@
 
   </main>
 
-  <!-- NATIVE iOS BOTTOM SHEET 1: FORM TUTORIAL -->
+ <!-- NATIVE iOS BOTTOM SHEET 1: FORM TUTORIAL (SCROLLABLE FIX) -->
   <div id="exerciseDiagramModal" onclick="if(event.target===this)closeDiagramModal()" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="bg-[#0c1217] border-t sm:border border-white/[0.1] rounded-t-3xl sm:rounded-3xl p-5 safe-sheet-bottom w-full max-w-md space-y-3.5 shadow-2xl">
+    <div class="bg-[#0c1217] border-t sm:border border-white/[0.1] rounded-t-3xl sm:rounded-3xl p-5 safe-sheet-bottom w-full max-w-md max-h-[85vh] overflow-y-auto custom-scrollbar space-y-3.5 shadow-2xl">
       <div class="w-10 h-1 bg-white/20 rounded-full mx-auto mb-1 sm:hidden"></div>
-      <div class="flex justify-between items-center">
+      <div class="flex justify-between items-center sticky top-0 bg-[#0c1217] pb-2 z-10 border-b border-white/[0.04]">
         <div>
           <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8]">Form Tutorial</span>
           <h3 class="text-sm font-black text-white" id="diagTitle">Exercise</h3>
@@ -675,7 +675,7 @@
         </div>
       </div>
 
-      <div class="flex gap-2">
+      <div class="flex gap-2 pt-1">
         <a id="diagDirectVideoLink" href="#" target="_blank" class="flex-1 bg-red-700 hover:bg-red-600 text-white font-bold text-xs py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow text-center">
           <i class="fa-brands fa-youtube"></i> Watch HD Demo
         </a>
