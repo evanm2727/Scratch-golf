@@ -646,13 +646,13 @@
 <!-- FULL-SCREEN TOP-ANCHORED FORM TUTORIAL OVERLAY -->
   <div id="exerciseDiagramModal" onclick="if(event.target===this)closeDiagramModal()" class="hidden fixed inset-0 bg-[#070b0e] z-[99999] flex flex-col overflow-y-auto custom-scrollbar">
     
-    <!-- Top Fixed Sticky Header Bar -->
-    <div class="sticky top-0 bg-[#090e13]/95 backdrop-blur-xl border-b border-white/[0.08] px-4 py-3.5 flex justify-between items-center z-20 safe-top">
-      <div>
-        <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8]">Form Tutorial</span>
-        <h3 class="text-xs sm:text-sm font-black text-white mt-0.5" id="diagTitle">Exercise</h3>
+   <!-- Top Fixed Sticky Header Bar (Safe Area & High Z-Index Fix) -->
+    <div class="sticky top-0 bg-[#070b0e]/95 backdrop-blur-xl border-b border-white/[0.08] px-4 py-3 flex justify-between items-center z-50 safe-top">
+      <div class="min-w-0 pr-3">
+        <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8] block">Form Tutorial</span>
+        <h3 class="text-xs sm:text-sm font-black text-white truncate mt-0.5" id="diagTitle">Exercise</h3>
       </div>
-      <button type="button" onclick="closeDiagramModal()" class="w-8 h-8 rounded-full bg-white/[0.08] text-slate-300 hover:text-white flex items-center justify-center text-sm transition">
+      <button type="button" onclick="closeDiagramModal()" class="w-9 h-9 rounded-full bg-white/[0.12] text-white hover:bg-white/[0.2] flex items-center justify-center text-base shrink-0 transition shadow-md cursor-pointer">
         <i class="fa-solid fa-xmark"></i>
       </button>
     </div>
