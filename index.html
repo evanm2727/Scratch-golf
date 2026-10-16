@@ -27,9 +27,9 @@
     }
     .safe-top { padding-top: max(env(safe-area-inset-top), 14px); }
     .safe-bottom-nav { padding-bottom: max(env(safe-area-inset-bottom), 18px); }
-    .safe-sheet-bottom { padding-bottom: max(env(safe-area-inset-bottom), 20px); }
-    .custom-scrollbar::-webkit-scrollbar { display: none; }
-    .custom-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .safe-sheet-bottom { padding-bottom: max(env(safe-area-inset-bottom), 24px); }
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 4px; }
     
     #bottom-nav {
       position: fixed;
@@ -190,7 +190,7 @@
       <div id="trainContentList" class="space-y-2.5"></div>
     </div>
 
- <!-- TAB 3: TRACKMAN & WEDGE MATRIX -->
+    <!-- TAB 3: TRACKMAN & WEDGE MATRIX -->
     <div id="tab-trackman" class="tab-pane hidden space-y-3">
       <!-- 1. 2D Visual Corridor & Dispersion Heatmap -->
       <div class="bg-[#0c1217] p-3.5 rounded-2xl border border-white/[0.07] shadow-xl">
@@ -357,7 +357,7 @@
         </div>
       </div>
 
-   <!-- 4. Bag Gapping Benchmarks -->
+      <!-- 4. Bag Gapping Benchmarks -->
       <div class="bg-[#0c1217] p-3 rounded-2xl border border-white/[0.07] shadow-xl">
         <h3 class="text-xs font-black text-slate-300 uppercase tracking-wider mb-2 flex items-center justify-between">
           <span>Bag Gapping Benchmarks</span>
@@ -397,7 +397,6 @@
         </div>
       </div>
     </div>
-
     
     <!-- TAB 4: PLAY (ON-COURSE STRATEGY & PACE HUB) -->
     <div id="tab-play" class="tab-pane hidden space-y-3">
@@ -467,7 +466,7 @@
         </div>
       </div>
 
-      <!-- In-Round Quick Wedge Card (Dynamically synced to wedgeMatrix) -->
+      <!-- In-Round Quick Wedge Card -->
       <div class="bg-[#0c1217] p-3 rounded-2xl border border-white/[0.07] shadow-xl">
         <div class="flex justify-between items-center mb-1.5 px-1">
           <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8]">In-Round Yardage Peek (1/2 &bull; 3/4 &bull; Full)</span>
@@ -644,15 +643,15 @@
 
   </main>
 
-<!-- NATIVE iOS BOTTOM SHEET 1: FORM TUTORIAL (SCROLL-FIXED) -->
-  <div id="exerciseDiagramModal" onclick="if(event.target===this)closeDiagramModal()" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-hidden">
-    <div class="bg-[#0c1217] border-t sm:border border-white/[0.1] rounded-t-3xl sm:rounded-3xl p-4 sm:p-5 safe-sheet-bottom w-full max-w-md max-h-[72vh] overflow-y-auto custom-scrollbar flex flex-col shadow-2xl" style="-webkit-overflow-scrolling: touch;">
+  <!-- NATIVE iOS BOTTOM SHEET 1: FORM TUTORIAL (SCROLLABLE & TOUCH-OPTIMIZED) -->
+  <div id="exerciseDiagramModal" onclick="if(event.target===this)closeDiagramModal()" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-[99999] flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="bg-[#0c1217] border-t sm:border border-white/[0.1] rounded-t-3xl sm:rounded-3xl p-4 sm:p-5 safe-sheet-bottom w-full max-w-md max-h-[75vh] flex flex-col shadow-2xl overflow-hidden pointer-events-auto">
       
       <!-- Drag Handle -->
       <div class="w-10 h-1 bg-white/20 rounded-full mx-auto mb-2 shrink-0 sm:hidden"></div>
       
       <!-- Sticky Header -->
-      <div class="flex justify-between items-center pb-2.5 shrink-0 border-b border-white/[0.06] sticky top-0 bg-[#0c1217] z-10">
+      <div class="flex justify-between items-center pb-2.5 shrink-0 border-b border-white/[0.06] bg-[#0c1217] z-10">
         <div>
           <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8]">Form Tutorial</span>
           <h3 class="text-xs sm:text-sm font-black text-white" id="diagTitle">Exercise</h3>
@@ -660,9 +659,9 @@
         <button type="button" onclick="closeDiagramModal()" class="w-7 h-7 rounded-full bg-white/[0.06] text-slate-400 hover:text-white flex items-center justify-center text-xs"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
-      <!-- Scrollable Content Body -->
-      <div class="py-3 space-y-2.5">
-        <div class="w-full h-28 bg-[#070b0e] rounded-2xl border border-white/[0.06] flex flex-col items-center justify-center p-3 text-center relative overflow-hidden shrink-0">
+      <!-- Scrollable Body Container with explicit touch momentum scrolling -->
+      <div class="flex-1 overflow-y-auto custom-scrollbar py-3 space-y-3 overscroll-contain" style="-webkit-overflow-scrolling: touch;">
+        <div class="w-full h-28 bg-[#070b0e] rounded-2xl border border-white/[0.06] flex flex-col items-center justify-center p-3 text-center relative shrink-0">
           <div class="w-10 h-10 rounded-full bg-red-600/20 border border-red-500/40 flex items-center justify-center text-red-400 text-base mb-1">
             <i class="fa-solid fa-play ml-0.5"></i>
           </div>
@@ -681,8 +680,7 @@
           </div>
         </div>
 
-        <!-- YouTube Action Buttons (Now fully scrollable into view) -->
-        <div class="flex gap-2 pt-2 pb-3">
+        <div class="flex gap-2 pt-2 pb-4">
           <a id="diagDirectVideoLink" href="#" target="_blank" class="flex-1 bg-red-700 hover:bg-red-600 text-white font-bold text-xs py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow text-center">
             <i class="fa-brands fa-youtube"></i> Watch HD Demo
           </a>
@@ -1661,7 +1659,6 @@
         document.getElementById('trainSessionDuration').innerText = "50 Mins";
         document.getElementById('trainSessionFocus').innerText = workout.focus;
 
-        // Auto-select first incomplete exercise if expandedExerciseIdx is null
         if (expandedExerciseIdx === null) {
           const firstIncomplete = workout.exercises.findIndex(e => {
             const l = gymLogs[getGymStorageKey(e.id)];
@@ -1693,7 +1690,6 @@
 
           return `
             <div class="bg-[#0c1217] rounded-2xl border ${isExpanded ? 'border-[#38bdf8]/50 shadow-xl' : log.completed ? 'border-[#38bdf8]/25 bg-[#090e13]/90' : 'border-white/[0.06]'} transition overflow-hidden">
-              <!-- Accordion Header Row -->
               <div class="p-3.5 flex justify-between items-center gap-2 cursor-pointer" onclick="toggleExpandExercise(${idx})">
                 <div class="flex items-center gap-2.5 min-w-0">
                   <button type="button" onclick="event.stopPropagation(); toggleExerciseComplete('${origEx.id}', ${idx})" class="w-6 h-6 rounded-full flex items-center justify-center border shrink-0 transition ${log.completed ? 'bg-[#38bdf8] border-[#38bdf8] text-slate-950 font-black shadow-[0_0_8px_rgba(56,189,248,0.5)]' : 'border-white/20 text-transparent hover:border-[#38bdf8]'}">
@@ -1715,10 +1711,8 @@
                 </div>
               </div>
 
-              <!-- Accordion Expanded Body -->
               ${isExpanded ? `
                 <div class="px-3.5 pb-3.5 pt-1 space-y-2.5 border-t border-white/[0.04]">
-                  <!-- TrackMan Data Tile Inputs -->
                   <div class="bg-[#070b0e] p-2.5 rounded-xl border border-white/[0.04] flex flex-wrap items-center justify-between gap-2">
                     <div class="flex items-center gap-2 text-xs flex-1">
                       <div class="flex-1">
@@ -1735,7 +1729,6 @@
                     </button>
                   </div>
 
-                  <!-- Sets Chips -->
                   ${log.sets.length > 0 ? `
                     <div class="flex flex-wrap gap-1.5">
                       ${log.sets.map((s, sIdx) => `
@@ -1747,7 +1740,6 @@
                     </div>
                   ` : ''}
 
-                  <!-- Action Row -->
                   <div class="flex items-center justify-between pt-1">
                     <button type="button" onclick="openAlternateModal('${origEx.id}', ${idx})" class="text-[10px] font-bold text-amber-300 hover:text-white bg-[#17140f] hover:bg-[#201c15] px-2.5 py-1.5 rounded-xl border border-amber-500/20 flex items-center gap-1.5 transition">
                       <i class="fa-solid fa-shuffle text-[9px]"></i> Swap (3 Alternates)
@@ -1762,7 +1754,6 @@
           `;
         }).join('');
       } else {
-        // Non-Gym Days: Periodized Sim / Course / Recovery Checklists
         const cycleIndex = ((currentWeek - 1) % 4) + 1;
         let proto = (activeTrainDay === 2 || activeTrainDay === 4)
           ? weeklySimDrills[cycleIndex][activeTrainDay]
@@ -1808,7 +1799,6 @@
       gymLogs[storageKey].completed = !gymLogs[storageKey].completed;
       localStorage.setItem('sb_gym_logs', JSON.stringify(gymLogs));
 
-      // Auto-advance accordion to next incomplete exercise when checked off
       if (gymLogs[storageKey].completed) {
         expandedExerciseIdx = null;
       } else {
@@ -1831,7 +1821,7 @@
       gymLogs[storageKey].completed = true;
       localStorage.setItem('sb_gym_logs', JSON.stringify(gymLogs));
 
-      expandedExerciseIdx = idx; // Keep current exercise open for subsequent sets
+      expandedExerciseIdx = idx;
       renderTrainContent();
       startRestTimer(90);
     }
@@ -1888,7 +1878,7 @@
     }
 
     // CORRECT FORM COACHING MODAL
-   function openDiagramModalByIndex(idx) {
+    function openDiagramModalByIndex(idx) {
       const prog = getProgramForWeek(currentWeek);
       const workout = prog.gymWorkouts[activeTrainDay] || prog.gymWorkouts[1];
       const origEx = workout.exercises[idx];
@@ -1922,13 +1912,14 @@
       document.getElementById('diagSearchVideoLink').href = searchUrl;
 
       document.getElementById('exerciseDiagramModal').classList.remove('hidden');
-      document.body.style.overflow = 'hidden'; // Lock background scroll on mobile
+      document.body.style.overflow = 'hidden';
     }
 
     function closeDiagramModal() {
       document.getElementById('exerciseDiagramModal').classList.add('hidden');
-      document.body.style.overflow = ''; // Restore background scroll
+      document.body.style.overflow = '';
     }
+
     // ==========================================
     // TRACKMAN TAB: 2D CORRIDOR HEATMAP
     // ==========================================
@@ -1944,26 +1935,22 @@
       const filterEl = document.getElementById('dispersionClubFilter');
       const clubFilter = filterEl ? filterEl.value : 'ALL';
 
-      // Filter shots by selected club
       const filteredShots = trackmanShots.filter((s, i) => {
         if (s.offline === undefined) {
-          // Backfill realistic offline dispersion for older cached shots
           const sampleOffsets = [-4, 3, -2, 1, -5, 4, -1, 2];
           s.offline = sampleOffsets[i % sampleOffsets.length];
         }
         return clubFilter === 'ALL' || s.club === clubFilter;
       }).slice(0, 20);
 
-      // Auto-scale Y-axis based on plotted shots
       const carries = filteredShots.map(s => parseFloat(s.carry) || 200);
       const minCarry = carries.length ? Math.max(30, Math.min(...carries) - 25) : 50;
       const maxCarry = carries.length ? Math.max(...carries) + 25 : 320;
       const carrySpan = Math.max(40, maxCarry - minCarry);
 
       const midX = w / 2;
-      const corridorHalfWidth = w * 0.24; // Represents +/- 15 yds
+      const corridorHalfWidth = w * 0.24;
 
-      // Draw 3 horizontal yardage range rings
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
       ctx.fillStyle = 'rgba(148, 163, 184, 0.45)';
       ctx.font = '9px monospace';
@@ -1977,7 +1964,6 @@
         ctx.fillText(`${ydLabel}y`, 6, yRing - 3);
       });
 
-      // Draw Target Center Line & 30-yd Fairway Corridor (+/- 15 yds)
       ctx.fillStyle = 'rgba(56, 189, 248, 0.03)';
       ctx.fillRect(midX - corridorHalfWidth, 0, corridorHalfWidth * 2, h);
 
@@ -1992,7 +1978,6 @@
       ctx.lineTo(midX, h);
       ctx.stroke();
 
-      // Plot Shots & Calculate Centroid for Dispersion Ellipse
       let inCorridorCount = 0;
       const pts = [];
 
@@ -2006,7 +1991,6 @@
 
         if (Math.abs(offline) <= 15) inCorridorCount++;
 
-        // Glow on most recent shot (idx === 0)
         if (idx === 0) {
           ctx.beginPath();
           ctx.arc(x, y, 8, 0, Math.PI * 2);
@@ -2023,7 +2007,6 @@
         ctx.stroke();
       });
 
-      // Draw Dispersion Ellipse if 2+ shots exist
       if (pts.length >= 2) {
         const avgX = pts.reduce((a, p) => a + p.x, 0) / pts.length;
         const avgY = pts.reduce((a, p) => a + p.y, 0) / pts.length;
@@ -2311,9 +2294,8 @@
         `;
       }).join('');
     }
-// ==========================================
-    // TRACKMAN STUDIO URL, JSON & TEXT IMPORTER
-    // ==========================================
+
+    // TRACKMAN STUDIO URL & FILE IMPORTER
     function normalizeTrackmanClub(rawClub) {
       if (!rawClub) return 'Driver';
       const c = String(rawClub).toUpperCase().replace(/[^A-Z0-9°]/g, '');
@@ -2339,7 +2321,6 @@
           ...u.searchParams.getAll('sgos[]'),
           ...u.searchParams.getAll('sgos')
         ];
-        // Also support indexed sgos[0], sgos[1]
         u.searchParams.forEach((val, key) => {
           if (/^sgos\[\d+\]$/.test(key)) sgos.push(val);
         });
@@ -2349,12 +2330,8 @@
         return { reportId: uuidMatch ? uuidMatch[0] : null, useNormalized: true, sgos: [] };
       }
     }
-// ==========================================
+
     // TRACKPULL PORTAL ARCHIVE CSV IMPORTER
-    // ==========================================
-   // ==========================================
-    // TRACKPULL PORTAL ARCHIVE CSV IMPORTER
-    // ==========================================
     function importTrackPullCsv(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -2369,7 +2346,6 @@
           return;
         }
 
-        // Dynamically find the row where column headers are located
         let headerIdx = lines.findIndex(l => l.toLowerCase().includes('club') && l.toLowerCase().includes('carry (yds)'));
         if (headerIdx === -1) headerIdx = lines.findIndex(l => l.toLowerCase().includes('ball speed'));
         if (headerIdx === -1) headerIdx = 0;
@@ -2393,7 +2369,6 @@
           const cols = lines[i].split(',').map(c => c.replace(/^["']|["']$/g, '').trim());
           if (cols.length <= carryIdx) continue;
 
-          // Skip summary rows like 'Average'
           const rowType = typeIdx !== -1 ? cols[typeIdx] : 'Shot';
           if (rowType && rowType.toLowerCase() === 'average') continue;
 
@@ -2437,6 +2412,7 @@
 
       reader.readAsText(file);
     }
+
     async function scanTrackmanReportUrl() {
       const urlInput = document.getElementById('trackmanReportUrl');
       const statusEl = document.getElementById('urlScanStatus');
@@ -2445,7 +2421,6 @@
 
       if (!rawInput) return alert("Paste your TrackMan Studio report link (or copied report text) first.");
 
-      // If user pasted raw JSON or copied page text directly into the box, parse immediately!
       if (!rawInput.startsWith('http')) {
         const directCount = parseAndImportTrackmanContent(rawInput, { useNormalized: true, sgos: [] });
         if (directCount > 0) {
@@ -2463,20 +2438,14 @@
 
       btn.disabled = true;
       btn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i>`;
-      statusEl.innerHTML = `<span class="text-[#38bdf8]">Fetching Report ${urlConfig.reportId.slice(0, 8)}... (${urlConfig.sgos.length || 'all'} club groups)</span>`;
+      statusEl.innerHTML = `<span class="text-[#38bdf8]">Fetching Report ${urlConfig.reportId.slice(0, 8)}...</span>`;
 
       try {
         let payload = null;
         const apiEndpoint = `https://web-dynamic-reports.trackmangolf.com/api/dynamicreports/getreport`;
         const getUrl1 = `${apiEndpoint}?reportId=${urlConfig.reportId}`;
-        const getUrl2 = `${apiEndpoint}?id=${urlConfig.reportId}&r=${urlConfig.reportId}`;
 
-        // 1. Try POST via CORS proxy & Cloudflare Worker (TrackMan's primary method)
-        const postTargets = [
-          `https://corsproxy.io/?${encodeURIComponent(apiEndpoint)}`,
-          apiEndpoint
-        ];
-
+        const postTargets = [`https://corsproxy.io/?${encodeURIComponent(apiEndpoint)}`, apiEndpoint];
         for (const target of postTargets) {
           try {
             const res = await fetch(target, {
@@ -2494,20 +2463,17 @@
           } catch (e) {}
         }
 
-        // 2. Fallback: Try GET requests across proxies
         if (!payload) {
           const getCandidates = [
             `https://corsproxy.io/?${encodeURIComponent(getUrl1)}`,
-            `https://api.allorigins.win/raw?url=${encodeURIComponent(getUrl1)}`,
-            `https://corsproxy.io/?${encodeURIComponent(getUrl2)}`,
-            `https://api.allorigins.win/raw?url=${encodeURIComponent(getUrl2)}`
+            `https://api.allorigins.win/raw?url=${encodeURIComponent(getUrl1)}`
           ];
           for (const endpoint of getCandidates) {
             try {
               const res = await fetch(endpoint);
               if (!res.ok) continue;
               const text = await res.text();
-              if (text && (text.includes('StrokeGroups') || text.includes('strokeGroups') || text.includes('BallSpeed') || text.includes('ClubSpeed'))) {
+              if (text && (text.includes('StrokeGroups') || text.includes('BallSpeed') || text.includes('ClubSpeed'))) {
                 payload = text;
                 break;
               }
@@ -2516,15 +2482,15 @@
         }
 
         if (!payload) {
-          throw new Error("TrackMan's server blocked direct proxy access. Quick workaround: Open the report link, press Ctrl+A then Ctrl+C (Copy All), paste it into this box, and tap Scan!");
+          throw new Error("TrackMan server blocked direct proxy. Quick workaround: Open link, press Ctrl+A then Ctrl+C (Copy), and paste into this box!");
         }
 
         const importedCount = parseAndImportTrackmanContent(payload, urlConfig);
         if (importedCount > 0) {
-          statusEl.innerHTML = `<span class="text-[#38bdf8] font-bold">&check; Imported ${importedCount} shots across ${urlConfig.sgos.length || 'all'} club groups!</span>`;
+          statusEl.innerHTML = `<span class="text-[#38bdf8] font-bold">&check; Imported ${importedCount} shots!</span>`;
           urlInput.value = '';
         } else {
-          throw new Error("Report reached, but shot payload was empty. Open your link, copy the table text (Ctrl+A, Ctrl+C), and paste it right into the box above.");
+          throw new Error("Report reached, but shot payload was empty.");
         }
       } catch (err) {
         statusEl.innerHTML = `<span class="text-amber-400">${err.message}</span>`;
@@ -2553,13 +2519,11 @@
     function parseAndImportTrackmanContent(rawText, urlConfig = { useNormalized: true, sgos: [] }) {
       const newShots = [];
 
-      // 1. Parse TrackMan Dynamic Report JSON (Supports r=..., nd=true, and sgos[] filtering)
       try {
         const json = JSON.parse(rawText);
         const reportObj = json.Report || json.report || json.data || json;
         let groups = reportObj.StrokeGroups || reportObj.strokeGroups || [];
 
-        // If URL specified sgos[] UUIDs, filter & order groups to match URL selection
         if (urlConfig.sgos && urlConfig.sgos.length > 0) {
           const sgoSet = new Set(urlConfig.sgos.map(id => id.toLowerCase()));
           const filtered = groups.filter(g => {
@@ -2575,7 +2539,6 @@
           strokes.forEach(stroke => {
             if (stroke.IsIgnored || stroke.isIgnored || stroke.Selected === false) return;
 
-            // Respect nd=true (NormalizedMeasurement) from URL parameter
             const m = (urlConfig.useNormalized && (stroke.NormalizedMeasurement || stroke.normalizedMeasurement))
               ? (stroke.NormalizedMeasurement || stroke.normalizedMeasurement)
               : (stroke.Measurement || stroke.measurement || stroke.NormalizedMeasurement || stroke);
@@ -2586,7 +2549,6 @@
             let smash = parseFloat(m.SmashFactor ?? m.smashFactor);
             let offline = parseFloat(m.CarrySide ?? m.carrySide ?? m.Side ?? m.side ?? 0);
 
-            // Convert TrackMan raw metric JSON (m/s & meters) to Imperial (mph & yards)
             const isMetricSpeed = (!isNaN(ballSpd) && ballSpd < 92) || (isNaN(ballSpd) && !isNaN(clubSpd) && clubSpd < 65);
             if (isMetricSpeed) {
               if (!isNaN(ballSpd)) ballSpd *= 2.23694;
@@ -2595,7 +2557,6 @@
               if (!isNaN(offline)) offline *= 1.09361;
             }
 
-            // If report only has ClubSpeed (like mp[]=ClubSpeed in your URL), derive BallSpeed/Smash
             if (isNaN(smash) && !isNaN(ballSpd) && !isNaN(clubSpd) && clubSpd > 0) {
               smash = ballSpd / clubSpd;
             }
@@ -2617,14 +2578,12 @@
         });
       } catch (e) {}
 
-      // 2. Fallback: Parse CSV / TSV or Copied Webpage Text (Ctrl+A, Ctrl+C from TrackMan report)
       if (newShots.length === 0) {
         const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
         let currentClub = 'Driver';
         let clubIdx = -1, speedIdx = -1, clubSpdIdx = -1, carryIdx = -1, smashIdx = -1, offlineIdx = -1;
 
         lines.forEach(line => {
-          // Detect Club Section Headers when user copies text directly off the TrackMan webpage
           if (/^(Dr\s*Driver|Driver|3W\s*3\s*Wood|3\s*Wood|2i\s*2\s*Iron|4i\s*4\s*Iron|5i\s*5\s*Iron|6i\s*6\s*Iron|7i\s*7\s*Iron|8i\s*8\s*Iron|9i\s*9\s*Iron|PW\s*Pitching\s*Wedge|50|52|54|56|58|60|GW|SW|LW)/i.test(line)) {
             currentClub = normalizeTrackmanClub(line);
           }
@@ -2674,6 +2633,15 @@
         renderDispersionCanvas();
       }
       return newShots.length;
+    }
+
+    function clearTrackmanHistory() {
+      if (!confirm("Clear current TrackMan shots so only your imported data is shown?")) return;
+      trackmanShots = [];
+      localStorage.setItem('sb_trackman_shots', JSON.stringify(trackmanShots));
+      renderTrackmanTable();
+      renderBagGapping();
+      renderDispersionCanvas();
     }
 
     // GHIN SYNC & COURSE DISAMBIGUATION
