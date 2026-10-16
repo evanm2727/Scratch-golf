@@ -644,11 +644,14 @@
 
   </main>
 
- <!-- NATIVE iOS BOTTOM SHEET 1: FORM TUTORIAL (SCROLLABLE FIX) -->
+<!-- NATIVE iOS BOTTOM SHEET 1: FORM TUTORIAL (SCROLL-LOCKED FIX) -->
   <div id="exerciseDiagramModal" onclick="if(event.target===this)closeDiagramModal()" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="bg-[#0c1217] border-t sm:border border-white/[0.1] rounded-t-3xl sm:rounded-3xl p-5 safe-sheet-bottom w-full max-w-md max-h-[85vh] overflow-y-auto custom-scrollbar space-y-3.5 shadow-2xl">
-      <div class="w-10 h-1 bg-white/20 rounded-full mx-auto mb-1 sm:hidden"></div>
-      <div class="flex justify-between items-center sticky top-0 bg-[#0c1217] pb-2 z-10 border-b border-white/[0.04]">
+    <div class="bg-[#0c1217] border-t sm:border border-white/[0.1] rounded-t-3xl sm:rounded-3xl p-5 safe-sheet-bottom w-full max-w-md max-h-[85vh] flex flex-col shadow-2xl">
+      <!-- Drag Handle -->
+      <div class="w-10 h-1 bg-white/20 rounded-full mx-auto mb-2 shrink-0 sm:hidden"></div>
+      
+      <!-- Sticky Header -->
+      <div class="flex justify-between items-center pb-3 shrink-0 border-b border-white/[0.06]">
         <div>
           <span class="text-[9px] font-black uppercase tracking-widest text-[#38bdf8]">Form Tutorial</span>
           <h3 class="text-sm font-black text-white" id="diagTitle">Exercise</h3>
@@ -656,32 +659,35 @@
         <button type="button" onclick="closeDiagramModal()" class="w-7 h-7 rounded-full bg-white/[0.06] text-slate-400 hover:text-white flex items-center justify-center text-xs"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
-      <div class="w-full h-32 bg-[#070b0e] rounded-2xl border border-white/[0.06] flex flex-col items-center justify-center p-3 text-center relative overflow-hidden">
-        <div class="w-11 h-11 rounded-full bg-red-600/20 border border-red-500/40 flex items-center justify-center text-red-400 text-lg mb-1.5">
-          <i class="fa-solid fa-play ml-0.5"></i>
+      <!-- Scrollable Body Container -->
+      <div class="overflow-y-auto custom-scrollbar flex-1 py-3 space-y-3">
+        <div class="w-full h-32 bg-[#070b0e] rounded-2xl border border-white/[0.06] flex flex-col items-center justify-center p-3 text-center relative overflow-hidden shrink-0">
+          <div class="w-11 h-11 rounded-full bg-red-600/20 border border-red-500/40 flex items-center justify-center text-red-400 text-lg mb-1.5">
+            <i class="fa-solid fa-play ml-0.5"></i>
+          </div>
+          <h4 class="text-xs font-bold text-white mb-0.5" id="diagBoxTitle">Exercise Form</h4>
+          <p class="text-[10px] text-slate-400 max-w-[220px]">PGA Tour & strength coach demonstration.</p>
         </div>
-        <h4 class="text-xs font-bold text-white mb-0.5" id="diagBoxTitle">Exercise Form</h4>
-        <p class="text-[10px] text-slate-400 max-w-[220px]">PGA Tour & strength coach demonstration.</p>
-      </div>
 
-      <div class="space-y-2 text-xs">
-        <div class="bg-[#111921] p-2.5 rounded-xl border border-white/[0.06]">
-          <span class="text-[9px] font-bold text-[#38bdf8] uppercase block mb-0.5">Execution & Joint Path</span>
-          <p class="text-[11px] text-slate-200 leading-snug" id="diagSetupText"></p>
+        <div class="space-y-2 text-xs">
+          <div class="bg-[#111921] p-2.5 rounded-xl border border-white/[0.06]">
+            <span class="text-[9px] font-bold text-[#38bdf8] uppercase block mb-0.5">Execution & Joint Path</span>
+            <p class="text-[11px] text-slate-200 leading-snug" id="diagSetupText"></p>
+          </div>
+          <div class="bg-[#111921] p-2.5 rounded-xl border border-white/[0.06]">
+            <span class="text-[9px] font-bold text-amber-300 uppercase block mb-0.5">Kinetic Chain Swing Transfer</span>
+            <p class="text-[11px] text-slate-300 leading-snug" id="diagCueText"></p>
+          </div>
         </div>
-        <div class="bg-[#111921] p-2.5 rounded-xl border border-white/[0.06]">
-          <span class="text-[9px] font-bold text-amber-300 uppercase block mb-0.5">Kinetic Chain Swing Transfer</span>
-          <p class="text-[11px] text-slate-300 leading-snug" id="diagCueText"></p>
-        </div>
-      </div>
 
-      <div class="flex gap-2 pt-1">
-        <a id="diagDirectVideoLink" href="#" target="_blank" class="flex-1 bg-red-700 hover:bg-red-600 text-white font-bold text-xs py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow text-center">
-          <i class="fa-brands fa-youtube"></i> Watch HD Demo
-        </a>
-        <a id="diagSearchVideoLink" href="#" target="_blank" class="flex-1 bg-[#111921] hover:bg-[#18232e] text-[#38bdf8] border border-white/[0.06] font-bold text-xs py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow text-center">
-          <i class="fa-solid fa-magnifying-glass text-[10px]"></i> Search YouTube
-        </a>
+        <div class="flex gap-2 pt-1">
+          <a id="diagDirectVideoLink" href="#" target="_blank" class="flex-1 bg-red-700 hover:bg-red-600 text-white font-bold text-xs py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow text-center">
+            <i class="fa-brands fa-youtube"></i> Watch HD Demo
+          </a>
+          <a id="diagSearchVideoLink" href="#" target="_blank" class="flex-1 bg-[#111921] hover:bg-[#18232e] text-[#38bdf8] border border-white/[0.06] font-bold text-xs py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow text-center">
+            <i class="fa-solid fa-magnifying-glass text-[10px]"></i> Search YouTube
+          </a>
+        </div>
       </div>
     </div>
   </div>
