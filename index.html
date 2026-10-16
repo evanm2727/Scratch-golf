@@ -681,7 +681,7 @@
         </div>
       </div>
 
-      <!-- YouTube Actions -->
+    <!-- YouTube Actions -->
       <div class="flex gap-2.5 pt-2">
         <a id="diagDirectVideoLink" href="#" target="_blank" class="flex-1 bg-red-700 hover:bg-red-600 text-white font-bold text-xs py-3 rounded-2xl transition flex items-center justify-center gap-2 shadow-lg text-center">
           <i class="fa-brands fa-youtube text-base"></i> Watch HD Demo
@@ -1920,7 +1920,13 @@
       document.getElementById('exerciseDiagramModal').classList.add('hidden');
       document.body.style.overflow = '';
     }
-
+// Force iOS PWA standalone mode to open external links cleanly
+    function openExternalLink(event, url) {
+      event.preventDefault();
+      if (url && url !== '#') {
+        window.open(url, '_blank');
+      }
+    }
     // ==========================================
     // TRACKMAN TAB: 2D CORRIDOR HEATMAP
     // ==========================================
